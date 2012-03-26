@@ -7,85 +7,85 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E50D9F5B152098C10052466A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E50D9F5A152098C10052466A /* UIKit.framework */; };
-		E50D9F5D152098C10052466A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E50D9F5C152098C10052466A /* Foundation.framework */; };
-		E50D9F5F152098C10052466A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E50D9F5E152098C10052466A /* CoreGraphics.framework */; };
-		E50D9F65152098C10052466A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E50D9F63152098C10052466A /* InfoPlist.strings */; };
-		E50D9F67152098C10052466A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E50D9F66152098C10052466A /* main.m */; };
-		E50D9F6B152098C10052466A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E50D9F6A152098C10052466A /* AppDelegate.m */; };
+		E5F42A3E1520B3B1006DAE33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3D1520B3B1006DAE33 /* UIKit.framework */; };
+		E5F42A401520B3B1006DAE33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3F1520B3B1006DAE33 /* Foundation.framework */; };
+		E5F42A421520B3B1006DAE33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */; };
+		E5F42A481520B3B1006DAE33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5F42A461520B3B1006DAE33 /* InfoPlist.strings */; };
+		E5F42A4A1520B3B1006DAE33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A491520B3B1006DAE33 /* main.m */; };
+		E5F42A4E1520B3B1006DAE33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E50D9F56152098C10052466A /* RRPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E50D9F5A152098C10052466A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		E50D9F5C152098C10052466A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		E50D9F5E152098C10052466A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E50D9F62152098C10052466A /* RRPhotos-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RRPhotos-Info.plist"; sourceTree = "<group>"; };
-		E50D9F64152098C10052466A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		E50D9F66152098C10052466A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E50D9F68152098C10052466A /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
-		E50D9F69152098C10052466A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		E50D9F6A152098C10052466A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E5F42A391520B3B1006DAE33 /* RRPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5F42A3D1520B3B1006DAE33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E5F42A3F1520B3B1006DAE33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */ = {isa = PBXFileReference; path = "RRPhotos-Info.plist"; sourceTree = "<group>"; };
+		E5F42A471520B3B1006DAE33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E5F42A491520B3B1006DAE33 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
+		E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E50D9F53152098C10052466A /* Frameworks */ = {
+		E5F42A361520B3B1006DAE33 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E50D9F5B152098C10052466A /* UIKit.framework in Frameworks */,
-				E50D9F5D152098C10052466A /* Foundation.framework in Frameworks */,
-				E50D9F5F152098C10052466A /* CoreGraphics.framework in Frameworks */,
+				E5F42A3E1520B3B1006DAE33 /* UIKit.framework in Frameworks */,
+				E5F42A401520B3B1006DAE33 /* Foundation.framework in Frameworks */,
+				E5F42A421520B3B1006DAE33 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E50D9F4B152098C10052466A = {
+		E5F42A2E1520B3B0006DAE33 = {
 			isa = PBXGroup;
 			children = (
-				E50D9F60152098C10052466A /* RRPhotos */,
-				E50D9F59152098C10052466A /* Frameworks */,
-				E50D9F57152098C10052466A /* Products */,
+				E5F42A431520B3B1006DAE33 /* RRPhotos */,
+				E5F42A3C1520B3B1006DAE33 /* Frameworks */,
+				E5F42A3A1520B3B1006DAE33 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		E50D9F57152098C10052466A /* Products */ = {
+		E5F42A3A1520B3B1006DAE33 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E50D9F56152098C10052466A /* RRPhotos.app */,
+				E5F42A391520B3B1006DAE33 /* RRPhotos.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E50D9F59152098C10052466A /* Frameworks */ = {
+		E5F42A3C1520B3B1006DAE33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E50D9F5A152098C10052466A /* UIKit.framework */,
-				E50D9F5C152098C10052466A /* Foundation.framework */,
-				E50D9F5E152098C10052466A /* CoreGraphics.framework */,
+				E5F42A3D1520B3B1006DAE33 /* UIKit.framework */,
+				E5F42A3F1520B3B1006DAE33 /* Foundation.framework */,
+				E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E50D9F60152098C10052466A /* RRPhotos */ = {
+		E5F42A431520B3B1006DAE33 /* RRPhotos */ = {
 			isa = PBXGroup;
 			children = (
-				E50D9F69152098C10052466A /* AppDelegate.h */,
-				E50D9F6A152098C10052466A /* AppDelegate.m */,
-				E50D9F61152098C10052466A /* Supporting Files */,
+				E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */,
+				E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */,
+				E5F42A441520B3B1006DAE33 /* Supporting Files */,
 			);
 			path = RRPhotos;
 			sourceTree = "<group>";
 		};
-		E50D9F61152098C10052466A /* Supporting Files */ = {
+		E5F42A441520B3B1006DAE33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E50D9F62152098C10052466A /* RRPhotos-Info.plist */,
-				E50D9F63152098C10052466A /* InfoPlist.strings */,
-				E50D9F66152098C10052466A /* main.m */,
-				E50D9F68152098C10052466A /* RRPhotos-Prefix.pch */,
+				E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */,
+				E5F42A461520B3B1006DAE33 /* InfoPlist.strings */,
+				E5F42A491520B3B1006DAE33 /* main.m */,
+				E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -93,13 +93,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E50D9F55152098C10052466A /* RRPhotos */ = {
+		E5F42A381520B3B1006DAE33 /* RRPhotos */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E50D9F6E152098C10052466A /* Build configuration list for PBXNativeTarget "RRPhotos" */;
+			buildConfigurationList = E5F42A511520B3B1006DAE33 /* Build configuration list for PBXNativeTarget "RRPhotos" */;
 			buildPhases = (
-				E50D9F52152098C10052466A /* Sources */,
-				E50D9F53152098C10052466A /* Frameworks */,
-				E50D9F54152098C10052466A /* Resources */,
+				E5F42A351520B3B1006DAE33 /* Sources */,
+				E5F42A361520B3B1006DAE33 /* Frameworks */,
+				E5F42A371520B3B1006DAE33 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -107,63 +107,63 @@
 			);
 			name = RRPhotos;
 			productName = RRPhotos;
-			productReference = E50D9F56152098C10052466A /* RRPhotos.app */;
+			productReference = E5F42A391520B3B1006DAE33 /* RRPhotos.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		E50D9F4D152098C10052466A /* Project object */ = {
+		E5F42A301520B3B0006DAE33 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = renren;
 			};
-			buildConfigurationList = E50D9F50152098C10052466A /* Build configuration list for PBXProject "RRPhotos" */;
+			buildConfigurationList = E5F42A331520B3B0006DAE33 /* Build configuration list for PBXProject "RRPhotos" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = E50D9F4B152098C10052466A;
-			productRefGroup = E50D9F57152098C10052466A /* Products */;
+			mainGroup = E5F42A2E1520B3B0006DAE33;
+			productRefGroup = E5F42A3A1520B3B1006DAE33 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E50D9F55152098C10052466A /* RRPhotos */,
+				E5F42A381520B3B1006DAE33 /* RRPhotos */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E50D9F54152098C10052466A /* Resources */ = {
+		E5F42A371520B3B1006DAE33 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E50D9F65152098C10052466A /* InfoPlist.strings in Resources */,
+				E5F42A481520B3B1006DAE33 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E50D9F52152098C10052466A /* Sources */ = {
+		E5F42A351520B3B1006DAE33 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E50D9F67152098C10052466A /* main.m in Sources */,
-				E50D9F6B152098C10052466A /* AppDelegate.m in Sources */,
+				E5F42A4A1520B3B1006DAE33 /* main.m in Sources */,
+				E5F42A4E1520B3B1006DAE33 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		E50D9F63152098C10052466A /* InfoPlist.strings */ = {
+		E5F42A461520B3B1006DAE33 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E50D9F64152098C10052466A /* en */,
+				E5F42A471520B3B1006DAE33 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -171,7 +171,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		E50D9F6C152098C10052466A /* Debug */ = {
+		E5F42A4F1520B3B1006DAE33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -187,15 +187,15 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
-		E50D9F6D152098C10052466A /* Release */ = {
+		E5F42A501520B3B1006DAE33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -204,17 +204,17 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		E50D9F6F152098C10052466A /* Debug */ = {
+		E5F42A521520B3B1006DAE33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -225,7 +225,7 @@
 			};
 			name = Debug;
 		};
-		E50D9F70152098C10052466A /* Release */ = {
+		E5F42A531520B3B1006DAE33 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -239,24 +239,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E50D9F50152098C10052466A /* Build configuration list for PBXProject "RRPhotos" */ = {
+		E5F42A331520B3B0006DAE33 /* Build configuration list for PBXProject "RRPhotos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E50D9F6C152098C10052466A /* Debug */,
-				E50D9F6D152098C10052466A /* Release */,
+				E5F42A4F1520B3B1006DAE33 /* Debug */,
+				E5F42A501520B3B1006DAE33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E50D9F6E152098C10052466A /* Build configuration list for PBXNativeTarget "RRPhotos" */ = {
+		E5F42A511520B3B1006DAE33 /* Build configuration list for PBXNativeTarget "RRPhotos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E50D9F6F152098C10052466A /* Debug */,
-				E50D9F70152098C10052466A /* Release */,
+				E5F42A521520B3B1006DAE33 /* Debug */,
+				E5F42A531520B3B1006DAE33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = E50D9F4D152098C10052466A /* Project object */;
+	rootObject = E5F42A301520B3B0006DAE33 /* Project object */;
 }
