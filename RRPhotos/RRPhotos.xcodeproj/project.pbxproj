@@ -20,11 +20,11 @@
 		E5F42A3D1520B3B1006DAE33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E5F42A3F1520B3B1006DAE33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */ = {isa = PBXFileReference; path = "RRPhotos-Info.plist"; sourceTree = "<group>"; };
+		E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RRPhotos-Info.plist"; sourceTree = "<group>"; };
 		E5F42A471520B3B1006DAE33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E5F42A491520B3B1006DAE33 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
-		E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
+		E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

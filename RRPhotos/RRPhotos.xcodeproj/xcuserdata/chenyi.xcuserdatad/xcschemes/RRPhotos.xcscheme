@@ -13,7 +13,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E50D9F55152098C10052466A"
+               BlueprintIdentifier = "E5F42A381520B3B1006DAE33"
                BuildableName = "RRPhotos.app"
                BlueprintName = "RRPhotos"
                ReferencedContainer = "container:RRPhotos.xcodeproj">
@@ -22,8 +22,8 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
@@ -31,7 +31,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E50D9F55152098C10052466A"
+            BlueprintIdentifier = "E5F42A381520B3B1006DAE33"
             BuildableName = "RRPhotos.app"
             BlueprintName = "RRPhotos"
             ReferencedContainer = "container:RRPhotos.xcodeproj">
@@ -39,18 +39,17 @@
       </MacroExpansion>
    </TestAction>
    <LaunchAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug"
-      ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E50D9F55152098C10052466A"
+            BlueprintIdentifier = "E5F42A381520B3B1006DAE33"
             BuildableName = "RRPhotos.app"
             BlueprintName = "RRPhotos"
             ReferencedContainer = "container:RRPhotos.xcodeproj">
@@ -68,7 +67,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E50D9F55152098C10052466A"
+            BlueprintIdentifier = "E5F42A381520B3B1006DAE33"
             BuildableName = "RRPhotos.app"
             BlueprintName = "RRPhotos"
             ReferencedContainer = "container:RRPhotos.xcodeproj">
