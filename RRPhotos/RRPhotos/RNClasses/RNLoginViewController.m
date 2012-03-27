@@ -84,12 +84,13 @@
             mainUser.checkIsNewUser = NO;
             break;
     }
-
-//进入主界面
-//    RNMainViewController *mainViewCtl = [RNControllerFactory createControllerWithURL:kMainViewController];
-//    RSAppDelegate *appDelegate = (RSAppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate.rootNavViewController pushViewController:mainViewCtl animated:YES];
-//    [mainViewCtl release];
+//	
+	UIViewController *view = [[UIViewController alloc]init ];//登陆后的界面
+	view.navigationItem.leftBarButtonItem = nil;
+	view.navigationItem.rightBarButtonItem = nil;
+	[self.navigationController setNavigationBarHidden:YES]; //暂时这样处理
+	[self.navigationController pushViewController:view animated:NO];
+	//进入主界面
 }
 
 
@@ -169,7 +170,7 @@
     [loginView release];
 
 	
-	// 取出最后一次登录用户名。
+	// 取出最后一次登录用户名。　
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     self.lastUsername = [defaults objectForKey:@"loginUserName"];
     if(self.lastUsername )
