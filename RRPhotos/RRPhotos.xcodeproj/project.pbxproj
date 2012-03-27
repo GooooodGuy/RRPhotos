@@ -14,8 +14,10 @@
 		E5B0853215216CF700F87B46 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0852D15216CF700F87B46 /* RCUser.m */; };
 		E5B0853B15216D8400F87B46 /* RCBasePost.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0853615216D8300F87B46 /* RCBasePost.m */; };
 		E5B0853C15216D8400F87B46 /* RCBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0853815216D8400F87B46 /* RCBaseRequest.m */; };
-		E5B0853D15216D8400F87B46 /* RCGeneralRequestAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0853A15216D8400F87B46 /* RCGeneralRequestAssistant.m */; };
 		E5B0854115216DE500F87B46 /* RCError.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0854015216DE400F87B46 /* RCError.m */; };
+		E5B20256152185F7002B5C40 /* RNBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B20253152184FB002B5C40 /* RNBaseViewController.m */; };
+		E5B2025A15218688002B5C40 /* RNLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B2025915218688002B5C40 /* RNLoginViewController.m */; };
+		E5B2025C152188DF002B5C40 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B2025B152188DF002B5C40 /* QuartzCore.framework */; };
 		E5B90D1F15215C5000F1E4D2 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B90CAF15215C5000F1E4D2 /* GTMBase64.m */; };
 		E5B90D2015215C5000F1E4D2 /* NSArray+RNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B90CB215215C5000F1E4D2 /* NSArray+RNAdditions.m */; };
 		E5B90D2115215C5000F1E4D2 /* NSData+CocoaDevUsersAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B90CB415215C5000F1E4D2 /* NSData+CocoaDevUsersAdditions.m */; };
@@ -233,11 +235,14 @@
 		E5B0853615216D8300F87B46 /* RCBasePost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBasePost.m; sourceTree = "<group>"; };
 		E5B0853715216D8300F87B46 /* RCBaseRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBaseRequest.h; sourceTree = "<group>"; };
 		E5B0853815216D8400F87B46 /* RCBaseRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCBaseRequest.m; sourceTree = "<group>"; };
-		E5B0853915216D8400F87B46 /* RCGeneralRequestAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCGeneralRequestAssistant.h; sourceTree = "<group>"; };
-		E5B0853A15216D8400F87B46 /* RCGeneralRequestAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCGeneralRequestAssistant.m; sourceTree = "<group>"; };
 		E5B0853E15216DE300F87B46 /* RCBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCBlocks.h; sourceTree = "<group>"; };
 		E5B0853F15216DE300F87B46 /* RCError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCError.h; sourceTree = "<group>"; };
 		E5B0854015216DE400F87B46 /* RCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCError.m; sourceTree = "<group>"; };
+		E5B20252152184FB002B5C40 /* RNBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNBaseViewController.h; sourceTree = "<group>"; };
+		E5B20253152184FB002B5C40 /* RNBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNBaseViewController.m; sourceTree = "<group>"; };
+		E5B2025815218688002B5C40 /* RNLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNLoginViewController.h; sourceTree = "<group>"; };
+		E5B2025915218688002B5C40 /* RNLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNLoginViewController.m; sourceTree = "<group>"; };
+		E5B2025B152188DF002B5C40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E5B90C8715215A0600F1E4D2 /* RNGlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNGlobalMacros.h; sourceTree = "<group>"; };
 		E5B90CAB15215C5000F1E4D2 /* BaseLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseLibrary.h; sourceTree = "<group>"; };
 		E5B90CAD15215C5000F1E4D2 /* Categories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Categories.h; sourceTree = "<group>"; };
@@ -492,6 +497,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B2025C152188DF002B5C40 /* QuartzCore.framework in Frameworks */,
 				E5B90D861521610F00F1E4D2 /* libz.1.2.5.dylib in Frameworks */,
 				E5B90D8415215E7600F1E4D2 /* Security.framework in Frameworks */,
 				E5B90D8215215E4600F1E4D2 /* SystemConfiguration.framework in Frameworks */,
@@ -515,8 +521,6 @@
 				E5B0853615216D8300F87B46 /* RCBasePost.m */,
 				E5B0853715216D8300F87B46 /* RCBaseRequest.h */,
 				E5B0853815216D8400F87B46 /* RCBaseRequest.m */,
-				E5B0853915216D8400F87B46 /* RCGeneralRequestAssistant.h */,
-				E5B0853A15216D8400F87B46 /* RCGeneralRequestAssistant.m */,
 				E5B0852615216CF700F87B46 /* Config */,
 				E5B0852A15216CF700F87B46 /* RCMainUser.h */,
 				E5B0852B15216CF700F87B46 /* RCMainUser.m */,
@@ -536,11 +540,22 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		E5B08542152181B000F87B46 /* BaseViewController */ = {
+		E5B2025515218516002B5C40 /* BaseViewController */ = {
 			isa = PBXGroup;
 			children = (
+				E5B20252152184FB002B5C40 /* RNBaseViewController.h */,
+				E5B20253152184FB002B5C40 /* RNBaseViewController.m */,
 			);
 			name = BaseViewController;
+			sourceTree = "<group>";
+		};
+		E5B2025715218663002B5C40 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E5B2025815218688002B5C40 /* RNLoginViewController.h */,
+				E5B2025915218688002B5C40 /* RNLoginViewController.m */,
+			);
+			name = Login;
 			sourceTree = "<group>";
 		};
 		E5B90CAA15215C5000F1E4D2 /* RLBaseLibs */ = {
@@ -873,7 +888,8 @@
 		E5B90ED01521638500F1E4D2 /* RNClasses */ = {
 			isa = PBXGroup;
 			children = (
-				E5B08542152181B000F87B46 /* BaseViewController */,
+				E5B2025715218663002B5C40 /* Login */,
+				E5B2025515218516002B5C40 /* BaseViewController */,
 			);
 			path = RNClasses;
 			sourceTree = "<group>";
@@ -899,6 +915,7 @@
 			isa = PBXGroup;
 			children = (
 				E5B90D851521610F00F1E4D2 /* libz.1.2.5.dylib */,
+				E5B2025B152188DF002B5C40 /* QuartzCore.framework */,
 				E5B90D8315215E7600F1E4D2 /* Security.framework */,
 				E5B90D8115215E4500F1E4D2 /* SystemConfiguration.framework */,
 				E5F42A3D1520B3B1006DAE33 /* UIKit.framework */,
@@ -962,7 +979,7 @@
 		E5F42A301520B3B0006DAE33 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = renren;
 			};
 			buildConfigurationList = E5F42A331520B3B0006DAE33 /* Build configuration list for PBXProject "RRPhotos" */;
@@ -1157,6 +1174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B20256152185F7002B5C40 /* RNBaseViewController.m in Sources */,
 				E5F42A4A1520B3B1006DAE33 /* main.m in Sources */,
 				E5F42A4E1520B3B1006DAE33 /* AppDelegate.m in Sources */,
 				E5B90D1F15215C5000F1E4D2 /* GTMBase64.m in Sources */,
@@ -1198,8 +1216,8 @@
 				E5B0853215216CF700F87B46 /* RCUser.m in Sources */,
 				E5B0853B15216D8400F87B46 /* RCBasePost.m in Sources */,
 				E5B0853C15216D8400F87B46 /* RCBaseRequest.m in Sources */,
-				E5B0853D15216D8400F87B46 /* RCGeneralRequestAssistant.m in Sources */,
 				E5B0854115216DE500F87B46 /* RCError.m in Sources */,
+				E5B2025A15218688002B5C40 /* RNLoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

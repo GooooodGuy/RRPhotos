@@ -157,6 +157,8 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #ifdef DEBUG
     NSLog(@"Reachability: dealloc");
 #endif
+	
+	[super dealloc]; //chenyi add
 }
 
 #pragma mark - notifier methods

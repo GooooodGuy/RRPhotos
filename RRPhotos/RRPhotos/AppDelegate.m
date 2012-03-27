@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "RNLoginViewController.h"
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -27,7 +27,14 @@
 	NSMutableArray *controllers = [NSMutableArray array];//视图控制器数组
 	
 	for (int i = 0 ; i < [item count]; i++) {
-		UIViewController *mainView = [[UIViewController alloc]init];
+		
+		UIViewController *mainView;
+		if (0 == i) {
+			mainView = [[RNLoginViewController alloc]init]; //第一个登陆界面　登陆后显示好友动态
+		}else {
+			mainView = [[UIViewController alloc]init];
+		}
+		
 		UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainView];
 		mainView.title = [item objectAtIndex: i];
 		

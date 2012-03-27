@@ -120,6 +120,7 @@ static NSOperationQueue *_sharedNetworkQueue;
 #if TARGET_OS_IPHONE    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
+	[super dealloc];//chenyi add
 }
 
 +(void) dealloc {

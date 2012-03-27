@@ -376,6 +376,7 @@
     
     [_connection cancel];
     _connection = nil;
+	[super dealloc];//chenyi add
 }
 
 -(void) updateHandlersFromOperation:(MKNetworkOperation*) operation {
