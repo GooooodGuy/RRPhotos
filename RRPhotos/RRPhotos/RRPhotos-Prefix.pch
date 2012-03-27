@@ -11,4 +11,9 @@
 #ifdef __OBJC__
 	#import <UIKit/UIKit.h>
 	#import <Foundation/Foundation.h>
+	
+	#import "RLBaseLibs/BaseLibrary.h"
+	#import "RCCommon/Common.h"
+	#import "RNGlobalMacros.h"
+
 #endif
