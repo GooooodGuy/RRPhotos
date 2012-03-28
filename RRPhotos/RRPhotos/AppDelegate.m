@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "RNLoginViewController.h"
 #import "RNPickPhotoController.h"
+#import "ImageProcessingViewController.h"
+#import "RNConstomTabBarController.h"
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -33,7 +35,8 @@
 		if (0 == i) {
 			mainView = [[RNLoginViewController alloc]init]; //第一个登陆界面　登陆后显示好友动态
 		}else if(2 == i) {
-			mainView = [[RNPickPhotoController alloc]init];
+//			mainView = [[RNPickPhotoController alloc]init];
+			mainView = [[ImageProcessingViewController alloc]init ];
 		}else {
 			mainView = [[UIViewController alloc]init ];
 		}
@@ -52,13 +55,17 @@
 	
 	UITabBarController *tabBarController = [[UITabBarController alloc]init];
 	tabBarController.viewControllers = controllers;//设置tabbar所对应的视图控制器
-	tabBarController.customizableViewControllers = controllers;
+//	tabBarController.customizableViewControllers = controllers;
+//	for (UIView *view in tabBarController.view.subviews) {
+//		if([view isKindOfClass:[UITabBar class]]){
+//			view.alpha = 0.0;
+//			break;
+//		}
+//		
+//	}
+//
+    [self.window addSubview:tabBarController.view];
 
-	self.window.rootViewController = tabBarController;
-   // [self.window addSubview:tabBarController.view];
-	
-	//RNLoginViewController *loginView = [[RNLoginViewController alloc]init]
-	//[self.window addSubview:(UIView *)
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

@@ -85,12 +85,14 @@
             break;
     }
 //	
-	UIViewController *view = [[UIViewController alloc]init ];//登陆后的界面
-	view.navigationItem.leftBarButtonItem = nil;
-	view.navigationItem.rightBarButtonItem = nil;
-	[self.navigationController setNavigationBarHidden:YES]; //暂时这样处理
-	[self.navigationController pushViewController:view animated:NO];
+//	UIViewController *view = [[UIViewController alloc]init ];//登陆后的界面
+//	view.navigationItem.leftBarButtonItem = nil;
+//	view.navigationItem.rightBarButtonItem = nil;
+//	[self.navigationController setNavigationBarHidden:YES]; //暂时这样处理
+//	[self.navigationController pushViewController:view animated:NO];
 	//进入主界面
+
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 

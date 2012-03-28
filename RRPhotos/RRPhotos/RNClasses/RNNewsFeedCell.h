@@ -9,8 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "RRImageView.h"
 #import "RRCellScrollView.h"
-#define CELL_HEIGHT 100
-#define CELL_WIDTH 320 //cell的宽高
+#import "RRShareListItem.h"
 
 @interface RNNewsFeedCell : UITableViewCell
 {

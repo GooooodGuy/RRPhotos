@@ -8,6 +8,23 @@
 
 #import "RNNewsFeedCell.h"
 
+static const CGFloat kCellLeftPadding = 5;          // 左填充
+static const CGFloat kCellTopPadding = 5;           // 顶部填充
+static const CGFloat kCellBottomPadding = 5;        // 底部填充
+static const CGFloat kCellRightPadding = 5;         // 右填充
+
+static const CGFloat kCellWidth = 320;              // cell宽度
+static const CGFloat kCellHeight = 120;				// cell高度
+
+static const CGFloat kCellHeadImageHeight = 40;     // 头像高度
+static const CGFloat kCellHeadImageWidth = 40;      // 头像宽度 
+
+static const CGFloat kCellHeadScrollSpace = 10;     // 头像和滚动视图的空隙
+
+static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHeadImageHeight;    //多图片滚动视图高度
+//static const CGFloat kCellScrollViewWidth = kCellWidth - 
+
+
 @implementation RNNewsFeedCell
 
 @synthesize headImage = _headImage;
@@ -32,4 +49,10 @@
     // Configure the view for the selected state
 }
 
+
+- (id) initwithFriendItem :(id)object{
+	if ([object isKindOfClass:RRShareListItem.class]) {
+		//init
+	}
+}
 @end

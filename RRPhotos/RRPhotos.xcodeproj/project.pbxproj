@@ -218,6 +218,11 @@
 		E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */; };
 		E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D991521E5C800DE6C84 /* RCFriendItem.m */; };
 		E5C80D9E1521E7EA00DE6C84 /* RRShareListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D9D1521E7EA00DE6C84 /* RRShareListItem.m */; };
+		E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */; };
+		E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C80DBE1522E7A000DE6C84 /* Icon.png */; };
+		E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */; };
+		E5C80DC91522E81D00DE6C84 /* ImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DC61522E81C00DE6C84 /* ImageUtil.m */; };
+		E5C80DCC1522EA4400DE6C84 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */; };
 		E5DF7E5D1521A6DA006DD063 /* RNPickPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */; };
 		E5F42A3E1520B3B1006DAE33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3D1520B3B1006DAE33 /* UIKit.framework */; };
 		E5F42A401520B3B1006DAE33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3F1520B3B1006DAE33 /* Foundation.framework */; };
@@ -225,6 +230,8 @@
 		E5F42A481520B3B1006DAE33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5F42A461520B3B1006DAE33 /* InfoPlist.strings */; };
 		E5F42A4A1520B3B1006DAE33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A491520B3B1006DAE33 /* main.m */; };
 		E5F42A4E1520B3B1006DAE33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */; };
+		E5F9BA8415232A5F00705D87 /* RNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8115232A5F00705D87 /* RNModel.m */; };
+		E5F9BA8515232A5F00705D87 /* RNModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8315232A5F00705D87 /* RNModelViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -499,6 +506,14 @@
 		E5C80D991521E5C800DE6C84 /* RCFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFriendItem.m; sourceTree = "<group>"; };
 		E5C80D9C1521E7EA00DE6C84 /* RRShareListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRShareListItem.h; sourceTree = "<group>"; };
 		E5C80D9D1521E7EA00DE6C84 /* RRShareListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRShareListItem.m; sourceTree = "<group>"; };
+		E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNConstomTabBarController.h; sourceTree = "<group>"; };
+		E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNConstomTabBarController.m; sourceTree = "<group>"; };
+		E5C80DBE1522E7A000DE6C84 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		E5C80DC31522E81900DE6C84 /* ImageProcessingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageProcessingViewController.h; sourceTree = "<group>"; };
+		E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageProcessingViewController.m; sourceTree = "<group>"; };
+		E5C80DC51522E81B00DE6C84 /* ImageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUtil.h; sourceTree = "<group>"; };
+		E5C80DC61522E81C00DE6C84 /* ImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUtil.m; sourceTree = "<group>"; };
+		E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		E5DF7E5B1521A6DA006DD063 /* RNPickPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNPickPhotoController.h; sourceTree = "<group>"; };
 		E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNPickPhotoController.m; sourceTree = "<group>"; };
 		E5F42A391520B3B1006DAE33 /* RRPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -511,6 +526,10 @@
 		E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
 		E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E5F9BA8015232A5F00705D87 /* RNModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNModel.h; sourceTree = "<group>"; };
+		E5F9BA8115232A5F00705D87 /* RNModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNModel.m; sourceTree = "<group>"; };
+		E5F9BA8215232A5F00705D87 /* RNModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNModelViewController.h; sourceTree = "<group>"; };
+		E5F9BA8315232A5F00705D87 /* RNModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNModelViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -518,6 +537,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5C80DCC1522EA4400DE6C84 /* OpenGLES.framework in Frameworks */,
 				E5B2025C152188DF002B5C40 /* QuartzCore.framework in Frameworks */,
 				E5B90D861521610F00F1E4D2 /* libz.1.2.5.dylib in Frameworks */,
 				E5B90D8415215E7600F1E4D2 /* Security.framework in Frameworks */,
@@ -564,6 +584,10 @@
 		E5B2025515218516002B5C40 /* BaseViewController */ = {
 			isa = PBXGroup;
 			children = (
+				E5F9BA8015232A5F00705D87 /* RNModel.h */,
+				E5F9BA8115232A5F00705D87 /* RNModel.m */,
+				E5F9BA8215232A5F00705D87 /* RNModelViewController.h */,
+				E5F9BA8315232A5F00705D87 /* RNModelViewController.m */,
 				E5B20252152184FB002B5C40 /* RNBaseViewController.h */,
 				E5B20253152184FB002B5C40 /* RNBaseViewController.m */,
 			);
@@ -909,15 +933,13 @@
 		E5B90ED01521638500F1E4D2 /* RNClasses */ = {
 			isa = PBXGroup;
 			children = (
+				E5C80DCA1522E82800DE6C84 /* Camara */,
+				E5C80DC01522E7AD00DE6C84 /* NewsFeed */,
 				E5C80D9B1521E5DD00DE6C84 /* Item */,
 				E5B2025715218663002B5C40 /* Login */,
 				E5B2025515218516002B5C40 /* BaseViewController */,
-				E5DF7E5B1521A6DA006DD063 /* RNPickPhotoController.h */,
-				E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */,
-				E5C80D801521BD2900DE6C84 /* RNNewsFeedController.h */,
-				E5C80D811521BD2900DE6C84 /* RNNewsFeedController.m */,
-				E5C80D861521BE3700DE6C84 /* RNNewsFeedCell.h */,
-				E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */,
+				E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */,
+				E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */,
 			);
 			path = RNClasses;
 			sourceTree = "<group>";
@@ -944,6 +966,30 @@
 			name = Item;
 			sourceTree = "<group>";
 		};
+		E5C80DC01522E7AD00DE6C84 /* NewsFeed */ = {
+			isa = PBXGroup;
+			children = (
+				E5C80D801521BD2900DE6C84 /* RNNewsFeedController.h */,
+				E5C80D811521BD2900DE6C84 /* RNNewsFeedController.m */,
+				E5C80D861521BE3700DE6C84 /* RNNewsFeedCell.h */,
+				E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */,
+			);
+			name = NewsFeed;
+			sourceTree = "<group>";
+		};
+		E5C80DCA1522E82800DE6C84 /* Camara */ = {
+			isa = PBXGroup;
+			children = (
+				E5DF7E5B1521A6DA006DD063 /* RNPickPhotoController.h */,
+				E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */,
+				E5C80DC31522E81900DE6C84 /* ImageProcessingViewController.h */,
+				E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */,
+				E5C80DC51522E81B00DE6C84 /* ImageUtil.h */,
+				E5C80DC61522E81C00DE6C84 /* ImageUtil.m */,
+			);
+			name = Camara;
+			sourceTree = "<group>";
+		};
 		E5F42A2E1520B3B0006DAE33 = {
 			isa = PBXGroup;
 			children = (
@@ -965,6 +1011,7 @@
 			isa = PBXGroup;
 			children = (
 				E5B90D851521610F00F1E4D2 /* libz.1.2.5.dylib */,
+				E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */,
 				E5B2025B152188DF002B5C40 /* QuartzCore.framework */,
 				E5B90D8315215E7600F1E4D2 /* Security.framework */,
 				E5B90D8115215E4500F1E4D2 /* SystemConfiguration.framework */,
@@ -981,10 +1028,10 @@
 				E5B90C8715215A0600F1E4D2 /* RNGlobalMacros.h */,
 				E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */,
 				E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */,
-				E5B0852515216CF600F87B46 /* RCCommon */,
 				E5B90ED01521638500F1E4D2 /* RNClasses */,
-				E5B90D871521616400F1E4D2 /* Resource */,
+				E5B0852515216CF600F87B46 /* RCCommon */,
 				E5B90CAA15215C5000F1E4D2 /* RLBaseLibs */,
+				E5B90D871521616400F1E4D2 /* Resource */,
 				E5C80D7B1521BCDB00DE6C84 /* RNUIControl */,
 				E5F42A441520B3B1006DAE33 /* Supporting Files */,
 			);
@@ -994,6 +1041,7 @@
 		E5F42A441520B3B1006DAE33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E5C80DBE1522E7A000DE6C84 /* Icon.png */,
 				E5B0852315216B5E00F87B46 /* Default.png */,
 				E5B0852115216B5300F87B46 /* Default@2x.png */,
 				E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */,
@@ -1215,6 +1263,7 @@
 				E5B90ECE1521616400F1E4D2 /* userInfo_head_bg@2x.png in Resources */,
 				E5B0852215216B5300F87B46 /* Default@2x.png in Resources */,
 				E5B0852415216B5E00F87B46 /* Default.png in Resources */,
+				E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1276,6 +1325,11 @@
 				E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */,
 				E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */,
 				E5C80D9E1521E7EA00DE6C84 /* RRShareListItem.m in Sources */,
+				E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */,
+				E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */,
+				E5C80DC91522E81D00DE6C84 /* ImageUtil.m in Sources */,
+				E5F9BA8415232A5F00705D87 /* RNModel.m in Sources */,
+				E5F9BA8515232A5F00705D87 /* RNModelViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

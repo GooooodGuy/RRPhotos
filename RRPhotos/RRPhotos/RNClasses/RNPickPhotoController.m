@@ -24,6 +24,8 @@
 }
 
 - (void)loadView{
+	
+	
 	if ([UIImagePickerController isSourceTypeAvailable:
          UIImagePickerControllerSourceTypeCamera]) {
         UIImagePickerController *picker =
@@ -38,6 +40,28 @@
         UIAlertView *alert = [[UIAlertView alloc] 
                               initWithTitle:@"Error" 
                               message:@"你没有摄像头" 
+                              delegate:nil 
+                              cancelButtonTitle:@"Drat!" 
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+
+	if ([UIImagePickerController isSourceTypeAvailable:
+         UIImagePickerControllerSourceTypePhotoLibrary]) {
+        UIImagePickerController *picker =
+        [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        // 图片库
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        
+        [self presentModalViewController:picker animated:YES];
+        
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] 
+                              initWithTitle:@"Error accessing photo library" 
+                              message:@"Device does not support a photo library" 
                               delegate:nil 
                               cancelButtonTitle:@"Drat!" 
                               otherButtonTitles:nil];

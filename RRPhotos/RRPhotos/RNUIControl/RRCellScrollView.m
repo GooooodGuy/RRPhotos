@@ -34,9 +34,16 @@
 		self.canCancelContentTouches = NO;
 		self.clipsToBounds = YES;
 		
-		//添加图片
-		for (RRImageView *currentImage in self.images) {
-//			CGRect *rect = CGRectMake(, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
+		//逐个添加图片
+		int i = 0;
+		for ( id obj in self.images) {
+			if ([obj isKindOfClass: RRImageView.class ]) {
+				RRImageView *currentImage = (RRImageView *) obj;
+				currentImage.frame = CGRectMake(0, i * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_HEIGHT);//设置当前照片的位置
+				[self addSubview: currentImage];//添加到视图
+			}
+			
+			i ++;
 		}
 		
     }
@@ -57,5 +64,19 @@
     // Drawing code
 }
 */
+#pragma -mark UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)sender {
+
+
+}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+
+}
+
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
+}
+
 
 @end
