@@ -10,6 +10,12 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
+@protocol RNLoginDelegate <NSObject>
+
+//登陆结束
+- (void)finishLogin;
+
+@end
 
 @interface RNLoginViewController : RNBaseViewController  <UITextFieldDelegate>{
 	// 帐号输入框
@@ -28,6 +34,7 @@
 	
     NSString* _lastPassword;
 
+	id<RNLoginDelegate> _loginDelegat;
 }
 
 /**
@@ -67,7 +74,7 @@
 @property (nonatomic, retain) UIView* activityIndicatorView;
 @property (nonatomic, copy) NSString* lastUsername;
 @property (nonatomic, copy) NSString* lastPassword;
-
+@property(nonatomic,assign)id<RNLoginDelegate> loginDelegate;
 @end
 
 //画出登陆框的中间的线

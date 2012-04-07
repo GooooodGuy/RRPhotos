@@ -15,7 +15,7 @@
 
 // #import "RRLoginModel.h"
 //#import "RCResManager.h"
-
+#import "ImageProcessingViewController.h"
 
 #define EMAIL_FIELD_TOP_EDGE 0
 #define PASSWORD_FIELD_TOP_EDGE 20
@@ -27,7 +27,7 @@
 @synthesize lastUsername = _lastUsername;
 @synthesize lastPassword = _lastPassword;
 @synthesize activityIndicatorView = _activityIndicatorView;
-
+@synthesize loginDelegate = _loginDelegat;
 
 - (void)dealloc {	
 	[emailField release];
@@ -92,7 +92,21 @@
 //	[self.navigationController pushViewController:view animated:NO];
 	//进入主界面
 
-	[self dismissModalViewControllerAnimated:YES];
+//	[self dismissModalViewControllerAnimated:YES];
+	
+	
+//	if (_loginDelegat) {
+//		if ([_loginDelegat performSelector:@selector(finishLogin)]) {
+//			[_loginDelegat finishLogin ];//通知登陆完毕
+//		}
+//	}
+	
+	ImageProcessingViewController *imageViewController = [[ImageProcessingViewController alloc]init];
+	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+											   sharedApplication].delegate;
+	
+	[appDelegate.rootNavController pushViewController:imageViewController animated:YES];
+	[imageViewController release];
 }
 
 

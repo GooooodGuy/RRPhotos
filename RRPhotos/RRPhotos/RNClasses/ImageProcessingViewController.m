@@ -12,6 +12,7 @@
 @implementation ProcessingImageView
 @synthesize delegate;
 
+
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	if([(NSObject*)delegate respondsToSelector:@selector(tapOnCallback:)])
@@ -25,6 +26,19 @@
 
 @implementation ImageProcessingViewController
 @synthesize startItem,segc,saveItem,imageV,toolbar,navBar;
+@synthesize currentImage;
+@synthesize pickPhotoHelper = _pickPhotoHelper;
+- (void)dealloc 
+{
+	self.startItem = nil;
+	self.segc = nil;
+	self.imageV = nil;
+	self.toolbar = nil;
+	self.navBar = nil;
+	self.currentImage = nil;
+	
+	[super dealloc];
+}
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -89,6 +103,10 @@
 	[imageV setBackgroundColor:[UIColor blueColor]];
 	[self.view addSubview:imageV];
 	[self.view addSubview:toolbar]; //工具栏盖在图片上方
+	
+	RNPickPhotoHelper *help = [[RNPickPhotoHelper alloc]init];
+	self.pickPhotoHelper = help;
+	TT_RELEASE_SAFELY(help);
 }
 
 
@@ -111,11 +129,6 @@
 	[super viewDidLoad];
 }
 
-- (void)dealloc 
-{
-	[currentImage release];
-	[super dealloc];
-}
 
 #pragma mark - start button action
 -(void)begin:(id)sender
@@ -236,56 +249,68 @@
 #pragma mark - sheet对应操作，拍照，取照片
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	imagePickerController = [[UIImagePickerController alloc] init];
-	imagePickerController.delegate = self;
-	if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-	{ //如果存在相机
+//	imagePickerController = [[UIImagePickerController alloc] init];
+//	imagePickerController.delegate = self;
+//	if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+//	{ //如果存在相机
+//		if(buttonIndex == 0)
+//		{
+//			imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//			[self presentModalViewController:imagePickerController animated:YES];
+//		}
+//		if(buttonIndex == 1) 
+//		{
+//			UIView *cameraView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 400)];
+//			cameraView.backgroundColor = [UIColor clearColor];
+//			cameraView.autoresizesSubviews = YES;
+//			
+//			UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, cameraView.frame.size.height-50, cameraView.frame.size.width, 50)];
+//			bottomBar.backgroundColor = [UIColor whiteColor];
+//			bottomBar.autoresizesSubviews = YES;
+//			
+//			UIButton *snapBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//			[snapBtn setTitle:@"拍照xx" forState:UIControlStateNormal];
+//			snapBtn.frame = CGRectMake(cameraView.frame.size.width / 2 - 30,9.0 , 60.0, 33.0);
+//			[snapBtn addTarget:self action:@selector(snap:) forControlEvents:UIControlEventTouchUpInside];
+//			
+//			UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//			[closeBtn setTitle:@"取消xx" forState:UIControlStateNormal];
+//			closeBtn.frame = CGRectMake(bottomBar.frame.size.width-60.0-5.0, 9.0, 60.0, 33.0);
+//			[closeBtn addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+//			
+//			[bottomBar addSubview:snapBtn]; 
+//			[bottomBar addSubview:closeBtn];
+//			[cameraView addSubview:bottomBar];
+//			[bottomBar release];
+//			
+//			imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+//			imagePickerController.showsCameraControls = NO; //是否显示标准的拍照界面
+//			imagePickerController.cameraOverlayView = cameraView;
+//			[cameraView release];
+//			
+//			[self presentModalViewController:imagePickerController animated:YES];
+//		}
+//	}
+//	else 
+//	{
+//		if(buttonIndex == 0)
+//		{
+//			imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//			[self presentModalViewController:imagePickerController animated:YES];
+//		}
+//	}
+	
+	
 		if(buttonIndex == 0)
 		{
-			imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-			[self presentModalViewController:imagePickerController animated:YES];
+			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypeCamera];
 		}
 		if(buttonIndex == 1) 
 		{
-			UIView *cameraView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 400)];
-			cameraView.backgroundColor = [UIColor clearColor];
-			cameraView.autoresizesSubviews = YES;
-			
-			UIView *bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, cameraView.frame.size.height-50, cameraView.frame.size.width, 50)];
-			bottomBar.backgroundColor = [UIColor whiteColor];
-			bottomBar.autoresizesSubviews = YES;
-			
-			UIButton *snapBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-			[snapBtn setTitle:@"拍照xx" forState:UIControlStateNormal];
-			snapBtn.frame = CGRectMake(cameraView.frame.size.width / 2 - 30,9.0 , 60.0, 33.0);
-			[snapBtn addTarget:self action:@selector(snap:) forControlEvents:UIControlEventTouchUpInside];
-			
-			UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-			[closeBtn setTitle:@"取消xx" forState:UIControlStateNormal];
-			closeBtn.frame = CGRectMake(bottomBar.frame.size.width-60.0-5.0, 9.0, 60.0, 33.0);
-			[closeBtn addTarget:self action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-			
-			[bottomBar addSubview:snapBtn]; 
-			[bottomBar addSubview:closeBtn];
-			[cameraView addSubview:bottomBar];
-			[bottomBar release];
-			
-			imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-			imagePickerController.showsCameraControls = NO; //是否显示标准的拍照界面
-			imagePickerController.cameraOverlayView = cameraView;
-			[cameraView release];
-			
-			[self presentModalViewController:imagePickerController animated:YES];
+			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypePhotoLibrary];
 		}
-	}
-	else 
-	{
-		if(buttonIndex == 0)
-		{
-			imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-			[self presentModalViewController:imagePickerController animated:YES];
-		}
-	}
+	
+	
 }
 
 #pragma mark -

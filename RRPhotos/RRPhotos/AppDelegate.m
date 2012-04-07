@@ -11,10 +11,11 @@
 #import "RNPickPhotoController.h"
 #import "ImageProcessingViewController.h"
 #import "RNConstomTabBarController.h"
+#import "RNRootNewsFeedController.h"
 @implementation AppDelegate
 
 @synthesize window = _window;
-
+@synthesize rootNavController = _rootNavController;
 - (void)dealloc
 {
 	[_window release];
@@ -33,7 +34,7 @@
 		
 		UIViewController *mainView;
 		if (0 == i) {
-			mainView = [[RNLoginViewController alloc]init]; //第一个登陆界面　登陆后显示好友动态
+			mainView = [[RNRootNewsFeedController alloc]init]; //第一个登陆界面　登陆后显示好友动态
 		}else if(2 == i) {
 //			mainView = [[RNPickPhotoController alloc]init];
 			mainView = [[ImageProcessingViewController alloc]init ];
@@ -64,7 +65,13 @@
 //		
 //	}
 //
-    [self.window addSubview:tabBarController.view];
+	RNLoginViewController *loginController = [[RNLoginViewController alloc]init];
+	UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:loginController];
+	self.rootNavController = navController;
+	[loginController release];
+	
+//    [self.window addSubview:tabBarController.view];
+	self.window.rootViewController = self.rootNavController;
 
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

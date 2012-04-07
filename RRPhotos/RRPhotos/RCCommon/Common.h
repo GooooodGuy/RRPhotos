@@ -13,7 +13,7 @@
 #import "Config/RCConfig.h"
 
 // 网络请求基类
-//#import "RCGeneralRequestAssistant.h"
+#import "RCGeneralRequestAssistant.h"
 #import "RCBaseRequest.h"
 #import "RCBasePost.h"
 //#import "RCMainSendQueue.h"

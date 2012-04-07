@@ -5,7 +5,7 @@
 //  Created by yi chen on 12-3-27.
 //  Copyright (c) 2012年 renren. All rights reserved.
 //
-
+#import "RNPickPhotoHelper.h"
 
 @protocol ProcessingImageViewDelegate;
 
@@ -51,6 +51,8 @@
 	
 	//是否显示工具栏
 	BOOL show;
+	
+	RNPickPhotoHelper *_pickPhotoHelper;
 }
 @property (retain)  UIBarButtonItem *startItem;
 @property (retain)  UIBarButtonItem *saveItem;
@@ -58,7 +60,8 @@
 @property (retain)  UIImageView *imageV;
 @property (retain)  UIToolbar *toolbar;
 @property (retain)  UINavigationBar *navBar;
-
+@property (retain) UIImage *currentImage;
+@property (nonatomic, retain) RNPickPhotoHelper *pickPhotoHelper;
 -(void)begin:(id)sender;
 -(void)effectChange:(id)sender;
 -(void)save:(id)sender;
