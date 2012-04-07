@@ -36,6 +36,7 @@
 		E56F94F715307590008E0D78 /* titlebar_confirm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E56F94DF15307590008E0D78 /* titlebar_confirm@2x.png */; };
 		E56F94F815307590008E0D78 /* turn_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E56F94E015307590008E0D78 /* turn_icon.png */; };
 		E56F94F915307590008E0D78 /* turn_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E56F94E115307590008E0D78 /* turn_icon@2x.png */; };
+		E56F950015307B07008E0D78 /* RNMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F94FF15307B07008E0D78 /* RNMainViewController.m */; };
 		E5B0852215216B5300F87B46 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5B0852115216B5300F87B46 /* Default@2x.png */; };
 		E5B0852415216B5E00F87B46 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E5B0852315216B5E00F87B46 /* Default.png */; };
 		E5B0853015216CF700F87B46 /* RCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0852815216CF700F87B46 /* RCConfig.m */; };
@@ -298,6 +299,8 @@
 		E56F94DF15307590008E0D78 /* titlebar_confirm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "titlebar_confirm@2x.png"; sourceTree = "<group>"; };
 		E56F94E015307590008E0D78 /* turn_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = turn_icon.png; sourceTree = "<group>"; };
 		E56F94E115307590008E0D78 /* turn_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "turn_icon@2x.png"; sourceTree = "<group>"; };
+		E56F94FE15307B07008E0D78 /* RNMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNMainViewController.h; sourceTree = "<group>"; };
+		E56F94FF15307B07008E0D78 /* RNMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNMainViewController.m; sourceTree = "<group>"; };
 		E5B0852115216B5300F87B46 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		E5B0852315216B5E00F87B46 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E5B0852715216CF700F87B46 /* RCConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConfig.h; sourceTree = "<group>"; };
@@ -1037,6 +1040,8 @@
 				E5B2025515218516002B5C40 /* BaseViewController */,
 				E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */,
 				E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */,
+				E56F94FE15307B07008E0D78 /* RNMainViewController.h */,
+				E56F94FF15307B07008E0D78 /* RNMainViewController.m */,
 			);
 			path = RNClasses;
 			sourceTree = "<group>";
@@ -1464,6 +1469,7 @@
 				E56F94C215306BCF008E0D78 /* RNRootNewsFeedController.m in Sources */,
 				E56F94C515306C78008E0D78 /* RNCreateAlbumViewController.m in Sources */,
 				E56F94C815306CC5008E0D78 /* RCGeneralRequestAssistant.m in Sources */,
+				E56F950015307B07008E0D78 /* RNMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,36 +26,36 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	
-    // Override point for customization after application launch.
-	NSArray *item = [[NSArray alloc]initWithObjects:@"动态", @"玩图",@"拍照",@"消息",@"更多",nil];
-	NSMutableArray *controllers = [NSMutableArray array];//视图控制器数组
-	
-	for (int i = 0 ; i < [item count]; i++) {
-		
-		UIViewController *mainView;
-		if (0 == i) {
-			mainView = [[RNRootNewsFeedController alloc]init]; //第一个登陆界面　登陆后显示好友动态
-		}else if(2 == i) {
-//			mainView = [[RNPickPhotoController alloc]init];
-			mainView = [[ImageProcessingViewController alloc]init ];
-		}else {
-			mainView = [[UIViewController alloc]init ];
-		}
-		
-		UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainView];
-		mainView.title = [item objectAtIndex: i];
-		
-		//nav.tabBarItem.title = [item objectAtIndex: i];
-		nav.tabBarItem.image = [UIImage imageNamed: @"publish_expression_sel@2x.png"];
-		nav.navigationBar.barStyle = UIBarStyleDefault;
-		[controllers addObject: nav];
-		
-		[mainView release];
-		[nav release];
-	}
-	
-	UITabBarController *tabBarController = [[UITabBarController alloc]init];
-	tabBarController.viewControllers = controllers;//设置tabbar所对应的视图控制器
+//    // Override point for customization after application launch.
+//	NSArray *item = [[NSArray alloc]initWithObjects:@"动态", @"玩图",@"拍照",@"消息",@"更多",nil];
+//	NSMutableArray *controllers = [NSMutableArray array];//视图控制器数组
+//	
+//	for (int i = 0 ; i < [item count]; i++) {
+//		
+//		UIViewController *mainView;
+//		if (0 == i) {
+//			mainView = [[RNRootNewsFeedController alloc]init]; //第一个登陆界面　登陆后显示好友动态
+//		}else if(2 == i) {
+////			mainView = [[RNPickPhotoController alloc]init];
+//			mainView = [[ImageProcessingViewController alloc]init ];
+//		}else {
+//			mainView = [[UIViewController alloc]init ];
+//		}
+//		
+//		UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:mainView];
+//		mainView.title = [item objectAtIndex: i];
+//		
+//		//nav.tabBarItem.title = [item objectAtIndex: i];
+//		nav.tabBarItem.image = [UIImage imageNamed: @"publish_expression_sel@2x.png"];
+//		nav.navigationBar.barStyle = UIBarStyleDefault;
+//		[controllers addObject: nav];
+//		
+//		[mainView release];
+//		[nav release];
+//	}
+//	
+//	UITabBarController *tabBarController = [[UITabBarController alloc]init];
+//	tabBarController.viewControllers = controllers;//设置tabbar所对应的视图控制器
 //	tabBarController.customizableViewControllers = controllers;
 //	for (UIView *view in tabBarController.view.subviews) {
 //		if([view isKindOfClass:[UITabBar class]]){
@@ -70,7 +70,6 @@
 	self.rootNavController = navController;
 	[loginController release];
 	
-//    [self.window addSubview:tabBarController.view];
 	self.window.rootViewController = self.rootNavController;
 
     self.window.backgroundColor = [UIColor whiteColor];

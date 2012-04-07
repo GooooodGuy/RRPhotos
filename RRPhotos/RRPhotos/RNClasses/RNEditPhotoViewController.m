@@ -315,7 +315,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 - (void)loadView{
 	
 	[super loadView];
-	self.view.backgroundColor = [UIColor clearColor];
+	self.view.backgroundColor = [UIColor blackColor];
 	
 	//导航栏的背景
 	UIImageView *topView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"button_bar.png"]];

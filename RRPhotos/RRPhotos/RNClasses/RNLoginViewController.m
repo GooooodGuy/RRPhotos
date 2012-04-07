@@ -15,7 +15,7 @@
 
 // #import "RRLoginModel.h"
 //#import "RCResManager.h"
-#import "ImageProcessingViewController.h"
+#import "RNMainViewController.h"
 
 #define EMAIL_FIELD_TOP_EDGE 0
 #define PASSWORD_FIELD_TOP_EDGE 20
@@ -101,12 +101,13 @@
 //		}
 //	}
 	
-	ImageProcessingViewController *imageViewController = [[ImageProcessingViewController alloc]init];
+	RNMainViewController *mainController = [[RNMainViewController alloc]init];
 	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 											   sharedApplication].delegate;
-	
-	[appDelegate.rootNavController pushViewController:imageViewController animated:YES];
-	[imageViewController release];
+	UIViewController *view = [[UIViewController alloc]init ];
+	view.view.backgroundColor = [UIColor greenColor];
+	[appDelegate.rootNavController pushViewController:mainController animated:YES];
+	[mainController release];
 }
 
 
