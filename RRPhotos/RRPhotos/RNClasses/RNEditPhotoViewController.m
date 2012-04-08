@@ -217,17 +217,17 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	NSMutableDictionary *photoInfoDic = [NSMutableDictionary dictionaryWithCapacity:5];
 		
 
-//	if (self.albumID) {
+	if (self.albumID) {
 
 		[photoInfoDic setObject:self.albumID forKey:@"id"]; //传回选中的相册ID
+	}
 
 		if (isHDPhoto) { //传回原始高清图片
 			[self.delegate editPhotoFinished:self.highQualityImage photoInfoDic:photoInfoDic];
 		}else {
 			[self.delegate editPhotoFinished:self.normalQualityImage photoInfoDic:photoInfoDic];
 		}
-//	}
-		
+			
 }
 
 /*
@@ -259,7 +259,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		
 		
 		
-		[UIView animateWithDuration:1 animations:^(){//显示图片大小
+		[UIView animateWithDuration:2 animations:^(){//显示图片大小
 			float l = _normalQualityLength / 1024.0;
 			if (l > 1024 ) {
 				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",l / 1024]; 
@@ -287,7 +287,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		self.normalTextLabel.textColor = RGBCOLOR(138, 138, 138);
 		
 		
-		[UIView animateWithDuration:1 animations:^(){//显示图片大小
+		[UIView animateWithDuration:2 animations:^(){//显示图片大小
 			float l = _highQualityLength / 1024.0;
 			if (l > 1024 ) {
 				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",l / 1024]; 

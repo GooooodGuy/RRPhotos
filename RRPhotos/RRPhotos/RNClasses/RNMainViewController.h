@@ -7,10 +7,36 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface RNMainViewController : UIViewController
+#import "RNPickPhotoHelper.h"
+#import "RNNewsFeedController.h"
+@interface RNMainViewController : UIViewController<UITabBarDelegate,UITabBarControllerDelegate>
 {
 	UITabBarController *_tabBarController;
+	
+	//自定义的TabBar
+	UITabBar *_tabBar;
+	
+	//照片拾取器
+	RNPickPhotoHelper *_pickHelper;
+	
+	//新鲜事界面
+	RNNewsFeedController *_newsFeedController;
+	
+	UIViewController *_testViewController;
+	
+	//记录上次选中的TabBarItem
+	NSInteger _lastSelectIndex;
 }
 @property(nonatomic,retain)UITabBarController *tabBarController;
+
+@property(nonatomic,retain)UITabBar *tabBar;
+
+@property(nonatomic,retain)RNPickPhotoHelper *pickHelper;
+
+@property(nonatomic,retain)RNNewsFeedController *newsFeedController;
+
+@property(nonatomic,retain)UIViewController *testViewController;
+
+@property(nonatomic,assign)NSInteger lastSelectIndex;
+
 @end

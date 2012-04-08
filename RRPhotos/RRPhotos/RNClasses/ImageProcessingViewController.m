@@ -144,9 +144,10 @@
 		ac = [[UIActionSheet alloc] initWithTitle:@"- 照片选择 -" delegate:self cancelButtonTitle:@"取消" 
 											 destructiveButtonTitle:nil otherButtonTitles:@"照片库",nil];
 	}
-	ac.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	ac.actionSheetStyle = UIActionSheetStyleDefault;
+	
 
-	[ac showInView:self.view];
+	[ac showInView:self.view.window];//用window 否则最后一个取消按钮会被tabbar 挡住
 	[ac release];
 }
 
@@ -303,11 +304,11 @@
 	
 		if(buttonIndex == 0)
 		{
-			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypeCamera];
+			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypePhotoLibrary];
 		}
 		if(buttonIndex == 1) 
 		{
-			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypePhotoLibrary];
+			[self.pickPhotoHelper pickPhotoWithSoureType:UIImagePickerControllerSourceTypeCamera];
 		}
 	
 	

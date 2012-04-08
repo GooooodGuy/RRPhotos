@@ -17,8 +17,8 @@
 //#import "RCResManager.h"
 #import "RNMainViewController.h"
 
-#define EMAIL_FIELD_TOP_EDGE 0
-#define PASSWORD_FIELD_TOP_EDGE 20
+#define EMAIL_FIELD_TOP_EDGE 40
+#define PASSWORD_FIELD_TOP_EDGE 60
 @implementation RNLoginViewController
 
 @synthesize emailField;
@@ -236,15 +236,20 @@
 	[passwordField becomeFirstResponder];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+	[super viewWillAppear:animated];
+	[self.navigationController setNavigationBarHidden:YES];//隐藏导航栏
 
+}
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	// 在新版three20下会崩溃, 暂注掉
 	[emailField becomeFirstResponder];
+	
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	// 回收键盘。
+
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	

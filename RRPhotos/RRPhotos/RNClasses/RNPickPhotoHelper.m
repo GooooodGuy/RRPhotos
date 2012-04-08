@@ -47,7 +47,7 @@
 	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 												   sharedApplication].delegate;
 
-	[appDelegate.window.rootViewController  presentModalViewController:self.imagePickerController  animated:YES];
+	[appDelegate.rootNavController  presentModalViewController:self.imagePickerController  animated:YES];
 }
 #pragma -mark UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
