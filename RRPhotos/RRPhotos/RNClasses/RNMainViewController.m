@@ -17,18 +17,18 @@
 
 @implementation RNMainViewController
 @synthesize tabBarController = _tabBarController;
-@synthesize tabBar = _tabBar;
+
 @synthesize pickHelper = _pickHelper;
 @synthesize newsFeedController = _newsFeedController;
-@synthesize testViewController = _testViewController;
+
 @synthesize lastSelectIndex = _lastSelectIndex;
 
 - (void)dealloc{
 	self.tabBarController = nil;
-	self.tabBar = nil;
+
 	self.pickHelper = nil;
 	self.newsFeedController = nil;
-	self.testViewController = nil;
+
 	[super dealloc];
 }
 
@@ -37,96 +37,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
 
-		//照片拾取器
-		RNPickPhotoHelper *help = [[RNPickPhotoHelper alloc]init];
-		self.pickHelper = help;
-		TT_RELEASE_SAFELY(help);
-
 		[self initView];
-//		[self initSubView];
-	
+
     }
     return self;
 }
 
 
-//- (void)initSubView{
-//		
-//	
-//	//测试
-//	UIViewController *testController = [[UIViewController alloc]init];
-//	self.testViewController = testController;
-//	TT_RELEASE_SAFELY(testController);
-//	
-//	self.testViewController.view.frame = CGRectMake(0, 0, PHONE_SCREEN_SIZE.width, PHONE_SCREEN_SIZE.height);
-//	self.testViewController.view.backgroundColor = [UIColor greenColor];
-//	[self.view addSubview:self.testViewController.view];
-//	
-//	
-//	//新鲜事
-//	RNNewsFeedController *newsFeedController = [[RNNewsFeedController alloc]init];
-//	self.newsFeedController = newsFeedController;
-//	TT_RELEASE_SAFELY(newsFeedController);
-//	
-//	self.newsFeedController.view.frame = CGRectMake(0, 0, PHONE_SCREEN_SIZE.width, PHONE_SCREEN_SIZE.height);
-////	self.newsFeedController.view.backgroundColor = [UIColor blueColor];
-//	[self.view addSubview:self.newsFeedController.view];
-//	
-//	
-//	//tabBar
-//	NSArray *item = [[NSArray alloc]initWithObjects:@"动态", @"玩图",@"拍照",@"消息",@"更多",nil];
-//	NSMutableArray *tabBarItems = [NSMutableArray array];
-//	
-//	int i = 0;
-//	for (NSString *name in item) {
-//		
-//		UIImage *itemBackImage;
-//		
-//		switch (i) { //设置背景
-//			case 0:
-//			case 1:
-//			case 3:
-//			case 4:
-//			{
-//				itemBackImage = [UIImage imageNamed:@"publish_expression_sel@2x.png"];
-//				
-//			}break;
-//				
-//			case 2:	
-//			{
-//				itemBackImage = [UIImage imageNamed:@"navigationbar_btn_camera.png"];
-//				
-//			}break;
-//			default:
-//				
-//				break;
-//		}
-//		
-//		UITabBarItem *tabBarItem = [[UITabBarItem alloc]initWithTitle:name image:itemBackImage tag:i];
-//		i ++;
-//		[tabBarItems addObject:tabBarItem];
-//		TT_RELEASE_SAFELY(tabBarItem);
-//	}
-//	
-//	UITabBar *tabBar = [[UITabBar alloc]init];
-//	self.tabBar = tabBar;
-//	TT_RELEASE_SAFELY(tabBar);
-//	
-//	
-//	self.tabBar.delegate = self;
-//	[self.tabBar setItems:tabBarItems];
-//	//		self.tabBar.selectionIndicatorImage = [UIImage imageNamed:@"navigationbar_arrow.png"];
-//	self.tabBar.frame = CGRectMake(0, PHONE_SCREEN_SIZE.height - 44, PHONE_SCREEN_SIZE.width,44);
-//	
-//	[self.tabBar setSelectedItem:[self.tabBar.items objectAtIndex:0]];
-//	[self.view addSubview: self.tabBar];
-//	
-//	
-//	
-//}
-
-
 - (void)initView{
+	
+	//照片拾取器
+	RNPickPhotoHelper *help = [[RNPickPhotoHelper alloc]init];
+	self.pickHelper = help;
+	TT_RELEASE_SAFELY(help);
+
 	
 	NSArray *item = [[NSArray alloc]initWithObjects:@"动态", @"多图",@"拍照",@"消息",@"更多",nil];
 	NSMutableArray *controllers = [NSMutableArray array];//视图控制器数组
@@ -204,7 +128,6 @@
 	tabBarController.delegate = self;
 	tabBarController.view.frame = CGRectMake(0, 0, PHONE_SCREEN_SIZE.width, PHONE_SCREEN_SIZE.height);
 	self.tabBarController = tabBarController;
-
 	TT_RELEASE_SAFELY(tabBarController);
 
 }
@@ -220,8 +143,9 @@
 	[self.navigationController setNavigationBarHidden:YES animated:YES];
 	
 //	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-//	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
-	
+
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+
 
 }
 - (void)viewDidLoad
@@ -232,9 +156,12 @@
 
 - (void)viewDidUnload
 {
-	self.tabBarController = nil;
+		
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+	self.tabBarController = nil;
+	self.pickHelper = nil;
+	self.newsFeedController = nil;
 
 }
 

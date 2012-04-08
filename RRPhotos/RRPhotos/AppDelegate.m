@@ -13,6 +13,16 @@
 #import "ImageProcessingViewController.h"
 #import "RNConstomTabBarController.h"
 
+//换掉背景图片 ios5以前
+@implementation UINavigationBar (CustomImage)  
+- (void)drawRect:(CGRect)rect { 
+	UIImage *image = [UIImage imageNamed: @"button_bar.png"]; 
+	[image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+
+} 
+@end 
+
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -25,6 +35,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	//设置全部UINavigationBar图片背景
+//	[[UINavigationBar appearance] setTintColor:[UIColor clearColor]];
+	[[UINavigationBar appearance] setTintColor:RGBCOLOR(48, 48, 48)];
+
+	if ([UINavigationBar instancesRespondToSelector:@selector(setBackgroundImage:forBarMetrics:)]){
+		
+		[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"button_bar.png"] forBarMetrics:UIBarMetricsDefault];
+	}
+
+	
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	
 	RNLoginViewController *loginController = [[RNLoginViewController alloc]init];

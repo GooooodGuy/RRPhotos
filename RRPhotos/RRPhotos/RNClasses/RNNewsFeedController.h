@@ -11,7 +11,12 @@
 @interface RNNewsFeedController : UIViewController
 {
 	UIButton *testButton;
+	
+	//新鲜事列表
+	UITableView *_newFeedTableView;
 }
 @property(nonatomic,retain)UIButton *testButton;
+
+@property(nonatomic,retain)UITableView *newsFeedTableView;
 
 @end
