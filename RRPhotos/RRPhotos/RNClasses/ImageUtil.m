@@ -15,7 +15,7 @@
 #include <string.h>
 
 // Return a bitmap context using alpha/red/green/blue byte values 
-CGContextRef CreateRGBABitmapContext (CGImageRef inImage) 
+static CGContextRef CreateRGBABitmapContext (CGImageRef inImage) 
 {
 	CGContextRef context = NULL; 
 	CGColorSpaceRef colorSpace; 
@@ -56,7 +56,7 @@ CGContextRef CreateRGBABitmapContext (CGImageRef inImage)
 }
 
 // Return Image Pixel data as an RGBA bitmap 
-unsigned char *RequestImagePixelData(UIImage *inImage) 
+static unsigned char *RequestImagePixelData(UIImage *inImage) 
 {
 	CGImageRef img = [inImage CGImage]; 
 	CGSize size = [inImage size];

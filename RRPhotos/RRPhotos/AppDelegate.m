@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "RNLoginViewController.h"
 //#import "RNLoginController.h"
-#import "RNPickPhotoController.h"
+
 #import "ImageProcessingViewController.h"
 #import "RNConstomTabBarController.h"
 

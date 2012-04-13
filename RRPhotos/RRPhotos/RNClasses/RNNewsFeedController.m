@@ -58,7 +58,17 @@
 	self.navigationItem.rightBarButtonItem = temporaryBarButtonItem;
 	[temporaryBarButtonItem release];
 	
+	//新鲜事表
+	UITableView *newsFeedTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 
+																				  0, 
+																				  PHONE_SCREEN_SIZE.width, 
+																				  PHONE_SCREEN_SIZE.height)];
+	newsFeedTableView.backgroundColor = RGBCOLOR(222, 222, 222);
 	
+	self.newsFeedTableView = newsFeedTableView;
+	newsFeedTableView.dataSource = self;
+	[self.view addSubview:newsFeedTableView];
+	TT_RELEASE_SAFELY(newsFeedTableView);
 }
 
 - (void)viewDidLoad
@@ -90,7 +100,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
+//点击测试按钮
 - (void)onClickTestButton{
 	UIViewController *viewController = [[UIViewController alloc]init ];
 	viewController.view.backgroundColor = [UIColor redColor];
@@ -98,5 +108,25 @@
 	[viewController.navigationController setNavigationBarHidden:NO animated:YES];
 	[self.navigationController pushViewController:viewController animated:YES];
 	TT_RELEASE_SAFELY(viewController);
+}
+
+
+#pragma -mark UITableViewDataSource
+//@required
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+	
+	return 20;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+	static NSString *cellIdentifier  = @"MyTableViewCell";
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	if (!cell) {
+		cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+		
+	}
+	cell.textLabel.text = @"test";
+	return cell;	
 }
 @end

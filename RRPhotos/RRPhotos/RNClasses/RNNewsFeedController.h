@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RNNewsFeedController : UIViewController
+@interface RNNewsFeedController : UIViewController<UITableViewDataSource>
 {
 	UIButton *testButton;
 	
 	//新鲜事列表
 	UITableView *_newFeedTableView;
+	
 }
 @property(nonatomic,retain)UIButton *testButton;
 

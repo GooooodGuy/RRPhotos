@@ -22,7 +22,7 @@ static const CGFloat kCellHeadImageWidth = 40;      // 头像宽度
 static const CGFloat kCellHeadScrollSpace = 10;     // 头像和滚动视图的空隙
 
 static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHeadImageHeight;    //多图片滚动视图高度
-//static const CGFloat kCellScrollViewWidth = kCellWidth - 
+
 
 
 @implementation RNNewsFeedCell
@@ -51,8 +51,9 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
 
 
 - (id) initwithFriendItem :(id)object{
-	if ([object isKindOfClass:RRShareListItem.class]) {
-		//init
-	}
+//	if ([object isKindOfClass:RRShareListItem.class]) {
+//		//init
+//	}
+	return nil;
 }
 @end

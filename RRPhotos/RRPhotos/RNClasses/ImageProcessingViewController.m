@@ -61,24 +61,6 @@
 - (void)loadView{
 	[super loadView];
 	
-//	//开始选择照片，或者拍照
-//	UIBarButtonItem *startItem;
-//	
-//	//保存照片
-//	UIBarButtonItem *saveItem;
-//	
-//	//照片操作工具栏
-//	UIToolbar *toolbar;
-//	
-//	//导航
-//	UINavigationBar *navBar;
-//	
-//	//照片获取界面
-//	UIImagePickerController *imagePickerController;
-//	
-//	//分区控制
-//	UISegmentedControl *segc;
-//
 	startItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"publisher_photo.png"]
 												style: UIBarButtonItemStyleBordered target:self action:@selector(begin:)];
 	[self.navigationItem setLeftBarButtonItem:startItem];
@@ -230,7 +212,7 @@
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
 	[UIView setAnimationDuration:0.3];
 	
-	[[UIApplication sharedApplication] setStatusBarHidden:show animated:NO];
+	[[UIApplication sharedApplication] setStatusBarHidden:YES];
 	if(show)
 	{
 		self.toolbar.alpha = 0.0;

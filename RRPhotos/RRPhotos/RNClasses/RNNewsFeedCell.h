@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "RRImageView.h"
 #import "RRCellScrollView.h"
-#import "RRShareListItem.h"
+#import "RRNewsFeedItem.h"
 
 @interface RNNewsFeedCell : UITableViewCell
 {

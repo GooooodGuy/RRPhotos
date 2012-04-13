@@ -25,8 +25,6 @@
 }
 @property(nonatomic,retain)UITabBarController *tabBarController;
 
-@property(nonatomic,retain)UITabBar *tabBar;
-
 @property(nonatomic,retain)RNPickPhotoHelper *pickHelper;
 
 @property(nonatomic,retain)RNNewsFeedController *newsFeedController;

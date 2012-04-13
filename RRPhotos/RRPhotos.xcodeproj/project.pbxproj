@@ -246,13 +246,12 @@
 		E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */; };
 		E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */; };
 		E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D991521E5C800DE6C84 /* RCFriendItem.m */; };
-		E5C80D9E1521E7EA00DE6C84 /* RRShareListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D9D1521E7EA00DE6C84 /* RRShareListItem.m */; };
 		E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */; };
 		E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C80DBE1522E7A000DE6C84 /* Icon.png */; };
 		E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */; };
 		E5C80DC91522E81D00DE6C84 /* ImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DC61522E81C00DE6C84 /* ImageUtil.m */; };
 		E5C80DCC1522EA4400DE6C84 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */; };
-		E5DF7E5D1521A6DA006DD063 /* RNPickPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */; };
+		E5CE556F1537FBF800D9F335 /* RRNewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */; };
 		E5F42A3E1520B3B1006DAE33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3D1520B3B1006DAE33 /* UIKit.framework */; };
 		E5F42A401520B3B1006DAE33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3F1520B3B1006DAE33 /* Foundation.framework */; };
 		E5F42A421520B3B1006DAE33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */; };
@@ -567,8 +566,6 @@
 		E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRCellScrollView.m; sourceTree = "<group>"; };
 		E5C80D981521E5C800DE6C84 /* RCFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFriendItem.h; sourceTree = "<group>"; };
 		E5C80D991521E5C800DE6C84 /* RCFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFriendItem.m; sourceTree = "<group>"; };
-		E5C80D9C1521E7EA00DE6C84 /* RRShareListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRShareListItem.h; sourceTree = "<group>"; };
-		E5C80D9D1521E7EA00DE6C84 /* RRShareListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRShareListItem.m; sourceTree = "<group>"; };
 		E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNConstomTabBarController.h; sourceTree = "<group>"; };
 		E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNConstomTabBarController.m; sourceTree = "<group>"; };
 		E5C80DBE1522E7A000DE6C84 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -577,8 +574,8 @@
 		E5C80DC51522E81B00DE6C84 /* ImageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUtil.h; sourceTree = "<group>"; };
 		E5C80DC61522E81C00DE6C84 /* ImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUtil.m; sourceTree = "<group>"; };
 		E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		E5DF7E5B1521A6DA006DD063 /* RNPickPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNPickPhotoController.h; sourceTree = "<group>"; };
-		E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNPickPhotoController.m; sourceTree = "<group>"; };
+		E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNewsFeedItem.h; sourceTree = "<group>"; };
+		E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNewsFeedItem.m; sourceTree = "<group>"; };
 		E5F42A391520B3B1006DAE33 /* RRPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F42A3D1520B3B1006DAE33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E5F42A3F1520B3B1006DAE33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1057,10 +1054,10 @@
 		E5C80D9B1521E5DD00DE6C84 /* Item */ = {
 			isa = PBXGroup;
 			children = (
-				E5C80D9C1521E7EA00DE6C84 /* RRShareListItem.h */,
-				E5C80D9D1521E7EA00DE6C84 /* RRShareListItem.m */,
 				E5C80D981521E5C800DE6C84 /* RCFriendItem.h */,
 				E5C80D991521E5C800DE6C84 /* RCFriendItem.m */,
+				E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */,
+				E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */,
 			);
 			name = Item;
 			sourceTree = "<group>";
@@ -1085,8 +1082,6 @@
 				E56F94BA15306BB5008E0D78 /* RNEditPhotoViewController.m */,
 				E56F94BB15306BB5008E0D78 /* RNPickPhotoHelper.h */,
 				E56F94BC15306BB5008E0D78 /* RNPickPhotoHelper.m */,
-				E5DF7E5B1521A6DA006DD063 /* RNPickPhotoController.h */,
-				E5DF7E5C1521A6DA006DD063 /* RNPickPhotoController.m */,
 				E5C80DC31522E81900DE6C84 /* ImageProcessingViewController.h */,
 				E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */,
 				E5C80DC51522E81B00DE6C84 /* ImageUtil.h */,
@@ -1446,12 +1441,10 @@
 				E5B0853B15216D8400F87B46 /* RCBasePost.m in Sources */,
 				E5B0853C15216D8400F87B46 /* RCBaseRequest.m in Sources */,
 				E5B0854115216DE500F87B46 /* RCError.m in Sources */,
-				E5DF7E5D1521A6DA006DD063 /* RNPickPhotoController.m in Sources */,
 				E5C80D7E1521BCDB00DE6C84 /* RRImageView.m in Sources */,
 				E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */,
 				E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */,
 				E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */,
-				E5C80D9E1521E7EA00DE6C84 /* RRShareListItem.m in Sources */,
 				E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */,
 				E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */,
 				E5C80DC91522E81D00DE6C84 /* ImageUtil.m in Sources */,
@@ -1464,6 +1457,7 @@
 				E56F950015307B07008E0D78 /* RNMainViewController.m in Sources */,
 				E56F9517153148BB008E0D78 /* RNLoginViewController.m in Sources */,
 				E56F95211531658B008E0D78 /* RNNewsFeedController.m in Sources */,
+				E5CE556F1537FBF800D9F335 /* RRNewsFeedItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
