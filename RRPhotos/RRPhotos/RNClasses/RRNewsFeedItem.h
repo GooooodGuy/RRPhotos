@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
+@class RRAttachment;
 ///新鲜事的类型
 #define ITEM_TYPES_NEWSFEED_FOR_PAGE	@"2002,2003,2004,2005,2006,2008,2009,2012,2013,2015"
 #define ITEM_TYPES_NEWSFEED_FOR_USER	@"102,103,104,107,110,501,502,601,701,709,1101,1104,2002,2003,2004,2005,2006,2008,2009,2012,2013,2015,8001,8002,8003,8004"
@@ -49,6 +49,10 @@ typedef enum {
 	
 } RRNewsfeedType;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	新鲜事基类
+ */
 @interface RRNewsFeedItem : NSObject
 {
 	//新鲜事的id
@@ -96,9 +100,21 @@ typedef enum {
 	//表示新鲜事来源pageid
 	NSNumber *_originPageId;
 	
+	//来源指定url
+	NSString *_originUrl;
+	
 	//表示新鲜事的具体内容 如日志内容	
 	NSString *_description;
 	
+	//评论数目
+	NSNumber *_commentCount;
+	
+	//新鲜事中包含的媒体内容,例如照片,视频等.
+	NSArray *_attachments;
+	
+	
+	//主页头像
+	NSString *_pageImageUrl;
 }
 
 @property(nonatomic,copy)NSNumber *feedId;
@@ -116,15 +132,77 @@ typedef enum {
 @property(nonatomic,copy)NSString *originTitle;
 @property(nonatomic,copy)NSString *originIconUrl;
 @property(nonatomic,copy)NSNumber *originPageId;
+@property(nonatomic,copy)NSString *originUrl;
 @property(nonatomic,copy)NSString *decription;
+@property(nonatomic,copy)NSNumber *commentCount;
+@property(nonatomic,retain)NSArray *attachments;
+@property(nonatomic,copy)NSString *pageImageUrl;
 
+/**
+ * 返回最后一个附件。
+ */
+- (RRAttachment*)lastAttachment;
+
+/**
+ * 返回第一个附件。
+ */
+- (RRAttachment*)firstAttachment;
+
+/**
+ * 表示新鲜事摘要
+ */
+- (NSArray *)feedAbstract;
 @end
 
-//照片新鲜事
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	照片新鲜事
+ */
 @interface RRNewsfeedPhotoItem : RRNewsFeedItem {
 	
 }
-- (id)initWithPlaceDictionary:(NSDictionary*) dictionary;
-//hzhang modify retian to copy
+
+- (id)initWithDictionary:(NSDictionary*) dictionary;
+
 @property (nonatomic, copy)NSNumber *aid;
+
 @end
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	表示新鲜事中包含的媒体内容，例如照片，视频
+ */
+@interface RRAttachment : NSObject
+{
+	//表示媒体内容的类型,目前有"photo","album", "link","video","audio"
+	NSString* _mediaType;
+	
+	//表示媒体内容的原地址
+	NSString* _href;
+	
+	//表示媒体内容的id,例如相片的id
+	NSNumber* _mediaId;
+	
+	//媒体的评论描述
+	NSString *_digest;
+    
+	//如type为 “photo”时 此项表示清晰的地址 （200X200）
+    NSString* _main_url;
+	
+}
+
+
+@property (nonatomic, copy) NSString* mediaType;
+@property (nonatomic, copy) NSString* href;
+@property (nonatomic, retain) NSNumber* mediaId;
+@property (nonatomic, copy) NSString *digest;
+@property (nonatomic, copy) NSString *main_url;
+
++ (id)attachmentWithDictionary:(NSDictionary*) dictionary;
+
+
+- (id)initWithDictionary:(NSDictionary*) dictionary;
+@end
+

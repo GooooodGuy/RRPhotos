@@ -4,14 +4,14 @@
 //
 //  Created by hai zhang on 3/6/12.
 //  Copyright (c) 2012 RenRen.com. All rights reserved.
-//
+//       
 
 #import <Foundation/Foundation.h>
 #import "RNBaseViewController.h"
 #import "RNModel.h"
+#import "RNNavigationViewController.h"
 
-
-@interface RNModelViewController : RNBaseViewController {
+@interface RNModelViewController : RNNavigationViewController {
     RNModel *_model;
 }
 

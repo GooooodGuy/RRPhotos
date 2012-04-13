@@ -25,7 +25,6 @@
     if (self) {
         //
         [self createModel];
-        [self load:NO];
     }
     
     return self;

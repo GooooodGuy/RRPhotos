@@ -10,15 +10,6 @@
 #import "RCBaseRequest.h"
 #import "RCMainUser.h"
 
-// 私有方法
-@interface RNModel (private) 
-- (void)didStartLoad;
-- (void)didFinishLoad:(id)result;
-- (void)didFailLoadWithError:(NSError*)error;
-- (void)didCancelLoad;
-
-@end
-
 
 //////////////////////////////////
 @implementation RNModel
@@ -26,10 +17,7 @@
 @synthesize method = _method;
 @synthesize delegates = _delegates;
 @synthesize request = _request;
-@synthesize resultDic = _resultDic;
-@synthesize resultAry = _resultAry;
-@synthesize isMore = _isMore;
-
+@synthesize result = _result;
 
 - (void)dealloc {
     self.query = nil;
@@ -37,8 +25,7 @@
     //self.delegates = nil;
     RL_RELEASE_SAFELY(_delegates);
     self.request = nil;
-    self.resultDic = nil;
-    self.resultAry = nil;
+    self.result = nil;
     
     [super dealloc];
 }
@@ -46,12 +33,12 @@
 
 - (id)init {
     if (self = [super init]) {
-        _delegates = [[NSMutableArray alloc] init];
         self.query = [NSMutableDictionary dictionary];
         RCMainUser *mainUser = [RCMainUser getInstance];
         [self.query setValue:mainUser.msessionKey forKey:@"session_key"];
         
         self.method = nil;
+        self.delegates = [NSMutableArray array];
         
         RCBaseRequest *request = [[RCBaseRequest alloc] init];
         request.onCompletion = ^(id result){
@@ -73,8 +60,13 @@
     if (self.method == nil) {
         return;
     }
-    self.isMore = more;
     [_request sendQuery:_query withMethod:_method];
+    [self didStartLoad];
+}
+
+- (void) search:(NSString *)text 
+{
+
 }
 
 #pragma mark - 网络回调
@@ -83,7 +75,8 @@
 }
 
 - (void)didFinishLoad:(id)result {
-    NSLog(@"model load succeed:  %@", result);
+    self.result = result;
+    
     [_delegates perform:@selector(modelDidFinishLoad:) withObject:self];
 }
 
@@ -94,6 +87,7 @@
 }
 
 - (void)didCancelLoad {
+    [self.request cancelRequest];
     [_delegates perform:@selector(modelDidCancelLoad:) withObject:self];
 }
 

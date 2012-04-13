@@ -36,12 +36,8 @@
     NSMutableArray *_delegates;
     // 网络请求qequest对象
     RCBaseRequest *_request;
-    // 返回数据为字典
-    NSDictionary *_resultDic;
-    // 返回数据为数组
-    NSArray *_resultAry;
-    // is load more
-    BOOL _isMore;
+    // 网络请求结果，为dictionary或者array类型
+    id _result;
 }
 
 
@@ -52,13 +48,19 @@
  */
 - (void)load:(BOOL)more;
 
+// temporary
+- (void)search:(NSString*)text;
+
+// request
+- (void)didStartLoad;
+- (void)didFinishLoad:(id)result;
+- (void)didFailLoadWithError:(NSError*)error;
+- (void)didCancelLoad;
 
 @property (nonatomic, retain) NSMutableDictionary *query;
 @property (nonatomic, copy) NSString *method;
 @property (nonatomic, retain) NSMutableArray *delegates;
 @property (nonatomic, retain) RCBaseRequest *request;
-@property (nonatomic, retain) NSDictionary *resultDic;
-@property (nonatomic, retain) NSArray *resultAry;
-@property (nonatomic, assign) BOOL isMore;
+@property (nonatomic, retain) id result;
 
 @end

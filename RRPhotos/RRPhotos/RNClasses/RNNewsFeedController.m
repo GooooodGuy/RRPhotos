@@ -12,9 +12,6 @@
 
 @end
 
-
-
-
 @implementation RNNewsFeedController
 @synthesize testButton;
 @synthesize newsFeedTableView = _newFeedTableView;
