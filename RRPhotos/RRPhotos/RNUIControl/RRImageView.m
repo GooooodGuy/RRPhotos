@@ -60,12 +60,7 @@
  * 设置默认的图片
  */
 - (void) setDefaultImage:(UIImage *)defaultImage{
-	if (_defaultImageView.image != defaultImage) {
-		[_defaultImageView release];
-		[_defaultImageView setImage: [defaultImage retain]];
-		[self layoutIfNeeded];
-	}
-	
+	[_defaultImageView setImage: defaultImage];
 	if (nil == _url || 0 == _url.length) { //如果URL为空，将显示默认图片
 		self.imageView = _defaultImageView;
 	}

@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "RNBaseViewController.h"
 #import "RNModel.h"
-#import "RNNavigationViewController.h"
+//#import "RNNavigationViewController.h"
 
-@interface RNModelViewController : RNNavigationViewController {
+@interface RNModelViewController : UIViewController {
     RNModel *_model;
 }
 

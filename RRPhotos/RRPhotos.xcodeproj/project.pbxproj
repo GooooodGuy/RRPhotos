@@ -245,7 +245,7 @@
 		E5C80D7E1521BCDB00DE6C84 /* RRImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D7D1521BCDB00DE6C84 /* RRImageView.m */; };
 		E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */; };
 		E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */; };
-		E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D991521E5C800DE6C84 /* RCFriendItem.m */; };
+		E5C80D9A1521E5C900DE6C84 /* RRFriendItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D991521E5C800DE6C84 /* RRFriendItem.m */; };
 		E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */; };
 		E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C80DBE1522E7A000DE6C84 /* Icon.png */; };
 		E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DC41522E81A00DE6C84 /* ImageProcessingViewController.m */; };
@@ -253,6 +253,7 @@
 		E5C80DCC1522EA4400DE6C84 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */; };
 		E5CE556F1537FBF800D9F335 /* RRNewsFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */; };
 		E5CE557F1538545600D9F335 /* RNPageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CE557E1538545600D9F335 /* RNPageModel.m */; };
+		E5CE55831538555700D9F335 /* RNNewsFeedModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5CE55821538555600D9F335 /* RNNewsFeedModel.m */; };
 		E5F42A3E1520B3B1006DAE33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3D1520B3B1006DAE33 /* UIKit.framework */; };
 		E5F42A401520B3B1006DAE33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A3F1520B3B1006DAE33 /* Foundation.framework */; };
 		E5F42A421520B3B1006DAE33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5F42A411520B3B1006DAE33 /* CoreGraphics.framework */; };
@@ -565,8 +566,8 @@
 		E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedCell.m; sourceTree = "<group>"; };
 		E5C80D8D1521C48A00DE6C84 /* RRCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRCellScrollView.h; sourceTree = "<group>"; };
 		E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRCellScrollView.m; sourceTree = "<group>"; };
-		E5C80D981521E5C800DE6C84 /* RCFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCFriendItem.h; sourceTree = "<group>"; };
-		E5C80D991521E5C800DE6C84 /* RCFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCFriendItem.m; sourceTree = "<group>"; };
+		E5C80D981521E5C800DE6C84 /* RRFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RRFriendItem.h; sourceTree = "<group>"; };
+		E5C80D991521E5C800DE6C84 /* RRFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRFriendItem.m; sourceTree = "<group>"; };
 		E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNConstomTabBarController.h; sourceTree = "<group>"; };
 		E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNConstomTabBarController.m; sourceTree = "<group>"; };
 		E5C80DBE1522E7A000DE6C84 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -575,10 +576,12 @@
 		E5C80DC51522E81B00DE6C84 /* ImageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUtil.h; sourceTree = "<group>"; };
 		E5C80DC61522E81C00DE6C84 /* ImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUtil.m; sourceTree = "<group>"; };
 		E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNewsFeedItem.h; sourceTree = "<group>"; };
+		E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RRNewsFeedItem.h; sourceTree = "<group>"; };
 		E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNewsFeedItem.m; sourceTree = "<group>"; };
 		E5CE557D1538545500D9F335 /* RNPageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNPageModel.h; sourceTree = "<group>"; };
 		E5CE557E1538545600D9F335 /* RNPageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNPageModel.m; sourceTree = "<group>"; };
+		E5CE55811538555400D9F335 /* RNNewsFeedModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNNewsFeedModel.h; sourceTree = "<group>"; };
+		E5CE55821538555600D9F335 /* RNNewsFeedModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedModel.m; sourceTree = "<group>"; };
 		E5F42A391520B3B1006DAE33 /* RRPhotos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRPhotos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5F42A3D1520B3B1006DAE33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E5F42A3F1520B3B1006DAE33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1059,8 +1062,8 @@
 		E5C80D9B1521E5DD00DE6C84 /* Item */ = {
 			isa = PBXGroup;
 			children = (
-				E5C80D981521E5C800DE6C84 /* RCFriendItem.h */,
-				E5C80D991521E5C800DE6C84 /* RCFriendItem.m */,
+				E5C80D981521E5C800DE6C84 /* RRFriendItem.h */,
+				E5C80D991521E5C800DE6C84 /* RRFriendItem.m */,
 				E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */,
 				E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */,
 			);
@@ -1074,6 +1077,8 @@
 				E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */,
 				E56F951F1531658A008E0D78 /* RNNewsFeedController.h */,
 				E56F95201531658A008E0D78 /* RNNewsFeedController.m */,
+				E5CE55811538555400D9F335 /* RNNewsFeedModel.h */,
+				E5CE55821538555600D9F335 /* RNNewsFeedModel.m */,
 			);
 			name = NewsFeed;
 			sourceTree = "<group>";
@@ -1449,7 +1454,7 @@
 				E5C80D7E1521BCDB00DE6C84 /* RRImageView.m in Sources */,
 				E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */,
 				E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */,
-				E5C80D9A1521E5C900DE6C84 /* RCFriendItem.m in Sources */,
+				E5C80D9A1521E5C900DE6C84 /* RRFriendItem.m in Sources */,
 				E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */,
 				E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */,
 				E5C80DC91522E81D00DE6C84 /* ImageUtil.m in Sources */,
@@ -1464,6 +1469,7 @@
 				E56F95211531658B008E0D78 /* RNNewsFeedController.m in Sources */,
 				E5CE556F1537FBF800D9F335 /* RRNewsFeedItem.m in Sources */,
 				E5CE557F1538545600D9F335 /* RNPageModel.m in Sources */,
+				E5CE55831538555700D9F335 /* RNNewsFeedModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

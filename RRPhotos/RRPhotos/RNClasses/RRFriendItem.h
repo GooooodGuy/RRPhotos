@@ -13,7 +13,7 @@
 #pragma mark FriendItem
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //好友信息数据结构
-@interface RCFriendItem : NSObject
+@interface RRFriendItem : NSObject
 {
 	NSString *_headUrl;     //头像地址
 	NSString *_networkName; //网络关系名字

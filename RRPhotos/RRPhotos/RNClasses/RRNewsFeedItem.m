@@ -58,11 +58,11 @@
 	[super dealloc];
 }
 
-
 + (id)newsfeedWithDictionary:(NSDictionary*) dictionary{
 	RRNewsfeedType myFeedType = [[dictionary objectForKey:@"type"] intValue];
 	switch (myFeedType) {
 		case RRItemTypeAlbumShared:
+		case RRItemTypePhotoUploadForPage:
         case RRItemTypeAlbumSharedForPage:
 		case RRItemTypePhotoShared:
 		case RRItemTypePhotoUploadOne:

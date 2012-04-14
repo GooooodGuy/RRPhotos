@@ -63,7 +63,8 @@
 	newsFeedTableView.backgroundColor = RGBCOLOR(222, 222, 222);
 	
 	self.newsFeedTableView = newsFeedTableView;
-	newsFeedTableView.dataSource = self;
+	newsFeedTableView.dataSource = self; //tableView的数据
+	newsFeedTableView.delegate = self;
 	[self.view addSubview:newsFeedTableView];
 	TT_RELEASE_SAFELY(newsFeedTableView);
 }
@@ -107,23 +108,58 @@
 	TT_RELEASE_SAFELY(viewController);
 }
 
+/*
+	重载父类的创建model
+ */
+- (void)createModel {
+	
+	//新鲜事类型
+	NSString *typeString = ITEM_TYPES_NEWSFEED_FOR_PHOTO;//只请求与照片有关的数据
+	
+	RNNewsFeedModel *model = [[RNNewsFeedModel alloc]initWithTypeString:typeString];
+	self.model = (RNModel *) model;
+	[self.model load:NO];//加载数据
+}
+
+
+- (void)modelDidFinishLoad:(RNModel *)model{
+
+    [_newFeedTableView reloadData];
+}
 
 #pragma -mark UITableViewDataSource
 //@required
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+	return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 	
-	return 20;
+	return ((RNNewsFeedModel *)self.model).newsFeedCount;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+	return 50;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-	static NSString *cellIdentifier  = @"MyTableViewCell";
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	static NSString *cellIdentifier  = @"newsFeedCell";
+	
+	RNNewsFeedCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+	NSLog(@"row = %d",indexPath.row);
+
 	if (!cell) {
-		cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-		
-	}
-	cell.textLabel.text = @"test";
+		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
+	}else {
+		while ([cell.contentView.subviews lastObject] != nil) {  
+            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
+        } 
+	}	
+	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
+	[cell setCellWithItem:item]; //cia
+	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 	return cell;	
 }
 @end

@@ -12,31 +12,31 @@
 ///新鲜事的类型
 #define ITEM_TYPES_NEWSFEED_FOR_PAGE	@"2002,2003,2004,2005,2006,2008,2009,2012,2013,2015"
 #define ITEM_TYPES_NEWSFEED_FOR_USER	@"102,103,104,107,110,501,502,601,701,709,1101,1104,2002,2003,2004,2005,2006,2008,2009,2012,2013,2015,8001,8002,8003,8004"
-
+#define ITEM_TYPES_NEWSFEED_FOR_PHOTO   @"103,104,701,709,2004,2013"
 typedef enum {
     
 	RRItemTypeHeadUpdated =                 501, // head updated	
 	RRItemTypeStatusUpdated =				502, // status updated
 	
 	RRItemTypeBlogShared =					102, // blog shared
-	RRItemTypePhotoShared =					103, // photo shared
-	RRItemTypeAlbumShared =					104, // album shared
+	RRItemTypePhotoShared =					103, // photo shared ------------
+	RRItemTypeAlbumShared =					104, // album shared ------------
     RRItemTypeLinkShared =                  107, // link shared
 	RRItemTypeVideoShared =                 110, // video shared
     
     RRItemTypeBlogPublish =					601, // blog publish
-    RRItemTypePhotoUploadOne =				701, // a photo upload 
-	RRItemTypePhotoUploadMore =				709, // more photo upload
+    RRItemTypePhotoUploadOne =				701, // a photo upload -------------
+	RRItemTypePhotoUploadMore =				709, // more photo upload -------------
     
     RRItemTypePageJoin =                    2002, // page join
     RRItemTypeBlogSharedForPage =			2003, // blog shared for page
-    RRItemTypePhotoSharedForPage =          2004, // photo shared for page
+    RRItemTypePhotoSharedForPage =          2004, // photo shared for page -------------
     RRItemTypeLinkSharedForPage =           2005, // link shared for page
 	RRItemTypeVideoSharedForPage =          2006, // video shared for page
 	RRItemTypeStatusUpdatedForPage =		2008, // status updated for page
     RRItemTypeAlbumSharedForPage =          2009, // share album for page
 	RRItemTypeBlogPublishForPage =			2012, // blog publish for page
-	RRItemTypePhotoUploadForPage =			2013, // photo upload for page
+	RRItemTypePhotoUploadForPage =			2013, // photo upload for page -------------
 	RRItemTypePageHeadPhotoUpdate =         2015, // Page Head Photo Update
 	
 	RRItemTypeCheckIn =                     1101, // check in
@@ -138,7 +138,12 @@ typedef enum {
 @property(nonatomic,retain)NSArray *attachments;
 @property(nonatomic,copy)NSString *pageImageUrl;
 
-/**
+/*
+	初始化方法
+ */
++ (id)newsfeedWithDictionary:(NSDictionary*) dictionary;
+
+/*
  * 返回最后一个附件。
  */
 - (RRAttachment*)lastAttachment;

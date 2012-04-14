@@ -6,11 +6,11 @@
 //  Copyright (c) 2012年 RenRen.com. All rights reserved.
 //
 
-#import "RCFriendItem.h"
+#import "RRFriendItem.h"
 //#import "NSDate+NSDateExt.h"
 
 //好友列表item
-@implementation RCFriendItem
+@implementation RRFriendItem
 
 @synthesize headUrl = _headUrl;
 @synthesize networkName = _networkName;
@@ -66,7 +66,7 @@
 }
 
 + (id)itemWithDicInfo:(NSDictionary *)friendDic {
-	RCFriendItem *item = [[RCFriendItem alloc] initWithDicInfo:friendDic];
+	RRFriendItem *item = [[RRFriendItem alloc] initWithDicInfo:friendDic];
 	return [item autorelease];
 }
 

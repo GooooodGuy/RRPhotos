@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface RNNewsFeedController : UIViewController<UITableViewDataSource>
+#import "RNModelViewController.h"
+#import "RNNewsFeedModel.h"
+#import "RRNewsFeedItem.h"
+#import "RNNewsFeedCell.h"
+@interface RNNewsFeedController : RNModelViewController<UITableViewDataSource,UITableViewDelegate>
 {
 	UIButton *testButton;
 	
