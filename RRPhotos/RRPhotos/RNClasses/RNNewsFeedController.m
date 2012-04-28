@@ -141,7 +141,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-	return 50;
+	return 150;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -153,9 +153,9 @@
 	if (!cell) {
 		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
 	}else {
-		while ([cell.contentView.subviews lastObject] != nil) {  
-            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
-        } 
+//		while ([cell.contentView.subviews lastObject] != nil) {  
+//            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
+//        } 
 	}	
 	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
 	[cell setCellWithItem:item]; //cia

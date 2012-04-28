@@ -18,8 +18,6 @@
 	
 	//当前选中的图片索引
 	NSInteger _selectedIndex;
-	
-
 }
 @property(nonatomic, retain) NSMutableArray *images;
 

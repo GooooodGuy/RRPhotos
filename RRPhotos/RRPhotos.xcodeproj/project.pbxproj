@@ -260,6 +260,11 @@
 		E5F42A481520B3B1006DAE33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5F42A461520B3B1006DAE33 /* InfoPlist.strings */; };
 		E5F42A4A1520B3B1006DAE33 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A491520B3B1006DAE33 /* main.m */; };
 		E5F42A4E1520B3B1006DAE33 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */; };
+		E5F8CF5E15479E9400B42376 /* RRWebImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5515479E9400B42376 /* RRWebImageCache.m */; };
+		E5F8CF5F15479E9400B42376 /* RRWebImageDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5715479E9400B42376 /* RRWebImageDecoder.m */; };
+		E5F8CF6015479E9400B42376 /* RRWebImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5915479E9400B42376 /* RRWebImageDownloader.m */; };
+		E5F8CF6115479E9400B42376 /* RRWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5B15479E9400B42376 /* RRWebImageManager.m */; };
+		E5F8CF6215479E9400B42376 /* UIImageView+RRWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5D15479E9400B42376 /* UIImageView+RRWebImage.m */; };
 		E5F9BA8415232A5F00705D87 /* RNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8115232A5F00705D87 /* RNModel.m */; };
 		E5F9BA8515232A5F00705D87 /* RNModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8315232A5F00705D87 /* RNModelViewController.m */; };
 /* End PBXBuildFile section */
@@ -566,7 +571,7 @@
 		E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedCell.m; sourceTree = "<group>"; };
 		E5C80D8D1521C48A00DE6C84 /* RRCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRCellScrollView.h; sourceTree = "<group>"; };
 		E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRCellScrollView.m; sourceTree = "<group>"; };
-		E5C80D981521E5C800DE6C84 /* RRFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RRFriendItem.h; sourceTree = "<group>"; };
+		E5C80D981521E5C800DE6C84 /* RRFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRFriendItem.h; sourceTree = "<group>"; };
 		E5C80D991521E5C800DE6C84 /* RRFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRFriendItem.m; sourceTree = "<group>"; };
 		E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNConstomTabBarController.h; sourceTree = "<group>"; };
 		E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNConstomTabBarController.m; sourceTree = "<group>"; };
@@ -576,7 +581,7 @@
 		E5C80DC51522E81B00DE6C84 /* ImageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageUtil.h; sourceTree = "<group>"; };
 		E5C80DC61522E81C00DE6C84 /* ImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageUtil.m; sourceTree = "<group>"; };
 		E5C80DCB1522EA4200DE6C84 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RRNewsFeedItem.h; sourceTree = "<group>"; };
+		E5CE556D1537FBF700D9F335 /* RRNewsFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNewsFeedItem.h; sourceTree = "<group>"; };
 		E5CE556E1537FBF800D9F335 /* RRNewsFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNewsFeedItem.m; sourceTree = "<group>"; };
 		E5CE557D1538545500D9F335 /* RNPageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNPageModel.h; sourceTree = "<group>"; };
 		E5CE557E1538545600D9F335 /* RNPageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNPageModel.m; sourceTree = "<group>"; };
@@ -592,6 +597,16 @@
 		E5F42A4B1520B3B1006DAE33 /* RRPhotos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RRPhotos-Prefix.pch"; sourceTree = "<group>"; };
 		E5F42A4C1520B3B1006DAE33 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E5F42A4D1520B3B1006DAE33 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E5F8CF5415479E9400B42376 /* RRWebImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRWebImageCache.h; sourceTree = "<group>"; };
+		E5F8CF5515479E9400B42376 /* RRWebImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRWebImageCache.m; sourceTree = "<group>"; };
+		E5F8CF5615479E9400B42376 /* RRWebImageDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRWebImageDecoder.h; sourceTree = "<group>"; };
+		E5F8CF5715479E9400B42376 /* RRWebImageDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRWebImageDecoder.m; sourceTree = "<group>"; };
+		E5F8CF5815479E9400B42376 /* RRWebImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRWebImageDownloader.h; sourceTree = "<group>"; };
+		E5F8CF5915479E9400B42376 /* RRWebImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRWebImageDownloader.m; sourceTree = "<group>"; };
+		E5F8CF5A15479E9400B42376 /* RRWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRWebImageManager.h; sourceTree = "<group>"; };
+		E5F8CF5B15479E9400B42376 /* RRWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRWebImageManager.m; sourceTree = "<group>"; };
+		E5F8CF5C15479E9400B42376 /* UIImageView+RRWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+RRWebImage.h"; sourceTree = "<group>"; };
+		E5F8CF5D15479E9400B42376 /* UIImageView+RRWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+RRWebImage.m"; sourceTree = "<group>"; };
 		E5F9BA8015232A5F00705D87 /* RNModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNModel.h; sourceTree = "<group>"; };
 		E5F9BA8115232A5F00705D87 /* RNModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNModel.m; sourceTree = "<group>"; };
 		E5F9BA8215232A5F00705D87 /* RNModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNModelViewController.h; sourceTree = "<group>"; };
@@ -707,6 +722,7 @@
 		E5B90CAA15215C5000F1E4D2 /* RLBaseLibs */ = {
 			isa = PBXGroup;
 			children = (
+				E5F8CF5315479E9400B42376 /* WebImage */,
 				E5B90CAB15215C5000F1E4D2 /* BaseLibrary.h */,
 				E5B90CAC15215C5000F1E4D2 /* Categories */,
 				E5B90CCC15215C5000F1E4D2 /* CocoaJSON */,
@@ -1162,6 +1178,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		E5F8CF5315479E9400B42376 /* WebImage */ = {
+			isa = PBXGroup;
+			children = (
+				E5F8CF5415479E9400B42376 /* RRWebImageCache.h */,
+				E5F8CF5515479E9400B42376 /* RRWebImageCache.m */,
+				E5F8CF5615479E9400B42376 /* RRWebImageDecoder.h */,
+				E5F8CF5715479E9400B42376 /* RRWebImageDecoder.m */,
+				E5F8CF5815479E9400B42376 /* RRWebImageDownloader.h */,
+				E5F8CF5915479E9400B42376 /* RRWebImageDownloader.m */,
+				E5F8CF5A15479E9400B42376 /* RRWebImageManager.h */,
+				E5F8CF5B15479E9400B42376 /* RRWebImageManager.m */,
+				E5F8CF5C15479E9400B42376 /* UIImageView+RRWebImage.h */,
+				E5F8CF5D15479E9400B42376 /* UIImageView+RRWebImage.m */,
+			);
+			path = WebImage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1470,6 +1503,11 @@
 				E5CE556F1537FBF800D9F335 /* RRNewsFeedItem.m in Sources */,
 				E5CE557F1538545600D9F335 /* RNPageModel.m in Sources */,
 				E5CE55831538555700D9F335 /* RNNewsFeedModel.m in Sources */,
+				E5F8CF5E15479E9400B42376 /* RRWebImageCache.m in Sources */,
+				E5F8CF5F15479E9400B42376 /* RRWebImageDecoder.m in Sources */,
+				E5F8CF6015479E9400B42376 /* RRWebImageDownloader.m in Sources */,
+				E5F8CF6115479E9400B42376 /* RRWebImageManager.m in Sources */,
+				E5F8CF6215479E9400B42376 /* UIImageView+RRWebImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

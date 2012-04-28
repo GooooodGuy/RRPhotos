@@ -8,7 +8,7 @@
 
 #import "RNNewsFeedCell.h"
 #import <QuartzCore/QuartzCore.h>
-static const CGFloat kCellHeight = 80; //cell的高度
+static const CGFloat kCellHeight = 150; //cell的高度
 static const CGFloat kCellWidth = 320;
 
 static const CGFloat kCellLeftPadding = 50;         // 内容左填充
@@ -19,10 +19,10 @@ static const CGFloat kCellRightPadding = 5;         //  内容右填充
 static const CGFloat kCellHeadImageHeight = 40;     // 头像高度
 static const CGFloat kCellHeadImageWidth = 40;      // 头像宽度 
 
-static const CGFloat kCellHeadScrollSpace = 10;     // 头像和滚动视图的空隙
-
-static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHeadImageHeight;    //多图片滚动视图高度
-
+static const CGFloat kCellHeadContentSpace = 10;     // 头像和滚动视图的空隙
+static const CGFloat kCellContentViewHeight = (kCellHeight - kCellHeadContentSpace  - kCellHeadImageHeight);    //多图片滚动视图高度
+static const CGFloat kCellContentViewWidth = 320;
+static const NSInteger kContentViewPhotoCount = 3;	//滚动视图内的照片数量
 
 
 @implementation RNNewsFeedCell
@@ -32,21 +32,21 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
 @synthesize userNameLabel = _userNameLabel;
 @synthesize newsFeedTimeLabel = _newsFeedTimeLabel;
 @synthesize fromAddress = _fromAddress;
-@synthesize cellScrollView = _cellScrollView;
+@synthesize attachmentsTableView = _attachmentsTableView;
 
 - (void)dealloc{
-	
 	self.newsFeedItem = nil;
 	self.headImageView = nil;
 	self.userNameLabel = nil;
 	self.newsFeedTimeLabel = nil;
 	self.fromAddress = nil;
-	self.cellScrollView = nil;
+	self.attachmentsTableView = nil;
+	
 	[super dealloc];
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+	
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
@@ -55,6 +55,7 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
 }
 
 - (void)layoutSubviews{
+	
 	[super layoutSubviews];
 
 	self.detailTextLabel.backgroundColor = [UIColor clearColor];
@@ -64,9 +65,8 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
     self.accessoryType = UITableViewCellAccessoryNone;
 
 	self.headImageView.backgroundColor = [UIColor clearColor];	
-	CALayer *layer = [self.headImageView.imageView layer];
+	CALayer *layer = [self.headImageView layer];
 	[layer setCornerRadius:6.0];
-
 }
 
 /*
@@ -78,42 +78,44 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
 	}
 	
 	self.newsFeedItem = newsFeedItem;
-	
-	//头像
-	if(self.newsFeedItem.headUrl){ 
-		[self.headImageView loadImageWithUrl:self.newsFeedItem.headUrl isUseCache:YES];
-	}
-	[self.headImageView setDefaultImage:[UIImage imageNamed:@"main_head_profile.png"]];
-	
 
+	if (self.newsFeedItem.headUrl) {
+		[self.headImageView setImageWithURL:[NSURL URLWithString:self.newsFeedItem.headUrl]
+						   placeholderImage:[UIImage imageNamed:@"main_head_profile.png"]];
+	}
+	
 	//用户名
 	if (self.newsFeedItem.userName && self.newsFeedItem.prefix) {
 		self.userNameLabel.text = [NSString stringWithFormat:@"%@-%@", 
 								   self.newsFeedItem.userName,self.newsFeedItem.prefix];
 	}
-	
-	[self layoutIfNeeded];
-	[self.contentView addSubview:_userNameLabel];
-	[self.contentView addSubview:_headImageView];
 
+		
+	[self.contentView removeAllSubviews];
+	[self.contentView addSubview:self.userNameLabel];
+	[self.contentView addSubview:self.headImageView];
+	
 }
 
 /*
 	头像的view
  */
-- (RRImageView *)headImageView{
+- (UIImageView *)headImageView{
 	if (!_headImageView) {
-		_headImageView = [[RRImageView alloc]initWithFrame:CGRectMake(kCellLeftPadding,
+		_headImageView = [[UIImageView alloc]initWithFrame:CGRectMake(kCellLeftPadding,
 																  kCellTopPadding,
 																  kCellHeadImageWidth, 
 																  kCellHeadImageHeight)];
-		CALayer *layer = [self.headImageView.imageView layer];
+		CALayer *layer = [self.headImageView layer];
         [layer setCornerRadius:6.0];
 
 	}
 	return _headImageView;
 }
 
+/*
+	用户名标签
+ */
 - (UILabel *)userNameLabel{
 	if (!_userNameLabel) {
 		_userNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100,
@@ -137,3 +139,47 @@ static const CGFloat kCellScrollViewHeight = kCellHeight - kCellHeight - kCellHe
 
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*	-------------------------------------	*/
+/*			新鲜事主列表的cell					*/
+/*	-------------------------------------	*/
+@implementation attachmentCell
+@synthesize bgImageView = _bgImageView;
+@synthesize contentImageView = _contentImageView;
+
+- (void)dealloc{
+	self.bgImageView = nil;
+	self.contentImageView = nil;
+	[super dealloc];
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+		self.contentView.backgroundColor = [UIColor clearColor];
+        UIView *selectedView = [[UIView alloc] initWithFrame:self.contentView.frame];
+        selectedView.backgroundColor = [UIColor clearColor];
+        self.selectedBackgroundView = selectedView;
+        [selectedView release];
+
+		_bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(5,
+																   5, 
+																   kCellContentViewHeight, 
+																   50)];
+		_bgImageView.backgroundColor = [UIColor grayColor];
+		[self addSubview:_bgImageView];
+		
+//		_contentImageView = [[UIImageView alloc]initWithImage:CGRectMake(5,
+//																		5, 
+//																		kCellContentViewHeight, 
+//																		50)];
+	}
+	return self;
+}
+@end
+
+
+
+
+
