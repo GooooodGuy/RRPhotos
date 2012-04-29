@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E551B2F8154D7AA700B54EB5 /* NSDate+NSDateExt.m in Sources */ = {isa = PBXBuildFile; fileRef = E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */; };
 		E56F94BD15306BB5008E0D78 /* RNEditPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F94BA15306BB5008E0D78 /* RNEditPhotoViewController.m */; };
 		E56F94BE15306BB5008E0D78 /* RNPickPhotoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F94BC15306BB5008E0D78 /* RNPickPhotoHelper.m */; };
 		E56F94C515306C78008E0D78 /* RNCreateAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F94C415306C78008E0D78 /* RNCreateAlbumViewController.m */; };
@@ -270,6 +271,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NSDateExt.m"; sourceTree = "<group>"; };
+		E551B2FA154D7ACA00B54EB5 /* NSDate+NSDateExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NSDateExt.h"; sourceTree = "<group>"; };
 		E56F94B915306BB5008E0D78 /* RNEditPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNEditPhotoViewController.h; sourceTree = "<group>"; };
 		E56F94BA15306BB5008E0D78 /* RNEditPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNEditPhotoViewController.m; sourceTree = "<group>"; };
 		E56F94BB15306BB5008E0D78 /* RNPickPhotoHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNPickPhotoHelper.h; sourceTree = "<group>"; };
@@ -735,6 +738,8 @@
 		E5B90CAC15215C5000F1E4D2 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E551B2FA154D7ACA00B54EB5 /* NSDate+NSDateExt.h */,
+				E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */,
 				E5B90CAD15215C5000F1E4D2 /* Categories.h */,
 				E5B90CAE15215C5000F1E4D2 /* GTMBase64.h */,
 				E5B90CAF15215C5000F1E4D2 /* GTMBase64.m */,
@@ -1508,6 +1513,7 @@
 				E5F8CF6015479E9400B42376 /* RRWebImageDownloader.m in Sources */,
 				E5F8CF6115479E9400B42376 /* RRWebImageManager.m in Sources */,
 				E5F8CF6215479E9400B42376 /* UIImageView+RRWebImage.m in Sources */,
+				E551B2F8154D7AA700B54EB5 /* NSDate+NSDateExt.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

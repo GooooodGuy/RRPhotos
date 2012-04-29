@@ -12,6 +12,9 @@
 #import "RRNewsFeedItem.h"
 #import "UIImageView+RRWebImage.h"
 
+#define  kCellHeight  150 //cell的高度
+#define  kCellWidth  320
+
 @protocol RNNewsFeedCellDelegate <NSObject>
 
 @optional
@@ -24,32 +27,39 @@
 /*	-------------------------------------	*/
 /*			新鲜事主列表的cell					*/
 /*	-------------------------------------	*/
-
 @interface RNNewsFeedCell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
 {
 	//新鲜事主体数据
 	RRNewsFeedItem *_newsFeedItem;
-	
+
 	//头像图片
 	UIImageView *_headImageView;
 	
 	//好友姓名
 	UILabel* _userNameLabel;
 	
+	//新鲜事内容前缀
+	UILabel	*_prefixLabel;
+	
+	//新鲜事主体内容
+	UILabel *_titleLabel;
+	
 	//新鲜事时间
-	UILabel* _newsFeedTimeLabel;
+	UILabel *_updateTimeLabel;
 	
 	//分享来源
-	NSString* _fromAddress;
+	NSString *_fromAddress;
 	
 	//附件照片
 	UITableView	*_attachmentsTableView;
 }
-@property(nonatomic,retain)RRNewsFeedItem *newsFeedItem;	
-@property(nonatomic, retain) UIImageView *headImageView;
-@property(nonatomic, copy) UILabel *userNameLabel;
-@property(nonatomic, copy) UILabel *newsFeedTimeLabel;
-@property(nonatomic, copy) NSString *fromAddress;
+@property(nonatomic, retain)RRNewsFeedItem *newsFeedItem;	
+@property(nonatomic, retain)UIImageView *headImageView;
+@property(nonatomic, retain)UILabel *userNameLabel;
+@property(nonatomic, retain)UILabel *prefixLabel;
+@property(nonatomic, retain)UILabel *titleLabel;
+@property(nonatomic, retain)UILabel *updateTimeLabel;
+@property(nonatomic, copy)NSString *fromAddress;
 @property(nonatomic, retain)UITableView	*attachmentsTableView;
 
 

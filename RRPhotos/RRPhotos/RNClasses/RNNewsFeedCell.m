@@ -8,11 +8,9 @@
 
 #import "RNNewsFeedCell.h"
 #import <QuartzCore/QuartzCore.h>
-static const CGFloat kCellHeight = 150; //cell的高度
-static const CGFloat kCellWidth = 320;
 
-static const CGFloat kCellLeftPadding = 20;         // 内容左填充
-static const CGFloat kCellTopPadding = 5;           //  内容顶部填充
+static const CGFloat kCellLeftPadding = 10;         // 内容左填充
+static const CGFloat kCellTopPadding = 2;           //  内容顶部填充
 static const CGFloat kCellBottomPadding = 5;        //  内容底部填充
 static const CGFloat kCellRightPadding = 5;         //  内容右填充
 
@@ -30,7 +28,9 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 @synthesize newsFeedItem = _newsFeedItem;
 @synthesize headImageView = _headImageView;
 @synthesize userNameLabel = _userNameLabel;
-@synthesize newsFeedTimeLabel = _newsFeedTimeLabel;
+@synthesize prefixLabel = _prefixLabel;
+@synthesize titleLabel = _titleLabel;
+@synthesize updateTimeLabel = _updateTimeLabel;
 @synthesize fromAddress = _fromAddress;
 @synthesize attachmentsTableView = _attachmentsTableView;
 
@@ -38,7 +38,9 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	self.newsFeedItem = nil;
 	self.headImageView = nil;
 	self.userNameLabel = nil;
-	self.newsFeedTimeLabel = nil;
+	self.prefixLabel = nil;
+	self.titleLabel = nil;
+	self.updateTimeLabel = nil;
 	self.fromAddress = nil;
 	self.attachmentsTableView = nil;
 	
@@ -66,19 +68,17 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	self.backgroundColor = [UIColor clearColor];
     self.accessoryType = UITableViewCellAccessoryNone;
 
-	self.headImageView.backgroundColor = [UIColor clearColor];	
-	CALayer *layer = [self.headImageView layer];
-	[layer setCornerRadius:6.0];
 }
 
 /*
- 设置cell的数据
+	设置cell的数据
  */
 - (void)setCellWithItem :(RRNewsFeedItem*)newsFeedItem{
 	if (!newsFeedItem) {
 		return;
 	}
 	
+	//新鲜事主题的数据结构存储
 	self.newsFeedItem = newsFeedItem;
 
 	//头像
@@ -88,9 +88,20 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	}
 	
 	//用户名
-	if (self.newsFeedItem.userName && self.newsFeedItem.prefix) {
-		self.userNameLabel.text = [NSString stringWithFormat:@"%@-%@", 
-								   self.newsFeedItem.userName,self.newsFeedItem.prefix];
+	if (self.newsFeedItem.userName ) {
+		self.userNameLabel.text = self.newsFeedItem.userName;
+	}
+	
+	if (self.newsFeedItem.prefix) {
+		NSMutableString  *prefixAndTitleString = [NSMutableString stringWithString: self.newsFeedItem.prefix];
+		if (self.newsFeedItem.title) {
+			[prefixAndTitleString appendString:self.newsFeedItem.title];
+		}
+		self.prefixLabel.text  = prefixAndTitleString;
+	}
+		
+	if (self.newsFeedItem.updateTime) {
+		self.updateTimeLabel.text = [self.newsFeedItem.updateTime stringForSectionTitle3];
 	}
 	
 	//新鲜事主体，照片附件,加载图片
@@ -102,6 +113,8 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	[self.contentView removeAllSubviews];
 	[self.contentView addSubview:self.userNameLabel];
 	[self.contentView addSubview:self.headImageView];
+	[self.contentView addSubview:self.prefixLabel];
+	[self.contentView addSubview:self.updateTimeLabel];
 	[self.contentView addSubview:self.attachmentsTableView];
 }
 
@@ -114,9 +127,10 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 																  kCellTopPadding,
 																  kCellHeadImageWidth, 
 																  kCellHeadImageHeight)];
-		CALayer *layer = [self.headImageView layer];
-        [layer setCornerRadius:6.0];
-
+		CALayer* layer = [_headImageView layer];
+		[layer setCornerRadius:4.0];
+		layer.masksToBounds = YES;
+		
 	}
 	return _headImageView;
 }
@@ -126,17 +140,50 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
  */
 - (UILabel *)userNameLabel{
 	if (!_userNameLabel) {
-		_userNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100,
+		_userNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(60,
 																  kCellTopPadding,
 																  200, 
-																  kCellHeadImageHeight)];
+																  kCellHeadImageHeight / 2)];
+		
 		_userNameLabel.backgroundColor = [UIColor clearColor];
-		_userNameLabel.textColor = [UIColor blackColor];
+		_userNameLabel.textColor = RGBCOLOR(0, 229 ,238);
+		_userNameLabel.font = [UIFont systemFontOfSize:15];
 	}
 	 
 	return _userNameLabel;
 }
 
+/*
+	新鲜事更新时间
+ */
+- (UILabel *)updateTimeLabel{
+	if (!_updateTimeLabel) {
+		_updateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(kCellWidth - 60, 
+																   self.userNameLabel.top,
+																   60,
+																   20)];
+		_updateTimeLabel.textColor = RGBCOLOR(100, 100,100);
+		_updateTimeLabel.font = [UIFont fontWithName:MED_HEITI_FONT size:10];
+		_updateTimeLabel.backgroundColor = [UIColor clearColor];
+	}
+	return _updateTimeLabel;
+}
+
+/*
+	新鲜事内容前缀
+ */
+- (UILabel *)prefixLabel{
+	if (!_prefixLabel) {
+		_prefixLabel = [[UILabel alloc]initWithFrame:CGRectMake(70,
+																kCellTopPadding + self.userNameLabel.height,
+																200, 
+																kCellHeadImageHeight / 2)];
+		_prefixLabel.textColor = RGBCOLOR(100, 100, 100);
+		_prefixLabel.font = [UIFont fontWithName:MED_HEITI_FONT size:12];
+		_prefixLabel.backgroundColor = [UIColor clearColor];
+	}
+	return _prefixLabel;
+}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
@@ -155,6 +202,7 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 																			 kCellContentViewWidth)
 															style:UITableViewStylePlain];
 
+		_attachmentsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_attachmentsTableView.dataSource = self;
 		_attachmentsTableView.delegate = self;
 
@@ -202,13 +250,12 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 									 reuseIdentifier:AttachmentCellIdentifier]autorelease];
 	}
 	
-	if (indexPath.row < [self.newsFeedItem.attachments count]) {
+	if (indexPath.row < [self.newsFeedItem.attachments count]) { //重新加载新鲜事的照片内容
 		id attachment = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
 		if (attachment && [attachment isKindOfClass:RRAttachment.class]) {
 			NSURL *url = [NSURL URLWithString:[(RRAttachment*)attachment main_url]];
 			[((RNAttachmentCell *)cell).contentImageView setImageWithURL:url];
 		}
-
 	}
 		
 	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
@@ -263,7 +310,9 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	}
 	return self;
 }
-
+/*
+	cell的主内容图片（带缓存自加载能力）
+ */
 - (UIImageView *)contentImageView{
 	if (!_contentImageView) {
 		_contentImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0,kCellContentViewHeight,  kCellContentViewWidth / 3)];
