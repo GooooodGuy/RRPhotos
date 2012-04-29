@@ -106,10 +106,20 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	
 	//新鲜事主体，照片附件,加载图片
 	if (self.newsFeedItem.attachments) {	
+		
+		if ([self.newsFeedItem.attachments count] == 1) {
+			CGRect r = 	self.attachmentsTableView.frame;
+			self.attachmentsTableView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
+		}else {
+			CGRect r = 	self.attachmentsTableView.frame;
+			self.attachmentsTableView.frame = CGRectMake(r.origin.x,
+														 r.origin.y, 
+														  kCellContentViewWidth, 
+														  kCellContentViewHeight);
+		}
 		[self.attachmentsTableView reloadData];
+		NSLog(@"附件的照片的数目1 = %d", [self.newsFeedItem.attachments count]);
 	}
-
-
 	[self.contentView removeAllSubviews];
 	[self.contentView addSubview:self.userNameLabel];
 	[self.contentView addSubview:self.headImageView];
@@ -250,14 +260,29 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 									 reuseIdentifier:AttachmentCellIdentifier]autorelease];
 	}
 	
+	NSLog(@"附件的照片的数目2 = %d", [self.newsFeedItem.attachments count]);
+
 	if (indexPath.row < [self.newsFeedItem.attachments count]) { //重新加载新鲜事的照片内容
 		id attachment = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
 		if (attachment && [attachment isKindOfClass:RRAttachment.class]) {
 			NSURL *url = [NSURL URLWithString:[(RRAttachment*)attachment main_url]];
 			[((RNAttachmentCell *)cell).contentImageView setImageWithURL:url];
+			
+			//仅有一张照片的时候高度做调整
+			if ([self.newsFeedItem.attachments count] == 1) {
+				CGRect r = 	((RNAttachmentCell *)cell).contentImageView.frame;
+				((RNAttachmentCell *)cell).contentImageView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
+			}else {
+				((RNAttachmentCell *)cell).contentImageView.frame = CGRectMake(0, 
+															 0,
+															 kCellContentViewWidth / 3,  
+															 kCellContentViewWidth / 3);
+			}
+
 		}
 	}
 		
+	
 	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 
 	return cell;
@@ -310,15 +335,21 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	}
 	return self;
 }
+
 /*
 	cell的主内容图片（带缓存自加载能力）
  */
 - (UIImageView *)contentImageView{
 	if (!_contentImageView) {
-		_contentImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0,kCellContentViewHeight,  kCellContentViewWidth / 3)];
+		_contentImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 
+																		 0,
+																		 kCellContentViewWidth / 3,  
+																		 kCellContentViewWidth / 3)];
 		CGRect r = _contentImageView.frame;
+
 		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
 		_contentImageView.transform = CGAffineTransformRotate(self.transform,  M_PI / 2);
+
 	}
 	return _contentImageView;
 }

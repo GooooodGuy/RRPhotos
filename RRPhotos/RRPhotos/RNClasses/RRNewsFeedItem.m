@@ -81,6 +81,7 @@
 - (id)initWithDictionary:(NSDictionary*) dictionary
 {
 	if (self = [super init]) {
+		NSLog(@"原始数据 ------------- %@",dictionary);
 		self.feedId = [dictionary objectForKey:@"id"];
 		self.sourceId = [dictionary objectForKey:@"source_id"];
 		self.sourceId = [dictionary objectForKey:@"source_id"];

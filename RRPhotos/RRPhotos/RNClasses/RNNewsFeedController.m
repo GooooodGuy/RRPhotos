@@ -141,6 +141,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
+	if ([item.attachments count] == 1) {
+		return 370; //如果是单张图片高度变宽
+	}
 	return kCellHeight;
 }
 
@@ -159,8 +163,8 @@
 //        } 
 	}	
 	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
-	[cell setCellWithItem:item]; //cia
-	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+	[cell setCellWithItem:item]; 
+//	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 	return cell;	
 }
 @end
