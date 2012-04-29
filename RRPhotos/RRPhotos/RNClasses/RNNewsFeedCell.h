@@ -25,7 +25,7 @@
 /*			新鲜事主列表的cell					*/
 /*	-------------------------------------	*/
 
-@interface RNNewsFeedCell : UITableViewCell
+@interface RNNewsFeedCell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
 {
 	//新鲜事主体数据
 	RRNewsFeedItem *_newsFeedItem;
@@ -63,12 +63,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*	-------------------------------------	*/
-/*			新鲜事主列表的cell					*/
+/*			新鲜事主列表的照片附件cell			*/
 /*	-------------------------------------	*/
-@interface attachmentCell : UITableViewCell
+@interface RNAttachmentCell : UITableViewCell
 {
-	UIImageView *_bgImageView;
-	
 	UIImageView *_contentImageView;
 }
 @property(nonatomic,retain)UIImageView *bgImageView;

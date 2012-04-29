@@ -13,6 +13,8 @@
 
 @interface RNMainViewController ()
 
+//初始设置
+- (void)initView;
 @end
 
 @implementation RNMainViewController

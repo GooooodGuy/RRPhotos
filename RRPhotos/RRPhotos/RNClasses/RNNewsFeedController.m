@@ -141,7 +141,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-	return 150;
+	return 160;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -151,7 +151,8 @@
 	NSLog(@"row = %d",indexPath.row);
 
 	if (!cell) {
-		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
+		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault 
+									 reuseIdentifier:cellIdentifier]autorelease];
 	}else {
 //		while ([cell.contentView.subviews lastObject] != nil) {  
 //            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
