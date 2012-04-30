@@ -9,19 +9,9 @@
 #import "RNNewsFeedCell.h"
 #import <QuartzCore/QuartzCore.h>
 
-static const CGFloat kCellLeftPadding = 10;         // 内容左填充
-static const CGFloat kCellTopPadding = 2;           //  内容顶部填充
-static const CGFloat kCellBottomPadding = 5;        //  内容底部填充
-static const CGFloat kCellRightPadding = 5;         //  内容右填充
+@interface RNNewsFeedCell(/*私有方法*/)
 
-static const CGFloat kCellHeadImageHeight = 40;     // 头像高度
-static const CGFloat kCellHeadImageWidth = 40;      // 头像宽度 
-
-static const CGFloat kCellHeadContentSpace = 10;     // 头像和滚动视图的空隙
-static const CGFloat kCellContentViewHeight = (kCellHeight - kCellHeadContentSpace  - kCellHeadImageHeight);    //多图片滚动视图高度
-static const CGFloat kCellContentViewWidth = 320;
-static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照片数量
-
+@end
 
 @implementation RNNewsFeedCell
 
@@ -186,7 +176,7 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	if (!_prefixLabel) {
 		_prefixLabel = [[UILabel alloc]initWithFrame:CGRectMake(70,
 																kCellTopPadding + self.userNameLabel.height,
-																200, 
+																kCellWidth - kCellLeftPadding - 70, 
 																kCellHeadImageHeight / 2)];
 		_prefixLabel.textColor = RGBCOLOR(100, 100, 100);
 		_prefixLabel.font = [UIFont fontWithName:MED_HEITI_FONT size:12];
@@ -206,12 +196,12 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	
 	if (!_attachmentsTableView) {
 		
-		_attachmentsTableView = [[UITableView alloc]initWithFrame:CGRectMake(kCellHeadImageHeight + kCellHeadContentSpace, 
+		_attachmentsTableView = [[UITableView alloc]initWithFrame:CGRectMake(kCellHeadImageHeight + kCellTopPadding + kCellHeadContentSpace, 
 																			 0,
 																			 kCellContentViewHeight, 
 																			 kCellContentViewWidth)
 															style:UITableViewStylePlain];
-
+		_attachmentsTableView.backgroundColor = [UIColor clearColor];
 		_attachmentsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_attachmentsTableView.dataSource = self;
 		_attachmentsTableView.delegate = self;
@@ -226,7 +216,6 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 		r = _attachmentsTableView.frame;
 		NSLog(@"90旋转变化之后---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
 
-		
 		_attachmentsTableView.frame = CGRectMake(new_x, new_y, r.size.width, r.size.height);
 		r = _attachmentsTableView.frame;
 		
@@ -314,6 +303,7 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	
 	[super layoutSubviews];
 	
+	self.contentView.backgroundColor = [UIColor clearColor];
 	self.detailTextLabel.backgroundColor = [UIColor clearColor];
 	self.textLabel.backgroundColor = [UIColor clearColor];
 	self.selectionStyle = UITableViewCellSelectionStyleNone; 
@@ -326,7 +316,12 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 	[selectedView release];
 	
 	[self.contentView removeAllSubviews];
+
 	[self.contentView addSubview:self.contentImageView];
+	CALayer* layer = [self.contentImageView layer];
+	[layer setCornerRadius:6.0];
+	layer.masksToBounds = YES;
+
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -345,11 +340,11 @@ static const NSInteger kCellContentViewPhotoCount = 3;	//滚动视图内的照�
 																		 0,
 																		 kCellContentViewWidth / 3,  
 																		 kCellContentViewWidth / 3)];
+		_contentImageView.backgroundColor = [UIColor clearColor];
 		CGRect r = _contentImageView.frame;
-
+		
 		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
 		_contentImageView.transform = CGAffineTransformRotate(self.transform,  M_PI / 2);
-
 	}
 	return _contentImageView;
 }

@@ -12,7 +12,22 @@
 #import "RRNewsFeedItem.h"
 #import "UIImageView+RRWebImage.h"
 
-#define  kCellHeight  150 //cell的高度
+
+#define  kCellLeftPadding 10        // 内容左填充
+#define  kCellTopPadding  20        //  内容顶部填充
+#define  kCellBottomPadding 5       //  内容底部填充
+#define  kCellRightPadding 5        //  内容右填充
+
+#define  kCellHeadImageHeight 40    // 头像高度
+#define  kCellHeadImageWidth 40     // 头像宽度 
+
+#define  kCellHeadContentSpace  20     // 头像和滚动视图的空隙
+#define  kCellContentViewPhotoCount  3 //滚动视图内的照片数量
+#define  kCellContentViewHeight (kCellWidth / kCellContentViewPhotoCount)//多图片滚动视图高度
+#define  kCellContentViewWidth  320.0
+
+#define  kCellHeight  (kCellTopPadding + kCellHeadImageHeight + \
+					kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 #define  kCellWidth  320
 
 @protocol RNNewsFeedCellDelegate <NSObject>
