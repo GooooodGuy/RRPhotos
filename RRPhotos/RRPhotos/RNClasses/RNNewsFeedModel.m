@@ -8,7 +8,7 @@
 
 #import "RNNewsFeedModel.h"
 #import "RRNewsFeedItem.h"
-#define kMaxNewsFeedCount 50
+#define kMaxNewsFeedCount 500
 @implementation RNNewsFeedModel
 
 @synthesize newsFeedCount = _newsFeedCount;
@@ -98,9 +98,14 @@
 	[self clearData]; //先清除数据
 	_newsFeeds = [[NSMutableArray alloc]initWithCapacity:kMaxNewsFeedCount];
 	for (id feedItem in feedList ) {
-		RRNewsFeedItem *newsFeedItem = [RRNewsFeedItem newsfeedWithDictionary:(NSDictionary *) feedItem];
-		[self.newsFeeds  addObject:newsFeedItem];
+		if ([feedItem isKindOfClass:NSDictionary.class] ) {
+			RRNewsFeedItem *newsFeedItem = [RRNewsFeedItem newsfeedWithDictionary:(NSDictionary *) feedItem];
+			if (newsFeedItem) {
+				[self.newsFeeds  addObject:newsFeedItem];
+			}
+		}
 	}
+	
 	self.newsFeedCount = [self.newsFeeds count];
 	
    [_delegates perform:@selector(modelDidFinishLoad:) withObject:self];

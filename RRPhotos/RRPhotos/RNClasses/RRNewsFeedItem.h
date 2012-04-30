@@ -12,7 +12,7 @@
 ///新鲜事的类型
 #define ITEM_TYPES_NEWSFEED_FOR_PAGE	@"2002,2003,2004,2005,2006,2008,2009,2012,2013,2015"
 #define ITEM_TYPES_NEWSFEED_FOR_USER	@"102,103,104,107,110,501,502,601,701,709,1101,1104,2002,2003,2004,2005,2006,2008,2009,2012,2013,2015,8001,8002,8003,8004"
-#define ITEM_TYPES_NEWSFEED_FOR_PHOTO   @"103,104,701,709,2004,2013"
+#define ITEM_TYPES_NEWSFEED_FOR_PHOTO   @"103,104,701,709,2004,2013,2009"
 typedef enum {
     
 	RRItemTypeHeadUpdated =                 501, // head updated	
@@ -34,7 +34,7 @@ typedef enum {
     RRItemTypeLinkSharedForPage =           2005, // link shared for page
 	RRItemTypeVideoSharedForPage =          2006, // video shared for page
 	RRItemTypeStatusUpdatedForPage =		2008, // status updated for page
-    RRItemTypeAlbumSharedForPage =          2009, // share album for page
+    RRItemTypeAlbumSharedForPage =          2009, // share album for page  ------------
 	RRItemTypeBlogPublishForPage =			2012, // blog publish for page
 	RRItemTypePhotoUploadForPage =			2013, // photo upload for page -------------
 	RRItemTypePageHeadPhotoUpdate =         2015, // Page Head Photo Update

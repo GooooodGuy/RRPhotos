@@ -64,12 +64,14 @@
 		case RRItemTypeAlbumShared:
 		case RRItemTypePhotoUploadForPage:
         case RRItemTypeAlbumSharedForPage:
+		case RRItemTypePhotoSharedForPage:
 		case RRItemTypePhotoShared:
 		case RRItemTypePhotoUploadOne:
 		case RRItemTypePhotoUploadMore: { //目前支持照片的新鲜事
 			RRNewsfeedPhotoItem* newsfeed = [[[RRNewsfeedPhotoItem alloc] initWithDictionary:dictionary] autorelease];
 			return newsfeed;
-		}
+		}break;
+			
 		default:
 			break;
 	}
