@@ -9,7 +9,7 @@
 #import "RNBaseViewController.h"
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-
+#import "RCClientLoginRequest.h"
 @protocol RNLoginDelegate <NSObject>
 
 //登陆结束
@@ -35,6 +35,9 @@
     NSString* _lastPassword;
 
 	id<RNLoginDelegate> _loginDelegat;
+	
+	
+	RCClientLoginRequest *_loginRequest;
 }
 
 /**
@@ -75,6 +78,7 @@
 @property (nonatomic, copy) NSString* lastUsername;
 @property (nonatomic, copy) NSString* lastPassword;
 @property(nonatomic,assign)id<RNLoginDelegate> loginDelegate;
+@property(nonatomic,retain)RCClientLoginRequest *loginRequest;
 @end
 
 //画出登陆框的中间的线

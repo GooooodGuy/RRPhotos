@@ -8,7 +8,38 @@
 
 #import "RCMainUser.h"
 
+// 最后一次登录的用户ID
+#define kLastLoginUserId            @"kLastLoginUserId"
+// 5.0之前版本持久化 MainUser 的 Key
+#define kLoginUserKeyLowerV5              @"kRRUserKey" 
+
+
+// mainUser持久化文件名
+#define kMainUserFileName @"user"
+// 公共目录名
+#define kCommonDir @"common"
+
 @interface RCMainUser (Private)
+
+//  是否需要从5.0之前版本更新
++ (BOOL)isNeedUpdateLowerV5:(NSNumber *)userId;
+
+// 从5.0之前版本更新
++ (RCMainUser *)readFromDiskLowerV5:(NSNumber *)userId;
+
+// 从持久化数据中读取mainUser
++ (RCMainUser *)readFromDisk:(NSNumber *)userId;
+
+// 清除 5.0 之前的缓存
++ (void)clearLowerV5Cache:(NSNumber *)userId;
+
+// 5.0 之前的mainuser持久化路径
++ (NSString *)persistPathLowerV5:(NSNumber *)userId;
+
+// 5.0 版本之后的持久化路径
+- (NSString *)persistPath:(NSNumber *)userId;
+
+
 
 @end
 
@@ -17,49 +48,49 @@ static RCMainUser* _instance = nil;
 @implementation RCMainUser
 
 @synthesize loginAccount = _loginAccount;
-//@synthesize loginPassword = _loginPassword;
 @synthesize ticket = _ticket;
-@synthesize mticket = _mticket;
 @synthesize sessionKey = _sessionKey;
-@synthesize msessionKey = _msessionKey;
-@synthesize mprivateSecretKey = _mprivateSecretKey;
+@synthesize userSecretKey = _userSecretKey;
 @synthesize md5Password = _md5Password;
-//@synthesize loginStatus = _loginStatus;
-@synthesize checkFriendList;
-@synthesize lastLoginDate;
-
-@synthesize headAlbumID;
-//@synthesize soundFileObject;
-@synthesize soundFileURLRef;
-@synthesize checkFavourite;
+@synthesize loginStatus = _loginStatus;
+@synthesize lastLoginDate = _lastLoginDate;
 @synthesize checkIsNewUser = _checkIsNewUser;
 @synthesize sessionId = _sessionId;
-@synthesize keyboardY = _keyboardY;
-@synthesize cannotGoProfile,fromNoTudou;
+@synthesize isLogin = _isLogin;
+@synthesize loginCount = _loginCount;
 
 + (RCMainUser *) getInstance {
 	@synchronized(self) {
-        
 		if (_instance == nil) {
             // 看是否有最近的登录用户Id
-            //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            //NSNumber *userId = [defaults objectForKey:kLastLoginUserId];
-            NSNumber *userId = nil;
-            //NSString *userIdStr = [userId stringValue];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSNumber *userId = [defaults objectForKey:kLastLoginUserId];
+            
             if (userId) {
-                //_instance = [(RCMainUser *)RR_PERSIST_GETOBJECT_WITH_USER_ID(kLoginUserKey, userId) retain];
-                if (!_instance) {
-                    [[RCMainUser alloc] init]; // assignment not done here
-                    
+                // 登陆过的逻辑
+                if ([RCMainUser isNeedUpdateLowerV5:userId]) {
+                    // 需要从5.0之前版本升级
+                    _instance = [RCMainUser readFromDiskLowerV5:userId];
+                    [RCMainUser clearLowerV5Cache:userId];
+                    [_instance persist];
+                }
+                else {
+                    // 5.0 之后版本逻辑
+                    _instance = [RCMainUser readFromDisk:userId];
+                    if (!_instance) {
+                        [[RCMainUser alloc] init]; // assignment not done here
+                    }
                 }
             } else {
+                // 从未登陆过的逻辑
                 [[RCMainUser alloc] init];
             }
-            
 		}
 	}
+    
 	return _instance;
 }
+
 
 + (id) allocWithZone:(NSZone*) zone {
 	@synchronized(self) {
@@ -94,30 +125,8 @@ static RCMainUser* _instance = nil;
 - (id) init
 {
 	if (self = [super init]){
-        //self.loginStatus = RRLoginStatusNotLogin;
-        
-        // Get the main bundle for the app
-        CFBundleRef mainBundle;
-        mainBundle = CFBundleGetMainBundle ();
-        
-        // Get the URL to the sound file to play
-        soundFileURLRef  =	CFBundleCopyResourceURL (
-                                                     mainBundle,
-                                                     CFSTR ("sub"),
-                                                     CFSTR ("caf"),
-                                                     NULL
-                                                     );
-        
-        // Create a system sound object representing the sound file
-//        AudioServicesCreateSystemSoundID (
-//                                          soundFileURLRef,
-//                                          &soundFileObject
-//                                          );
-        
         [self clear];
         self.userId = [NSNumber numberWithInt:0];
-        self.keyboardY = 200;
-        self.cannotGoProfile = NO;
 	}
 	return self;
 }
@@ -125,16 +134,12 @@ static RCMainUser* _instance = nil;
 
 - (void) dealloc
 {
-    TT_RELEASE_SAFELY(_loginAccount);
-    //	TT_RELEASE_SAFELY(_loginPassword);
-    TT_RELEASE_SAFELY(_ticket);
-	TT_RELEASE_SAFELY(_mticket);
-    TT_RELEASE_SAFELY(_sessionKey);
-    TT_RELEASE_SAFELY(_msessionKey);
-    TT_RELEASE_SAFELY(_mprivateSecretKey);
-	TT_RELEASE_SAFELY(_md5Password);
-	[headAlbumID release];
-	//TT_RELEASE_SAFELY(_loginModel);
+    self.loginAccount = nil;
+    self.md5Password = nil;
+    self.ticket = nil;
+    self.sessionKey = nil;
+    self.userSecretKey = nil;
+    self.sessionId = nil;
 	
 	[super dealloc];
 }
@@ -143,65 +148,38 @@ static RCMainUser* _instance = nil;
 
 - (void) clear
 {
-	//self.loginStatus = RRLoginStatusNotLogin;
 	self.ticket = nil;
-    self.mticket = nil;
-	
 	self.sessionKey = nil;
-	self.msessionKey = nil;
-	self.mprivateSecretKey = nil;
-	
-    //	self.loginPassword = nil;
+	self.userSecretKey = nil;
 	self.md5Password = nil;
-	
-	self.headAlbumID = nil;
-    
-	self.checkFriendList = NO;
 	self.lastLoginDate = 0.0;
-    // RRUser数据清空
-	//self.userId = 0;
     self.userName = nil;
     self.networkName = nil;
-    //self.birthday = nil;
     self.tinyurl = nil;
     self.headurl = nil;
-	isFirst = YES;
-	
-	isSavingFriendsList = NO;
-    // 清空新用户引导判断
     self.checkIsNewUser = NO;
-    // MainUser是被持久化的，如果新添加了成员一定要在注销时干掉它
     self.sessionId = nil;
-    
 }
 
 #pragma mark -
 #pragma mark Public
 - (void)persist {
-//	NSNumber *userId = self.userId;
+    NSNumber *userId = self.userId;
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setObject:userId forKey:kLastLoginUserId];
 	
-//	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//	[defaults setObject:userId forKey:kLastLoginUserId];
-//	
-//	if (userId) {
-//		RR_PERSIST_SETOBJECT_WITH_USER_ID(kLoginUserKey, self, userId);
-//	}
+	if (userId) {
+        NSString *persistPath = [RCMainUser persistPath:userId];
+        [NSKeyedArchiver archiveRootObject:self toFile:persistPath];
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)login:(NSString*)name password:(NSString*)pwd {
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)logout {
-	RCMainUser *mainUser = [RCMainUser getInstance];
-    //mainUser.loginStatus = RRLoginStatusNotLogin;
+	RCMainUser *mainUser = _instance;
+    mainUser.isLogin = NO;
 	[mainUser clear];
 	[mainUser persist];
-    //[mainUser invalidate:YES];
-	
-	// 删去最后登录用户记录
-	//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	//[defaults removeObjectForKey:kLastLoginUserId];
 }
 
 - (BOOL) isMainUser
@@ -222,10 +200,11 @@ static RCMainUser* _instance = nil;
 	
 	return NSOrderedSame == [self.userId compare:anUserId] ? TRUE : FALSE;
 }
+
 #pragma mark -
 #pragma mark push notification methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)openPushNotification{
++ (void)registerPushNotification{
 	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeNone|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound];
 }
 
@@ -234,21 +213,12 @@ static RCMainUser* _instance = nil;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithCoder:(NSCoder *)decoder {
 	if (self = [super initWithCoder:decoder]) {
-        // 设置为未登录状态。
-		//self.loginStatus = RRLoginStatusNotLogin;
-		
-		self.ticket = [decoder decodeObjectForKey:@"ticket"];
-		self.mticket = [decoder decodeObjectForKey:@"mticket"];
-		
-		self.sessionKey = [decoder decodeObjectForKey:@"sessionKey"];
-		self.msessionKey = [decoder decodeObjectForKey:@"msessionKey"];
-		
-		self.mprivateSecretKey = [decoder decodeObjectForKey:@"mprivateSecretKey"];
-		
+        // 由于兼容 5.0 之前版本，所以key值与属性名不一致
+		self.ticket = [decoder decodeObjectForKey:@"mticket"];
+		self.sessionKey = [decoder decodeObjectForKey:@"msessionKey"];
+		self.userSecretKey = [decoder decodeObjectForKey:@"mprivateSecretKey"];
 		self.loginAccount = [decoder decodeObjectForKey:@"loginAccount"];
 		self.md5Password = [decoder decodeObjectForKey:@"md5Password"];
-        //		self.loginPassword = [decoder decodeObjectForKey:@"loginPassword"];
-        
         self.checkIsNewUser = [decoder decodeBoolForKey:@"checkIsNewUser"];
 	}
 	return self;
@@ -258,55 +228,122 @@ static RCMainUser* _instance = nil;
 	[super encodeWithCoder:encoder];
     
 	[encoder encodeObject:self.loginAccount forKey:@"loginAccount"];
-    //	[encoder encodeObject:self.loginPassword forKey:@"loginPassword"];
 	[encoder encodeObject:self.md5Password forKey:@"md5Password"];
-	
-	[encoder encodeObject:self.ticket forKey:@"ticket"];
-	[encoder encodeObject:self.mticket forKey:@"mticket"];
-	
-	[encoder encodeObject:self.sessionKey forKey:@"sessionKey"];
-	[encoder encodeObject:self.msessionKey forKey:@"msessionKey"];
-	
-	[encoder encodeObject:self.mprivateSecretKey forKey:@"mprivateSecretKey"];
-    
+	[encoder encodeObject:self.ticket forKey:@"mticket"];
+	[encoder encodeObject:self.sessionKey forKey:@"msessionKey"];
+	[encoder encodeObject:self.userSecretKey forKey:@"mprivateSecretKey"];
     [encoder encodeBool:self.checkIsNewUser forKey:@"checkIsNewUser"];
 }
-#pragma mark -
-#pragma mark TTModel methods
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//- (void)load:(TTURLRequestCachePolicy)cachePolicy more:(BOOL)more {
-//    if (!self.isLoading) {
-//        // 准备登录
-//        if (RRLoginStatusWillLogin == self.loginStatus) {
-//            
-//        }
-//    }
-//    [super load:cachePolicy more:more];
-//}
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//- (void)requestDidFinishLoad:(TTURLRequest*)request {
-//	[super requestDidFinishLoad:request];
-//    
-//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-//    [nc postNotificationName:NN_USER_INFO_DID_LOAD object:self];
-//    
-//    // Persist user.
-//    RRMainUser *mainUser = self;
-//    NSNumber *userId = mainUser.userId;
-//    RR_PERSIST_SETOBJECT_WITH_USER_ID(kLoginUserKey, mainUser, userId);
-//}
 
+//  是否需要从5.0之前版本更新
++ (BOOL)isNeedUpdateLowerV5:(NSNumber *)userId{
+    NSString *userFile = [RCMainUser persistPathLowerV5:userId];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if ([fileMgr fileExistsAtPath:userFile]) {
+        return YES;
+    }
+    return NO;
+}
+
+// 从5.0之前版本更新
++ (RCMainUser *)readFromDiskLowerV5:(NSNumber *)userId{
+    NSString *userFile = [RCMainUser persistPathLowerV5:userId];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:userFile];
+}
+
+// 从持久化数据中读取mainUser
++ (RCMainUser *)readFromDisk:(NSNumber *)userId{
+    NSString *userFile = [RCMainUser persistPath:userId];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:userFile];
+}
+
+// 清除 5.0 之前的缓存
++ (void)clearLowerV5Cache:(NSNumber *)userId{
+    NSString *userFile = [RCMainUser persistPathLowerV5:userId];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    [fileMgr removeItemAtPath:userFile error:nil];
+}
 
 - (BOOL) checkLoginInfo
 {
-	//double per = fabs([NSDate timeIntervalSinceReferenceDate] - self.lastLoginDate);
-	if (self.msessionKey && self.mprivateSecretKey) {
-		
+	if (self.sessionKey && self.userSecretKey) {
 		return YES;
 	}
 	
 	return NO;
 }
 
+// App Document 路径
++ (NSString *)documentPath{
+    NSArray *searchPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [searchPath objectAtIndex:0];
+    return path;
+}
+
+// 公共文件夹路径
++ (NSString *)commonPath{
+    NSString *path = [[RCMainUser documentPath] stringByAppendingPathComponent:kCommonDir];
+    
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if (![fileMgr fileExistsAtPath:path]) {
+        NSError *error = nil;
+        [fileMgr createDirectoryAtPath:path
+           withIntermediateDirectories:YES
+                            attributes:nil
+                                 error:&error];
+        if (error) {
+            NSLog(@"创建 commonPath 失败 %@", error);
+        }
+    }
+    
+    return path;
+}
+
+// 用户路径
+- (NSString *)userDocumentPath{
+    NSString *path = [[RCMainUser documentPath] stringByAppendingPathComponent:[self.userId stringValue]];
+    
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if (![fileMgr fileExistsAtPath:path]) {
+        NSError *error = nil;
+        [fileMgr createDirectoryAtPath:path
+           withIntermediateDirectories:YES
+                            attributes:nil
+                                 error:&error];
+        if (error) {
+            NSLog(@"创建 userDocumentPath 失败 %@", error);
+        }
+    }
+    
+    return path;
+}
+
+// 5.0 之前的mainuser持久化路径
++ (NSString *)persistPathLowerV5:(NSNumber *)userId{
+	NSString *documentDirectory = [RCMainUser documentPath];
+	NSString *fileName = [NSString stringWithFormat:@"rr_persistence_%@_object_%@", userId, kLoginUserKeyLowerV5];
+	NSString* path = [documentDirectory stringByAppendingPathComponent:fileName];
+	return path;
+}
+
+// 5.0 版本之后的持久化路径
++ (NSString *)persistPath:(NSNumber *)userId{
+    NSString *dirPath = [[RCMainUser documentPath] stringByAppendingPathComponent:[userId stringValue]];
+    
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if (![fileMgr fileExistsAtPath:dirPath]) {
+        NSError *error = nil;
+        [fileMgr createDirectoryAtPath:dirPath
+           withIntermediateDirectories:YES
+                            attributes:nil
+                                 error:&error];
+        if (error) {
+            NSLog(@"创建 userDocumentPath 失败 %@", error);
+        }
+    }
+    
+    NSString *path = [dirPath stringByAppendingPathComponent:kMainUserFileName];
+    return path;
+}
 
 @end

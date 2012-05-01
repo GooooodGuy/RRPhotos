@@ -5,21 +5,21 @@
 //  Created by yi chen on 12-3-29.
 //  Copyright (c) 2012年 RenRen.com. All rights reserved.
 //
-
 #import "RNEditPhotoViewController.h"
-
+#import "AppDelegate.h"
 #import "RCBaseRequest.h"
 #import "RCMainUser.h"
-
+#import "RCResManager.h"
 #define ALBUM_TABLE_CELL_HEIGHT 20 //相册选择列表的单元高度
 #define ALBUM_TABLE_HEIGHT 300 //相册选择列表的高度
-#define NAVIGATIONBAR_BACKGROUND @"navigationbar_background.png"
 #define MAX_IMAGE_DISPLAY_WIDTH 320 //最大的照片显示宽度
 
-static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; };
+#define kSlibBarPointMinX 235   //图片切换小点的左右极限坐标
+#define kSlibBarPointMaxX 289
 
+#pragma mark 私有方法
 /**
- *私有方法
+ *	私有方法
  */
 @interface RNEditPhotoViewController ()
 
@@ -29,18 +29,23 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 - (void)requestDidError:(RCError *)error;
 //载入图片
 -(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size  isToLoadHDImage:(BOOL) isToLoadHDImage ;
-//旋转图片
-- (UIImage *)imageRotated:(UIImage*)img andByDegrees:(CGFloat)degrees;
 //展示相册列表
 - (void)showAlbumTable;
 //隐藏相册列表
 - (void)hiddenAlbumTable;
-
+//高清普通按钮切换
+- (void)onClickSwitchButton;
+//调整图片到中心
+- (void)ajustImageViewCenter;
+//显示照片
+- (void)displayCurrentView;
 @end
 
 
 @implementation RNEditPhotoViewController
+
 @synthesize currentImageView = _currentImageView;
+@synthesize cutPhotoBgView = _cutPhotoBgView;
 @synthesize highQualityImage = _highQualityImage;
 @synthesize normalQualityImage = _normalQualityImage;
 @synthesize qualityLengthLabel = _qualityLengthLabel;
@@ -49,10 +54,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 @synthesize hdTextLabel = _hdTextLabel;
 @synthesize normalTextLabel = _normalTextLabel;
 @synthesize photoTurnLeftButton = _photoTurnLeftButton;
+@synthesize photoTurnRightButton = _photoTurnRightButton;
 @synthesize toolBarView = _toolBarView;
 @synthesize albumSelectBarView = _albumSelectBarView;
 @synthesize albumNameTableView = _albumNameTableView;
 @synthesize albumID = _albumID;
+@synthesize albumName = albumName;
 @synthesize albumNameLabel = _albumNameLabel;
 @synthesize arrowView = _arrowView;
 @synthesize albumIDArray = _albumIDArray;
@@ -60,50 +67,62 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 @synthesize requestAssistant = _requestAssistant;
 @synthesize oldSelectedIndexPath = _oldSelectedIndexPath;
 
+#pragma mark -方法
 
 - (void)dealloc{
 
 	self.currentImageView  = nil;
+	self.cutPhotoBgView = nil;
 	self.highQualityImage = nil;
 	self.normalQualityImage = nil;
 	self.qualityLengthLabel = nil;
-
 	self.topNavView = nil;
-
 	self.slibBarPoiontView = nil;
 	self.hdTextLabel = nil;
 	self.normalTextLabel = nil;
 	self.photoTurnLeftButton = nil;
+	self.photoTurnRightButton = nil;
 	self.toolBarView = nil;
 	self.albumNameTableView = nil;
 	self.albumID = nil;
+    self.albumName = nil;
 	self.albumSelectBarView = nil;
 	self.albumNameLabel = nil;
 	self.arrowView = nil;
 	self.albumIDArray = nil;
 	self.delegate = nil;
 	self.requestAssistant = nil;
+	
+	TT_RELEASE_SAFELY(_doubleTapGesture);
+	TT_RELEASE_SAFELY(_singleTapGesture);
+	TT_RELEASE_SAFELY(_pinchGesture);
+	TT_RELEASE_SAFELY(_panGesture);
 	[super dealloc];
 }
 
-/*
- * 从外部导入要编辑的图片
+/**
+ * uploadType :默认是普通照片上传
  */
-- (void)loadImageToEdit:(UIImage *)editImage{
-	
-	//载入高清图片
-	self.highQualityImage = [self scaleAndRotateImage:editImage size:1024 isToLoadHDImage:YES];
-	_highQualityLength = [UIImageJPEGRepresentation(_highQualityImage, 1.0f) length];
+- (id)initWithType: (PhotoUploadType)uploadType{
+	_uploadType = uploadType;
+	if (self = [self init]) {
+		self.albumName = @"头像相册";
+	}
+	return  self;
+}
 
-	//载入普通图片
-	UIImage* lowimg = [self scaleAndRotateImage:editImage size:600 isToLoadHDImage:NO];
-	NSData* data = UIImageJPEGRepresentation(lowimg, 0.98f);
-	
-	_normalQualityLength = [data length];
-	
-	
-	self.normalQualityImage = [UIImage imageWithData:data];
-
+/**
+ * 向指定相册上传照片
+ * @param albumId 相册id
+ * @param albumName 相册名称
+ * @author siglea 
+ */
+- (id)initWithAlbumId:(NSString *)albumId withAlbumName:(NSString *)albumname{
+    if (self = [self init]) {
+        self.albumID = albumId;
+        self.albumName = albumname;
+    }
+    return self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -115,9 +134,6 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		//默认是非全屏浏览模式
 		isFullScreenMode = NO;
 		
-		//默认选用高清图片
-		isHDPhoto = YES;
-		
 		//默认是没有展开相册列表
 		isExpand = NO;
 		
@@ -126,62 +142,133 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		self.requestAssistant.onCompletion = ^(NSDictionary* result){
 			[self requestDidSucceed:result];
 		};
-		
 		self.requestAssistant.onError = ^(RCError* error) {
 			[self requestDidError:error];
 		};
 				
 		//相册列表数组
-		_albumIDArray= [[NSMutableArray alloc]initWithCapacity:100];
+		_albumIDArray= [[NSMutableArray alloc]initWithCapacity:1000];
+		
+		UIImageView *currentImageView = [[UIImageView alloc ]init];
+		self.currentImageView = currentImageView;
+		TT_RELEASE_SAFELY(currentImageView);
+
     }
     return self;
 }
 
+/*
+ * 从外部导入要编辑的图片
+ */
+- (void)loadImageToEdit:(UIImage *)editImage{
+	NSLog(@"cy -------- 原始图片的高：%f 宽：%f",editImage.size.height, editImage.size.width);
+	//载入高清图片
+//	self.highQualityImage = [editImage scaleWithMaxSize:1024];
+	self.highQualityImage = [self scaleAndRotateImage:editImage size:1024];
+	_highQualityLength = [UIImageJPEGRepresentation(_highQualityImage, 1.0f) length];
+	
+	//载入普通图片
+//	UIImage* lowimg = [editImage scaleWithMaxSize:516];
+	UIImage* lowimg = [self scaleAndRotateImage:editImage size:516];
+	NSData* data = UIImageJPEGRepresentation(lowimg, 1.0f);
+	
+	_normalQualityLength = [data length];
+	self.normalQualityImage = [UIImage imageWithData:data];
+}
 
-#pragma -mark 显示照片
-//显示当前要编辑的照片
+
+#pragma mark - 显示照片  加载界面
+/* 
+	显示当前要编辑的照片,加载整个界面的视图
+ */
 - (void)displayCurrentView{
 	
 	if(nil == self.highQualityImage){
 		return;
 	}
 	
-	
 	CGFloat image_w = self.highQualityImage.size.width;
 	CGFloat image_h = self.highQualityImage.size.height;
-	NSLog(@"原始图片的宽度：%f 高度 %f",image_w,image_h);
-	
+	NSLog(@"原高清图片的 宽度：%f 高度 %f",image_w,image_h);
+	NSLog(@"普通清晰图的 宽度：%f 高度 %f",self.normalQualityImage.size.width ,self.normalQualityImage.size.height);
 	CGFloat newImageWidth = image_w ;
 	CGFloat newImageHeigth = image_w;
 
-	if (image_w > MAX_IMAGE_DISPLAY_WIDTH) {
-		newImageWidth = MAX_IMAGE_DISPLAY_WIDTH;//宽度设为最大的显示
-		newImageHeigth = newImageWidth / image_w * image_h; 
+	if (image_w > image_h && image_h > MAX_IMAGE_DISPLAY_WIDTH) {
+		newImageHeigth = MAX_IMAGE_DISPLAY_WIDTH;//宽度设为最大的显示
+		newImageWidth = newImageHeigth / image_h * image_w; 
+	}else if (image_w > MAX_IMAGE_DISPLAY_WIDTH){
+		newImageWidth = MAX_IMAGE_DISPLAY_WIDTH;
+		newImageHeigth = newImageWidth / image_w * image_h;
 	}
-
 
 	CGRect viewFrame = CGRectMake(160 - newImageWidth / 2, 230 - newImageHeigth / 2,
 								   newImageWidth, newImageHeigth);
 	_lastDisplayFrame = viewFrame;//记录最近一次的显示矩形框
 	
 	[self.view removeAllSubviews];//先移除，否则会被覆盖
-	
-	
+	//主照片
+
+	self.currentImageView.frame = viewFrame;
+	[self.view addSubview:self.currentImageView];
+	if (_uploadType == PhotoUploadTypeHead) {
+		UIImage *cutPhotoBgImage = [[RCResManager getInstance]imageForKey:@"cutPhotoFrame"];
+		UIImageView *cutPhotoBgView = [[UIImageView alloc]initWithImage:[cutPhotoBgImage 
+																		 stretchableImageWithLeftCapWidth:1 
+																			topCapHeight:1]];
+		
+		CGRect imgframe;
+		if(newImageWidth < newImageHeigth){
+			imgframe = CGRectMake(160 - newImageWidth/2, 230-newImageWidth/2 + 10, newImageWidth, newImageWidth);
+		} else {
+			imgframe = CGRectMake(160 - newImageHeigth/2, 230-newImageHeigth/2 + 10, newImageHeigth, newImageHeigth);
+		}
+		cutPhotoBgView.frame = imgframe;
+		[self.view addSubview:cutPhotoBgView];
+		self.cutPhotoBgView = cutPhotoBgView;
+		TT_RELEASE_SAFELY(cutPhotoBgView);
+		
+		//灰色边界
+		UIView* outofCutv1 = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, imgframe.origin.y + 20)];
+        outofCutv1.backgroundColor = [UIColor blackColor];
+        outofCutv1.alpha = 0.4;
+        [self.view addSubview:outofCutv1];
+        [outofCutv1 release];
+        
+        UIView* outofCutv2 = [[UIView alloc] initWithFrame:CGRectMake(0, imgframe.origin.y, imgframe.origin.x, 
+																	  imgframe.size.height)];
+        outofCutv2.backgroundColor = [UIColor blackColor];
+        outofCutv2.alpha = 0.4;
+        [self.view addSubview:outofCutv2];
+        [outofCutv2 release];
+        
+        UIView* outofCutv3 = [[UIView alloc] initWithFrame: CGRectMake(imgframe.origin.x+imgframe.size.width,
+                                                                       imgframe.origin.y, 
+                                                                       320-imgframe.origin.x-imgframe.size.width,
+                                                                       imgframe.size.height)];
+        outofCutv3.backgroundColor = [UIColor blackColor];
+        outofCutv3.alpha = 0.4;
+        [self.view addSubview:outofCutv3];
+        [outofCutv3 release];
+        
+        UIView* outofCutv4 = [[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                      imgframe.origin.y+imgframe.size.height, 
+                                                                      320, 
+                                                                      460-imgframe.origin.y-imgframe.size.height)];
+        outofCutv4.backgroundColor = [UIColor blackColor];
+        outofCutv4.alpha = 0.4;
+        [self.view addSubview:outofCutv4];
+        [outofCutv4 release];
+	}
+
 	if (self.currentImageView != nil) {
-		[self.currentImageView removeGestureRecognizer:_pinchRecognizer];
+		[self.currentImageView removeGestureRecognizer:_pinchGesture];
 		[self.currentImageView removeGestureRecognizer:_doubleTapGesture];
 		[self.currentImageView removeGestureRecognizer:_singleTapGesture];
+
 	}
 	
-	self.currentImageView = nil;
-	UIImageView *view = [[UIImageView alloc]init];
-	view.frame = viewFrame;
-	[self.view addSubview: view]; 
-	self.currentImageView = view;
-	[view release];
-	
-	
-	[self.view addSubview:self.topNavView];
+	[self.view addSubview:self.topNavView]; 
 	[self.view addSubview:self.albumNameTableView];
 	[self.view addSubview:self.albumSelectBarView];
 	[self.view addSubview: self.toolBarView];
@@ -192,20 +279,21 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	}else{
 		self.currentImageView.image = self.normalQualityImage;//加载普通图片
 	}
-	
-	
+
 	//加入当前照片的手势
 	self.currentImageView.userInteractionEnabled = YES;    //允许用户交互
-	[self.currentImageView addGestureRecognizer:_pinchRecognizer];//添加图片点击手势，做全屏浏览处理
+	[self.currentImageView addGestureRecognizer:_pinchGesture];//添加图片点击手势，做全屏浏览处理
 	[self.currentImageView addGestureRecognizer:_singleTapGesture];
-	[self.currentImageView addGestureRecognizer:_doubleTapGesture]; 
-
+	[self.currentImageView addGestureRecognizer:_doubleTapGesture];
 }
-
+#pragma mark - 点击事件
 - (void)onClickConcelButton{
 	//点击取消按钮
-//	[self.titleLabel removeFromSuperview];//移除添加的title,否则将会有异常显示
-	[self.navigationController popViewControllerAnimated:YES];
+	if (self.navigationController) { //如果页面是push出来的
+		[self.navigationController popViewControllerAnimated:YES];
+	}else { //如果是present出来的
+		[self dismissModalViewControllerAnimated:YES];
+	}
 }
 
 /*
@@ -221,250 +309,304 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 
 		[photoInfoDic setObject:self.albumID forKey:@"id"]; //传回选中的相册ID
 	}
+	
+	CGFloat cx;
+    CGFloat cy;
+    CGFloat cw;
+    
+    CGFloat scale = self.currentImageView.width / _lastDisplayFrame.size.width;
+    if(_lastDisplayFrame.size.height > _lastDisplayFrame.size.width){
+		cx = (self.cutPhotoBgView.origin.x - self.currentImageView.origin.x) / scale ;
+        cy = (self.cutPhotoBgView.origin.y - self.currentImageView.origin.y)  / scale ;
+        cw = _lastDisplayFrame.size.width / scale;
+    } else {
+		cx = (self.cutPhotoBgView.origin.x - self.currentImageView.origin.x)  / scale ;
+        cy = (self.cutPhotoBgView.origin.y - self.currentImageView.origin.y)  / scale ;
+        cw = _lastDisplayFrame.size.height / scale;
+    }
+	
+	CGFloat scale1 ; //比例换算到原图
+	if (isHDPhoto) {
+		scale1 = self.highQualityImage.size.width / _lastDisplayFrame.size.width;
+	}else{
+		scale1 = self.normalQualityImage.size.width / _lastDisplayFrame.size.width;
+	}
+	cx *= scale1;
+	cy *= scale1;
+	cw *= scale1;
+	
+    CGRect cropRect = CGRectMake(cx, cy, cw, cw);
+    NSLog(@"cy ---------- cropRect: %f %f %f %f", cx,cy,cw,cw);
+    NSLog(@"--- currentImageView.image.size: %@", NSStringFromCGSize(self.currentImageView.image.size));
+	
+	if ( _uploadType == PhotoUploadTypeHead) {
+		UIImage *result;
+		CGImageRef imageRef;
 
-		if (isHDPhoto) { //传回原始高清图片
-			[self.delegate editPhotoFinished:self.highQualityImage photoInfoDic:photoInfoDic];
-		}else {
-			[self.delegate editPhotoFinished:self.normalQualityImage photoInfoDic:photoInfoDic];
+		if(isHDPhoto){
+			imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
+			result = [UIImage imageWithCGImage:imageRef];	
+		} else {
+			imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
+			result = [UIImage imageWithCGImage:imageRef];
 		}
-			
+		CGImageRelease(imageRef);
+		NSLog(@"--- new.photo.size: %@", NSStringFromCGSize(result.size));
+
+		//传回头像数据
+		if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
+			[self.delegate editPhotoFinished:result photoInfoDic:photoInfoDic];
+		}
+		
+	}else{
+		if (isHDPhoto) { //传回原始高清图片
+			if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
+				[self.delegate editPhotoFinished:self.highQualityImage photoInfoDic:photoInfoDic];
+			}
+		}else {
+			if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
+				[self.delegate editPhotoFinished:self.normalQualityImage photoInfoDic:photoInfoDic];
+			}
+		}
+
+	}
+	
+	if (self.navigationController) { //如果页面是push出来的
+
+	}else { //如果是present出来的
+		[self dismissModalViewControllerAnimated:YES];
+	}
 }
 
 /*
  * 旋转照片操作
  */
 - (void)onClickTurnLeftButton{
-	//点击旋转图片按钮
-//	self.currentImageView.image = [self imageRotated:self.currentImageView.image andByDegrees:90];
-	self.highQualityImage = [self imageRotated:self.highQualityImage andByDegrees:-90];
-	self.normalQualityImage = [self imageRotated:self.normalQualityImage andByDegrees:-90];
+	//点击左旋转图片按钮
+	self.highQualityImage = [self.highQualityImage imageRotated:self.highQualityImage andByDegrees:-90];
+	self.normalQualityImage = [self.normalQualityImage imageRotated:self.normalQualityImage andByDegrees:-90];
 	[self displayCurrentView];
-//	[self.view layoutIfNeeded];
 }
 
-#pragma -mark 切换图片清晰度
+/**
+ * 右边旋转操作
+ */
+- (void)onClickTurnRightButton{
+	//点击右旋转图片按钮
+	self.highQualityImage = [self.highQualityImage imageRotated:self.highQualityImage andByDegrees:90];
+	self.normalQualityImage = [self.normalQualityImage imageRotated:self.normalQualityImage andByDegrees:90];
+	[self displayCurrentView];
+}
+
+/**
+ * 拖动高清普通切换的小点
+ */
+- (void)onPanSwitchPoint:(UIPanGestureRecognizer *)panGesture{
+	CGPoint translation = [panGesture translationInView:self.toolBarView];
+//    CGPoint velocity = [panGesture velocityInView:self.view];
+	CGFloat diffX = translation.x - _preLocationX;
+	NSLog(@"chenyi -------paning ------- %f ",translation.x);
+
+	CGFloat newX = self.slibBarPoiontView.left + diffX;
+	if (newX > kSlibBarPointMaxX) {
+		self.slibBarPoiontView.left = kSlibBarPointMaxX;
+	}else if (newX < kSlibBarPointMinX) {
+		self.slibBarPoiontView.left = kSlibBarPointMinX;
+	}else {
+		self.slibBarPoiontView.left = newX;
+	}
+	
+	if (panGesture.state == UIGestureRecognizerStateEnded) {
+        _preLocationX = 0;
+		if (self.slibBarPoiontView.left > (kSlibBarPointMinX + kSlibBarPointMaxX ) / 2) {
+			[UIView animateWithDuration:0.1 animations:^(){
+				self.slibBarPoiontView.left = kSlibBarPointMaxX;
+			} completion:^(BOOL finished){
+				if (finished) {
+					isHDPhoto = YES; //图片质量切换
+					[self setSlibBarApearance];
+					[self displayCurrentView];
+
+				}
+			}];
+			
+		}else {
+			[UIView animateWithDuration:0.1 animations:^(){
+				self.slibBarPoiontView.left = kSlibBarPointMinX;
+			} completion:^(BOOL finished){
+				if (finished) {
+					isHDPhoto = NO; //图片质量切换
+					[self setSlibBarApearance];
+					[self displayCurrentView];
+
+				}
+			}];
+		}
+	}else {
+        _preLocationX = translation.x;
+    }
+}
+/*
+	改变图片质量切换bar的一些外观
+ */
+- (void)setSlibBarApearance{
+	if (!isHDPhoto) {
+		self.normalTextLabel.textColor = RGBCOLOR(222, 222, 222); //设置标签选中颜色
+		self.hdTextLabel.textColor = RGBCOLOR(138, 138, 138);
+	}else {
+		self.hdTextLabel.textColor = RGBCOLOR(222, 222, 222); //改变两个标签的颜色，标记选中状态
+		self.normalTextLabel.textColor = RGBCOLOR(138, 138, 138);
+	}
+	
+	[UIView animateWithDuration:1 animations:^(){//显示图片大小
+		if (!isHDPhoto) {
+			float l = _normalQualityLength / 1024.0;
+			if (l > 1024 ) {
+				self.qualityLengthLabel.text = [NSString stringWithFormat:
+												NSLocalizedString(@"图片大小：%.2fM", @"图片大小：%.2fM"),l / 1024]; 
+			}else {
+				self.qualityLengthLabel.text = [NSString stringWithFormat:
+												NSLocalizedString(@"图片大小：%.2fK", @"图片大小：%.2fK"),l]; 
+			}
+		}else {
+			float l = _highQualityLength / 1024.0;
+			if (l > 1024 ) {
+				self.qualityLengthLabel.text = [NSString stringWithFormat:
+												NSLocalizedString(@"图片大小：%.2fM", @"图片大小：%.2fM") ,l / 1024]; 
+			}else {
+				self.qualityLengthLabel.text = [NSString stringWithFormat:
+												NSLocalizedString(@"图片大小：%.2fK", @"图片大小：%.2fK") ,l]; 
+			} 
+		}
+		self.qualityLengthLabel.alpha = 0.6;
+	} completion:^(BOOL finished){
+		if (finished) { 
+			[UIView animateWithDuration:1 animations:^(){
+//				self.qualityLengthLabel.alpha = 0.0f;
+			}];
+		}
+		
+	}];
+}
+
 /**
  * 切换照片质量
  */
 - (void)onClickSwitchButton{
 	isHDPhoto = ! isHDPhoto; //图片质量切换
 	if (!isHDPhoto) { 
-		[UIView animateWithDuration:0.3 animations:^(){
-			self.slibBarPoiontView.frame = CGRectMake(239, 24, _slibBarPoiontView.image.size.width, 
+		[UIView animateWithDuration:0.2 animations:^(){
+			self.slibBarPoiontView.frame = CGRectMake(kSlibBarPointMinX, 24, _slibBarPoiontView.image.size.width, 
 													  _slibBarPoiontView.image.size.height);
 		}];
 		
-		self.normalTextLabel.textColor = RGBCOLOR(222, 222, 222); //设置标签选中颜色
-		self.hdTextLabel.textColor = RGBCOLOR(138, 138, 138);
-		
-		
-		
-		[UIView animateWithDuration:2 animations:^(){//显示图片大小
-			float l = _normalQualityLength / 1024.0;
-			if (l > 1024 ) {
-				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",l / 1024]; 
-			}else {
-				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fK",l]; 
-			}
-			 
-			self.qualityLengthLabel.alpha = 1.0f;
-			
-		} completion:^(BOOL finished){
-			if (finished) { //隐藏
-				[UIView animateWithDuration:1 animations:^(){
-					self.qualityLengthLabel.alpha = 0.0f;
-				}];
-			}
-			
-		}];
 	}else {
-		[UIView animateWithDuration:0.3 animations:^(){
-			self.slibBarPoiontView.frame = CGRectMake(289, 24, _slibBarPoiontView.image.size.width, 
+		[UIView animateWithDuration:0.2 animations:^(){
+			self.slibBarPoiontView.frame = CGRectMake(kSlibBarPointMaxX, 24, _slibBarPoiontView.image.size.width, 
 													  _slibBarPoiontView.image.size.height);
-		}];
-		
-		self.hdTextLabel.textColor = RGBCOLOR(222, 222, 222); //改变两个标签的颜色，标记选中状态
-		self.normalTextLabel.textColor = RGBCOLOR(138, 138, 138);
-		
-		
-		[UIView animateWithDuration:2 animations:^(){//显示图片大小
-			float l = _highQualityLength / 1024.0;
-			if (l > 1024 ) {
-				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",l / 1024]; 
-			}else {
-				self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fK",l]; 
-			} 
-			self.qualityLengthLabel.alpha = 1.0f;
-			
-		} completion:^(BOOL finished){
-			if (finished) { //隐藏
-				[UIView animateWithDuration:1 animations:^(){
-					self.qualityLengthLabel.alpha = 0.0f;
-				}];
-			}
-			
 		}];
 	}
-	
+	[self setSlibBarApearance]; //改变外观
 	[self displayCurrentView];
-	//照片质量切换
 }
 
-#pragma -mark view lifecycle
+/**
+ *	点击选中相册条
+ */
+- (void)tapAlbumSelectBar{
+	
+	//发送网络请求相册列表
+	if (!isExpand && [self.albumIDArray count] == 0 ) { //如果数据为空，并且没有展开，则发网络请求
+		RCMainUser *mainUser = [RCMainUser getInstance];
+		NSMutableDictionary *dics = [NSMutableDictionary dictionaryWithCapacity:10];
+		if (mainUser.sessionKey) {
+			[dics setObject:mainUser.sessionKey forKey:@"session_key"];
+			[dics setObject:mainUser.userId forKey:@"uid"];
+			[dics setObject:[NSNumber numberWithInt:1600] forKey:@"page_size"];
+            [dics setObject:[NSNumber numberWithInt:1] forKey:@"all_album"];
+			[self.requestAssistant sendQuery:dics withMethod:@"photos/getAlbums"];
+		}
+	}else if (!isExpand ) { //如果有数据，直接展示
+		[self showAlbumTable];
+	}else { //如果已经展开，那么直接收缩
+		[self hiddenAlbumTable];
+	}
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+	
+	return YES;
+}
+
+
+#pragma  mark - 图片双击 则重置位置到中心
+- (void)doubletapCurrentImage{
+	[UIView animateWithDuration:0.5 animations:^(){
+		[self ajustImageViewCenter];
+		
+	}];
+}
+
+#pragma  mark - 图片单击 进入全屏浏览模式
+- (void)tapCurrentImage{
+	if (isExpand) { //如果已经展开了不允许隐藏
+		return;
+	}
+	
+	isFullScreenMode = !isFullScreenMode;
+	
+	[UIView beginAnimations:@"aa" context:nil];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+	[UIView setAnimationDuration:0.3];
+	if(isFullScreenMode)
+	{		
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreenMode withAnimation:UIStatusBarAnimationSlide];
+		CGRect r =	self.topNavView.frame;
+		r.origin.y -= (20 + self.topNavView.height);
+		self.topNavView.frame = r;
+		
+		r = self.albumSelectBarView.frame;
+		r.origin.y -= (64 + r.size.height);
+		self.albumSelectBarView.frame = r;
+		
+		r = self.toolBarView.frame;
+		r.origin.y += (44 + self.qualityLengthLabel.height);
+		self.toolBarView.frame = r;
+		
+	}
+	else 
+	{
+		self.navigationController.navigationBar.hidden = NO;
+		
+		[[UIApplication sharedApplication] setStatusBarHidden:isFullScreenMode withAnimation:UIStatusBarAnimationSlide];
+		CGRect r =	self.topNavView.frame;
+		r.origin.y += (20 + self.topNavView.height);
+		self.topNavView.frame = r;
+		
+		r = self.albumSelectBarView.frame;
+		r.origin.y += (64 + r.size.height);
+		self.albumSelectBarView.frame = r;
+		
+		r = self.toolBarView.frame;
+		r.origin.y -= (44 + self.qualityLengthLabel.height);
+		self.toolBarView.frame = r;
+		
+	}
+	[UIView commitAnimations];
+}
+
+
+#pragma mark - view lifecycle
 
 - (void)loadView{
 	
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
-	
-	//导航栏的背景
-	UIImageView *topView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"button_bar.png"]];
-	self.topNavView = topView;
-	self.topNavView.userInteractionEnabled = YES;
-	self.topNavView.frame = CGRectMake(0, 0, 320, 44);
-	[topView release];
-	
-	//返回按键
-	UIButton* concelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[concelButton setImage:[UIImage imageNamed:@"titlebar_cancel.png"]  
-				  forState:UIControlStateNormal];
-	CGSize buttonSize = [concelButton currentImage].size;
-	concelButton.frame = CGRectMake(5, 0, buttonSize.width	,buttonSize.height);
-	[concelButton addTarget:self action:@selector(onClickConcelButton) 
-		   forControlEvents:UIControlEventTouchUpInside];
-	[self.topNavView addSubview:concelButton];
-	[self.view addSubview:self.topNavView];
-	
-	//确认按钮
-	UIButton* confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[confirmButton setImage:[UIImage imageNamed:@"titlebar_confirm.png"] 
-				   forState:UIControlStateNormal];
-	CGSize confirmButtonSize = [confirmButton currentImage].size;
-	confirmButton.frame = CGRectMake(270, 0, confirmButtonSize.width, confirmButtonSize.height);
-	[confirmButton addTarget:self action:@selector(onClickConfirmButton) 
-			forControlEvents:UIControlEventTouchUpInside];
-	[self.topNavView addSubview:confirmButton];
-	
-	//标题栏
-	UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(59, 8, 137, 28)];
-	[titleLabel setBackgroundColor: [UIColor clearColor]];
-	[titleLabel setTextColor:RGBCOLOR(255, 255, 255)];
-	[titleLabel setShadowOffset:CGSizeMake(0, -2)]; 
-	[titleLabel setShadowColor:RGBACOLOR(0, 0, 0, 0.3)];//阴影颜色及alpha
-	[titleLabel setFont:[UIFont fontWithName:MED_HEITI_FONT size:20]];
-	[titleLabel setText:@"编辑照片"];
-	[self.topNavView addSubview:titleLabel];
-	[titleLabel release];
-	
-	//相册名称选择bar(点击弹出下拉列表)
-	_albumSelectBarView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"album_selected_bar.png"]];
-	self.albumSelectBarView.frame = CGRectMake(0, CONTENT_NAVIGATIONBAR_HEIGHT, 320, _albumSelectBarView.image.size.height);
-	self.albumSelectBarView.userInteractionEnabled = YES;//允许使用手势点击
-	UITapGestureRecognizer *albumNameTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self 
-																						 action:@selector(tapAlbumSelectBar)];
-	[albumNameTapGesture setNumberOfTapsRequired:1];
-	[self.albumSelectBarView addGestureRecognizer:(albumNameTapGesture)];//添加图片点击手势，做全屏浏览处理
-	[albumNameTapGesture release];
-	[self.view addSubview:self.albumSelectBarView];
-	
-	//下拉箭头
-	_arrowView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"pull_arrow.png"]];
-	self.arrowView.frame = CGRectMake(293, 9, _arrowView.image.size.width,_arrowView.image.size.height);
-	[self.albumSelectBarView addSubview:self.arrowView];
-	
-	
-	_albumNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 6, 275, 20)];
-	[_albumNameLabel setBackgroundColor:[UIColor clearColor]];
-	[_albumNameLabel setTextColor:RGBCOLOR(255, 255, 255)];
-	[_albumNameLabel setShadowColor:RGBACOLOR(0, 0, 0, 0.75)];
-	[_albumNameLabel setShadowOffset:CGSizeMake(0, 2)];
-	[_albumNameLabel setFont:[UIFont fontWithName:MED_HEITI_FONT size:15]];
-	[_albumNameLabel setText:@"上传相册:"];
-	[self.albumSelectBarView addSubview:self.albumNameLabel];
-	
-	
-	//工具栏
-	_toolBarView = [[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"button_bar.png"]]autorelease];
-	self.toolBarView.frame = CGRectMake(0, 480 - 44 - 20, 320, 44);
-	[self.view addSubview:self.toolBarView];
-	self.toolBarView.userInteractionEnabled = YES;
-	
-	//选择照片按钮
-	_photoTurnLeftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[self.photoTurnLeftButton setImage:[UIImage imageNamed:@"turn_icon.png" ]
-							  forState:UIControlStateNormal];
-	self.photoTurnLeftButton.frame = CGRectMake(27, 0, [self.photoTurnLeftButton currentImage].size.width, 
-												[self.photoTurnLeftButton currentImage].size.height);
-	[self.photoTurnLeftButton addTarget:self action:@selector(onClickTurnLeftButton) //点击旋转图片
-					   forControlEvents:UIControlEventTouchUpInside];
-	[self.toolBarView addSubview:self.photoTurnLeftButton]; //添加到工具栏
-	
-	
-	//照片质量切换控件
-	UIButton *photoQualitySwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[photoQualitySwitchButton setImage:[UIImage imageNamed:@"slid_bar.png"] forState:UIControlStateNormal];
-	[photoQualitySwitchButton addTarget:self action:@selector(onClickSwitchButton) 
-					   forControlEvents:UIControlEventTouchUpInside];
-	photoQualitySwitchButton.frame  = CGRectMake(239, 24, photoQualitySwitchButton.currentImage.size.width,
-												 photoQualitySwitchButton.currentImage.size.height);
-	[self.toolBarView addSubview:photoQualitySwitchButton];
-	
-	//质量切换上面的小点
-	_slibBarPoiontView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slid_point.png"]];
-	self.slibBarPoiontView.frame = CGRectMake(289, 24, _slibBarPoiontView.image.size.width, 
-											  _slibBarPoiontView.image.size.height);
-	
-	[self.toolBarView addSubview:self.slibBarPoiontView];
-	
-	//文字 高清
-	_hdTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(285, 5, 30, 25)];
-	self.hdTextLabel.backgroundColor = [UIColor clearColor];
-	self.hdTextLabel.textColor = RGBCOLOR(222, 222, 222);
-	self.hdTextLabel.text = @"高清";
-	self.hdTextLabel.font = [UIFont fontWithName: LIGHT_HEITI_FONT size:12];
-	self.hdTextLabel.shadowColor = RGBACOLOR(0, 0, 0,0.75);
-	self.hdTextLabel.shadowOffset = CGSizeMake(0, -2);
-	[self.toolBarView addSubview:self.hdTextLabel];
-	
-	//文字 普通
-	_normalTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 5, 30, 25)];
-	self.normalTextLabel.backgroundColor = [UIColor clearColor];
-	self.normalTextLabel.textColor = RGBCOLOR(138, 138, 138);
-	self.normalTextLabel.text = @"普通";
-	self.normalTextLabel.font = [UIFont fontWithName: LIGHT_HEITI_FONT size:12];
-	self.normalTextLabel.shadowColor = RGBACOLOR(0, 0, 0,0.75);
-	self.normalTextLabel.shadowOffset = CGSizeMake(0, -2);
-	[self.toolBarView addSubview:self.normalTextLabel];
-	
-	//图片大小文字
-	_qualityLengthLabel = [[UILabel alloc]initWithFrame:CGRectMake(200 , -30, 160, 30)];
-	self.qualityLengthLabel.backgroundColor = [UIColor clearColor];
-	self.qualityLengthLabel.alpha = 1.0;//开始是显示
-	self.qualityLengthLabel.font = [UIFont fontWithName:LIGHT_HEITI_FONT size:12];
-	self.qualityLengthLabel.textColor = RGBCOLOR(255, 255, 255);
-	if (_highQualityLength / 1024.0 > 1024) { //如果大于1024K 则换算成M
-		self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",_highQualityLength / 1024.0 / 1024];
-  	}else {
-		self.qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fK",_highQualityLength / 1024.0];
-	}
-	
-	[self.toolBarView addSubview:self.qualityLengthLabel];
-	
-	//相册列表 
-	_albumNameTableView = [[UITableView alloc]initWithFrame:
-						   CGRectMake(0,44 + _albumSelectBarView.frame.size.height	, 320, 0) style:UITableViewStylePlain];
-	self.albumNameTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
-	self.albumNameTableView.bounces = NO;//不允许反向拖动
-	self.albumNameTableView.separatorStyle = UITableViewCellSeparatorStyleNone;//设置无分割线
-	self.albumNameTableView.hidden = NO;
-	self.albumNameTableView.delegate  = self;
-	self.albumNameTableView.dataSource = self;
-	[self.view addSubview:self.albumNameTableView];
-	
 	//缩放手势
-	_pinchRecognizer = [[UIPinchGestureRecognizer alloc]   
+	_pinchGesture = [[UIPinchGestureRecognizer alloc]   
                         initWithTarget:self action:@selector(scaleChange:)];  
-    [_pinchRecognizer setDelegate:self];  
+    [_pinchGesture setDelegate:self];  
 	
 	//双击手势
     _doubleTapGesture = [[UITapGestureRecognizer alloc]
@@ -472,13 +614,263 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
     _doubleTapGesture.numberOfTapsRequired = 2;
     [_doubleTapGesture setDelegate:self];
 	
-	//单机手势
+	//单击手势
     _singleTapGesture = [[UITapGestureRecognizer alloc]
                          initWithTarget:self action:@selector(tapCurrentImage)];
     _singleTapGesture.numberOfTapsRequired = 1;
     [_singleTapGesture setDelegate:self];
+
+	//选用高清图片
+	//调用一次,切换成普通图片，同时隐藏图片大小标签
+	isHDPhoto = NO;
+	[self setSlibBarApearance];
+//	[self onClickSwitchButton];
+}
+
+- (UIButton *)photoTurnLeftButton{
+	if (!_photoTurnLeftButton) {
+		//旋转照片按钮
+		_photoTurnLeftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[_photoTurnLeftButton setImage:[[RCResManager getInstance]imageForKey:@"turn_icon" ]
+								  forState:UIControlStateNormal];
+		_photoTurnLeftButton.frame = CGRectMake(27, 0, [_photoTurnLeftButton currentImage].size.width, 
+													[_photoTurnLeftButton currentImage].size.height);
+		[_photoTurnLeftButton addTarget:self action:@selector(onClickTurnLeftButton) //点击旋转图片
+						   forControlEvents:UIControlEventTouchUpInside];
+
+	}
+	return _photoTurnLeftButton;
+}
+
+- (UIButton *)photoTurnRightButton{
+	if (!_photoTurnRightButton) {
+		_photoTurnRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *rightButtonBGImage = [[RCResManager getInstance]imageForKey:@"turn_icon" ];
+		rightButtonBGImage = [rightButtonBGImage rotate:UIImageOrientationRightMirrored]; 
+		[_photoTurnRightButton setImage:rightButtonBGImage	forState:UIControlStateNormal];
 	
+		_photoTurnRightButton.frame = CGRectMake(80, 0, [_photoTurnRightButton currentImage].size.width, 
+												 [_photoTurnRightButton currentImage].size.height);
+		[_photoTurnRightButton addTarget:self action:@selector(onClickTurnRightButton) //点击旋转图片
+						forControlEvents:UIControlEventTouchUpInside];
+
+	}
+	return _photoTurnRightButton;
+}
+
+- (UIImageView *)topNavView{
 	
+	if (!_topNavView) {
+		//导航栏的背景
+		UIImageView *topView = [[UIImageView alloc]initWithImage:[[RCResManager getInstance]imageForKey:@"title_bar"]];
+		topView.userInteractionEnabled = YES;
+		topView.frame = CGRectMake(0, 0, 320, 44);
+		_topNavView = topView;
+		
+		//返回按键
+		UIButton* concelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[concelButton setImage:[[RCResManager getInstance]imageForKey:@"titlebar_cancel"]  
+					  forState:UIControlStateNormal];
+		CGSize buttonSize = [concelButton currentImage].size;
+		concelButton.frame = CGRectMake(5, 0, buttonSize.width	,buttonSize.height);
+		[concelButton addTarget:self action:@selector(onClickConcelButton) 
+			   forControlEvents:UIControlEventTouchUpInside];
+		[_topNavView addSubview:concelButton];
+		
+		//确认按钮
+		UIButton* confirmButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[confirmButton setImage:[[RCResManager getInstance]imageForKey:@"titlebar_confirm"] 
+					   forState:UIControlStateNormal];
+		CGSize confirmButtonSize = [confirmButton currentImage].size;
+		confirmButton.frame = CGRectMake(270, 0, confirmButtonSize.width, confirmButtonSize.height);
+		[confirmButton addTarget:self action:@selector(onClickConfirmButton) 
+				forControlEvents:UIControlEventTouchUpInside];
+		[_topNavView addSubview:confirmButton];
+		
+		//标题栏
+		UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(59, 8, 137, 28)];
+		[titleLabel setBackgroundColor: [UIColor clearColor]];
+		[titleLabel setTextColor:RGBCOLOR(255, 255, 255)];
+		[titleLabel setShadowOffset:CGSizeMake(0, -2)]; 
+		[titleLabel setShadowColor:RGBACOLOR(0, 0, 0, 0.3)];//阴影颜色及alpha
+		[titleLabel setFont:[UIFont fontWithName:MED_HEITI_FONT size:20]];
+		[titleLabel setText:NSLocalizedString(@"编辑照片", @"编辑照片")];
+		[_topNavView addSubview:titleLabel];
+		[titleLabel release];
+
+	}
+	return _topNavView;
+}
+
+- (UILabel *)hdTextLabel{
+	if (!_hdTextLabel) {
+		//文字 高清
+		_hdTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(285, 5, 30, 25)];
+		_hdTextLabel.backgroundColor = [UIColor clearColor];
+		_hdTextLabel.textColor = RGBCOLOR(222, 222, 222);
+		_hdTextLabel.text = @"高清";
+		_hdTextLabel.font = [UIFont fontWithName: LIGHT_HEITI_FONT size:12];
+		_hdTextLabel.shadowColor = RGBACOLOR(0, 0, 0,0.75);
+		_hdTextLabel.shadowOffset = CGSizeMake(0, -2);
+	}
+	return _hdTextLabel;
+}
+
+- (UILabel *)normalTextLabel{
+	if (!_normalTextLabel) {
+		//文字 普通
+		_normalTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(235, 5, 30, 25)];
+		_normalTextLabel.backgroundColor = [UIColor clearColor];
+		_normalTextLabel.textColor = RGBCOLOR(138, 138, 138);
+		_normalTextLabel.text = @"普通";
+		_normalTextLabel.font = [UIFont fontWithName: LIGHT_HEITI_FONT size:12];
+		_normalTextLabel.shadowColor = RGBACOLOR(0, 0, 0,0.75);
+		_normalTextLabel.shadowOffset = CGSizeMake(0, -2);
+	}
+	return _normalTextLabel;
+}
+
+//
+// 图片大小标签
+//
+- (UILabel*)qualityLengthLabel{
+	if (!_qualityLengthLabel) {
+		//图片大小文字
+		_qualityLengthLabel = [[UILabel alloc]initWithFrame:CGRectMake(0 , -20, PHONE_SCREEN_SIZE.width, 20)];
+		_qualityLengthLabel.backgroundColor = [UIColor blackColor];
+		_qualityLengthLabel.alpha = 0.0;
+		_qualityLengthLabel.font = [UIFont systemFontOfSize:12];
+		_qualityLengthLabel.textColor =	[UIColor whiteColor];
+		_qualityLengthLabel.textAlignment = UITextAlignmentCenter;
+		if (_highQualityLength / 1024.0 > 1024) { //如果大于1024K 则换算成M
+			_qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fM",_highQualityLength / 1024.0 / 1024];
+		}else {
+			_qualityLengthLabel.text = [NSString stringWithFormat:@"图片大小：%.2fK",_highQualityLength / 1024.0];
+		}
+	}
+	return _qualityLengthLabel;
+}
+
+//
+// 底部工具栏
+//
+
+- (UIImageView *)toolBarView{
+	if (!_toolBarView) {
+		//工具栏
+		_toolBarView = [[[UIImageView alloc]initWithImage:
+						 [[RCResManager getInstance]imageForKey:@"button_bar"]]autorelease];
+		_toolBarView.frame = CGRectMake(0, 480 - 44 - 20, 320, 44);
+		_toolBarView.userInteractionEnabled = YES;
+
+		//照片质量切换控件
+		UIButton *photoQualitySwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[photoQualitySwitchButton setImage:[[RCResManager getInstance]imageForKey:@"slid_bar"] forState:UIControlStateNormal];
+		photoQualitySwitchButton.frame  = CGRectMake(239, 24, photoQualitySwitchButton.currentImage.size.width,
+													 photoQualitySwitchButton.currentImage.size.height);
+		[_toolBarView addSubview:photoQualitySwitchButton];
+
+		//质量切换上面的小点
+		_slibBarPoiontView = [[UIImageView alloc]initWithImage:[[RCResManager getInstance]imageForKey:@"slid_point"]];
+		self.slibBarPoiontView.frame = CGRectMake((isHDPhoto ? kSlibBarPointMaxX : kSlibBarPointMinX), 
+												  24, 
+												  _slibBarPoiontView.image.size.width, 
+												  _slibBarPoiontView.image.size.height);
+		_slibBarPoiontView.userInteractionEnabled = YES;
+		
+		[_toolBarView addSubview:self.photoTurnLeftButton]; //左旋转添加到工具栏
+		[_toolBarView addSubview:self.photoTurnRightButton]; //右旋转添加到工具栏
+		[_toolBarView addSubview:self.slibBarPoiontView];
+		[_toolBarView addSubview:self.hdTextLabel];
+		[_toolBarView addSubview:self.normalTextLabel];
+		[_toolBarView addSubview:self.qualityLengthLabel];
+		
+		//为了方便拖动在上面盖一层透明蒙版
+		UIButton *panView = [[UIButton alloc]initWithFrame:CGRectMake(239, 
+																  0, 
+																 _toolBarView.width - 239,
+																 _toolBarView.height)];
+		
+		[panView addTarget:self action:@selector(onClickSwitchButton) 
+						   forControlEvents:UIControlEventTouchUpInside];
+		panView.backgroundColor = [UIColor clearColor];
+		
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self 
+                                                                                     action:@selector(onPanSwitchPoint:)];
+        panGesture.minimumNumberOfTouches = 1;
+        panGesture.maximumNumberOfTouches = 1;
+        panGesture.delegate = self;
+		_panGesture = panGesture;
+		panView.userInteractionEnabled = YES;
+		
+		[panView addGestureRecognizer:panGesture];
+		[self.toolBarView addSubview:panView];
+		TT_RELEASE_SAFELY(panGesture);
+	}
+	return _toolBarView;
+}
+
+- (UILabel *)albumNameLabel{
+	
+	if (!_albumNameLabel) {
+		_albumNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 6, 275, 20)];
+		[_albumNameLabel setBackgroundColor:[UIColor clearColor]];
+		[_albumNameLabel setTextColor:RGBCOLOR(255, 255, 255)];
+		[_albumNameLabel setShadowColor:RGBACOLOR(0, 0, 0, 0.75)];
+		[_albumNameLabel setShadowOffset:CGSizeMake(0, 2)];
+		[_albumNameLabel setFont:[UIFont fontWithName:MED_HEITI_FONT size:15]];
+		[_albumNameLabel setText:[NSString stringWithFormat:
+								  NSLocalizedString(@"上传相册：%@", @"上传相册：%@") ,self.albumName ? self.albumName : @""]];
+
+	}
+	return _albumNameLabel;
+}
+
+- (UIImageView *)albumSelectBarView{
+	if(!_albumSelectBarView){
+		_albumSelectBarView = [[UIImageView alloc]initWithImage:[[RCResManager getInstance]
+																 imageForKey:@"album_selected_bar"]];
+		_albumSelectBarView.frame = CGRectMake(0, CONTENT_NAVIGATIONBAR_HEIGHT, 320, 
+												   _albumSelectBarView.image.size.height);
+//		_albumSelectBarView.alpha = 0.8;
+		if (self.albumID == nil && _uploadType != PhotoUploadTypeHead) {//如果已指定相册或者上传头像 不需要选择相册
+			_albumSelectBarView.userInteractionEnabled = YES;//允许使用手势点击
+			UITapGestureRecognizer *albumNameTapGesture = [[UITapGestureRecognizer alloc]
+														   initWithTarget:self  action:@selector(tapAlbumSelectBar)];
+			[albumNameTapGesture setNumberOfTapsRequired:1];
+			[_albumSelectBarView addGestureRecognizer:(albumNameTapGesture)];//添加图片点击手势，做全屏浏览处理
+			[albumNameTapGesture release];
+		
+			//下拉箭头
+			_arrowView = [[UIImageView alloc]initWithImage:[[RCResManager getInstance]imageForKey:@"pull_arrow"]];
+			self.arrowView.frame = CGRectMake(293, 9, _arrowView.image.size.width,_arrowView.image.size.height);
+			//			self.arrowView.frame = CGRectMake(180, 9, _arrowView.image.size.width,_arrowView.image.size.height);
+			[_albumSelectBarView addSubview:self.arrowView];
+			
+			//默认是手机相册
+			self.albumName = @"手机相册";
+		}
+		//相册名称
+		[self.albumSelectBarView addSubview:self.albumNameLabel];
+
+	}
+	return _albumSelectBarView;
+}
+
+- (UITableView *)albumNameTableView{
+	if (!_albumNameTableView) {
+		//相册列表 
+		_albumNameTableView = [[UITableView alloc]initWithFrame:
+							   CGRectMake(0,44 + self.albumSelectBarView.frame.size.height	, 320, 0)
+														  style:UITableViewStylePlain];
+		_albumNameTableView.showsVerticalScrollIndicator = NO;//隐藏滚动条
+		_albumNameTableView.bounces = NO;//不允许反向拖动
+		_albumNameTableView.separatorStyle = UITableViewCellSeparatorStyleNone;//设置无分割线
+		_albumNameTableView.hidden = NO;
+		_albumNameTableView.delegate  = self;
+		_albumNameTableView.dataSource = self;
+	}
+	return _albumNameTableView;
 }
 
 - (void)viewDidLoad
@@ -491,8 +883,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	//在这里隐藏才是真正的隐藏,否则有延迟显示
 	[self.navigationController setNavigationBarHidden:YES animated:animated];
 	
-	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+	[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackOpaque];
 
 	[self displayCurrentView];//显示图片
 	
@@ -505,23 +897,55 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
+	[super viewDidDisappear:animated];
+}
 
+- (void)didReceiveMemoryWarning
+{
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+	self.currentImageView  = nil;
+	self.cutPhotoBgView = nil;
+	self.highQualityImage = nil;
+	self.normalQualityImage = nil;
+	self.qualityLengthLabel = nil;
 	
+	self.topNavView = nil;
+	
+	self.slibBarPoiontView = nil;
+	self.hdTextLabel = nil;
+	self.normalTextLabel = nil;
+	self.photoTurnLeftButton = nil;
+	self.photoTurnRightButton = nil;
+	self.toolBarView = nil;
+	self.albumNameTableView = nil;
+	self.albumID = nil;
+    self.albumName = nil;
+	self.albumSelectBarView = nil;
+	self.albumNameLabel = nil;
+	self.arrowView = nil;
+	self.albumIDArray = nil;
+	self.delegate = nil;
+	self.requestAssistant = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
-
-- (void)setImageViewCenter{
+/*
+	调整照片至中心位置
+ */
+- (void)ajustImageViewCenter{
     if(self.currentImageView){
         _currentImageView.frame = _lastDisplayFrame;
         if(_lastDisplayScale < 1.0){
@@ -532,43 +956,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
         }
     }
 }
-#pragma -mark 图片双击 则重置位置到中心
-- (void)doubletapCurrentImage{
-	[UIView animateWithDuration:0.5 animations:^(){
-		[self setImageViewCenter];
-
-	}];
-}
-
-#pragma -mark 图片单击 进入全屏浏览模式
-- (void)tapCurrentImage{
-	isFullScreenMode = !isFullScreenMode;
-	
-	[[UIApplication sharedApplication] setStatusBarHidden:isFullScreenMode withAnimation:UIStatusBarAnimationFade];
-	
-	[UIView beginAnimations:@"aa" context:nil];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-	[UIView setAnimationDuration:0.15];
-	if(isFullScreenMode)
-	{	//全屏模式则隐藏
-		for (UIView *subView in self.view.subviews) {
-			if (subView != self.currentImageView) {
-				subView.alpha = 0.0;
-			}
-		}
-		self.navigationController.navigationBar.hidden = YES;
-	}
-	else 
-	{
-		for (UIView *subView in self.view.subviews) {
-			subView.alpha = 1.0;
-		}
-		self.navigationController.navigationBar.hidden = NO;
-	}
-	[UIView commitAnimations];
-}
-
-#pragma -mark 缩放图片手势
+#pragma mark - 缩放图片手势
 - (void) scaleChange:(UIPinchGestureRecognizer*)gestureRecognizer{
 	if([gestureRecognizer state] == UIGestureRecognizerStateEnded) {  
         _lastDisplayScale = 1.0;  
@@ -583,8 +971,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
     CGAffineTransform currentTransform = self.currentImageView.transform;  
     CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, scale, scale); 
 	
-    if( _currentImageView.width > 2 *_lastDisplayFrame.size.width && scale > 1){ 
-        return; //如果放大超过两倍，那么不再放大
+    if( _currentImageView.width > 3 *_lastDisplayFrame.size.width && scale > 1){ 
+        return; //如果放大超过三倍，那么不再放大
     }
 	
     if( _currentImageView.width <= _lastDisplayFrame.size.width * 1 && scale <= 1){
@@ -599,29 +987,11 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
     _lastDisplayScale = [gestureRecognizer scale];  
 
 }
-#pragma -mark 点击展开相册列表
-- (void)tapAlbumSelectBar{
-	//发送网络请求相册列表
-	if (!isExpand && [self.albumIDArray count] == 0) { //如果数据为空，并且没有展开，则发网络请求
-		RCMainUser *mainUser = [RCMainUser getInstance];
-		NSMutableDictionary *dics = [NSMutableDictionary dictionaryWithCapacity:10];
-		if (mainUser.msessionKey) {
-			[dics setObject:mainUser.msessionKey forKey:@"session_key"];
-			[dics setObject:mainUser.userId forKey:@"uid"];
-			[dics setObject:[NSNumber numberWithInt:160] forKey:@"page_size"];
-			[self.requestAssistant sendQuery:dics withMethod:@"photos/getAlbums"];
-		}
-	}else if (!isExpand ) { //如果有数据，直接展示
-		[self showAlbumTable];
-		
-	}else { //如果已经展开，那么直接收缩
 
-		[self hiddenAlbumTable];
-	}
 
-}
-
-//显示相册列表
+/*
+	显示相册列表
+ */
 - (void)showAlbumTable{
 	[self.albumNameTableView reloadData];
 	
@@ -637,7 +1007,9 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	isExpand = !isExpand;
 }
 
-//隐藏相册列表
+/* 
+	隐藏相册列表
+ */
 - (void)hiddenAlbumTable{
 	[UIView animateWithDuration:0.5 animations:^(){
 		//下拉箭头归位
@@ -651,11 +1023,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 }
 
 
-#pragma -mark UITableViewDataSource
+#pragma mark - UITableViewDataSource
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 	
     UITableViewCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
 	
+    NSLog(@"cell.frame.size.height = %f",cell.frame.size.height);
     return cell.frame.size.height;
 }
 
@@ -664,26 +1037,22 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	
 	return [self.albumIDArray count] + 1;//多一行照片添加相册
 }
-
+#pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 	
-	if (indexPath.row == [self.albumIDArray count]) {
-		//新建相册操作 待加入
+	if (0 == indexPath.row) {//创建相册
 		RNCreateAlbumViewController *rn = [[RNCreateAlbumViewController alloc]init];
 		rn.delegate = self;
 		[self.navigationController pushViewController:rn animated:YES];
 		[rn release];
-	}else {
-
-		NSDictionary * dic = (NSDictionary * )[self.albumIDArray objectAtIndex:indexPath.row];//获取相册名称
+	}else if([self.albumIDArray count] > 0){ //普通相册名
+		NSDictionary * dic = (NSDictionary * )[self.albumIDArray objectAtIndex:indexPath.row - 1];//获取相册名称
 		self.albumID = [dic objectForKey: @"id"]; //相册ID
-		self.albumNameLabel.text = [NSString stringWithFormat:@"上传相册ID：%@",[dic objectForKey: @"title"]];
+		self.albumNameLabel.text = [NSString stringWithFormat:NSLocalizedString(@"上传相册：%@", @"上传相册：%@") ,[dic objectForKey: @"title"]];
 	}
-
-	self.oldSelectedIndexPath = indexPath; //记录选中行
-
-	[self hiddenAlbumTable];
 	
+	self.oldSelectedIndexPath = indexPath; //记录选中行
+	[self hiddenAlbumTable]; //隐藏相册列表
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -699,32 +1068,8 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	[textLabel setShadowColor:RGBACOLOR(0, 0, 0, 0.75)];
 	[textLabel setShadowOffset:CGSizeMake(0, 2)];
 	[textLabel setBackgroundColor:[UIColor clearColor]];
-	if (indexPath.row < [self.albumIDArray count] ) {
+	if (0 == indexPath.row  ) {
 		
-		if (!cell) {
-			cell = [[[UITableViewCell alloc] initWithStyle:
-					 UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
-					
-			
-		} 
-		[cell.contentView removeAllSubviews];
-		[cell.contentView addSubview:textLabel];
-		textLabel.text = [NSString stringWithFormat:@"%@",
-						  [[_albumIDArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
-		
-		//如果是选中行的话 打钩钩
-		if ([indexPath compare:self.oldSelectedIndexPath] == NSOrderedSame) { 
-			UIImageView * addIconView = [[[UIImageView alloc]initWithImage:
-										  [UIImage imageNamed:@"hook_icon.png"]]autorelease];
-			addIconView.frame = CGRectMake(81, 16, addIconView.image.size.width, addIconView.image.size.height);//设置加号标记
-			
-			cell.accessoryView = addIconView;
-		}else {
-			cell.accessoryView = nil;
-		}
-		
-				
-	}else if(indexPath.row == [self.albumIDArray count] ){
 		if (!cell) {
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
 										   reuseIdentifier:cellIdentifier] autorelease];
@@ -733,16 +1078,40 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		} 
 		
 		UIImageView * addIconView = [[[UIImageView alloc]initWithImage:
-									  [UIImage imageNamed:@"album_add_icon.png"]]autorelease];
+									  [[RCResManager getInstance]imageForKey:@"album_add_icon"]]autorelease];
 		addIconView.frame = CGRectMake(81, 16, addIconView.frame.size.width, addIconView.frame.size.height);
 		//设置加号标记
-	
+		
 		[cell.contentView removeAllSubviews];
 		//缩进文本的位置
 		textLabel.frame = CGRectOffset(textLabel.frame, 20 , 0);
-		textLabel.text = [NSString stringWithFormat:@"添加新相册"];
+		textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"添加新相册", @"添加新相册") ];
 		[cell.contentView addSubview:textLabel];	
 		[cell.contentView addSubview:addIconView];
+
+	}else if(indexPath.row <= [self.albumIDArray count] ){
+		
+		if (!cell) {
+			cell = [[[UITableViewCell alloc] initWithStyle:
+					 UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];
+			
+			
+		} 
+		[cell.contentView removeAllSubviews];
+		[cell.contentView addSubview:textLabel];
+		textLabel.text = [NSString stringWithFormat:@"%@",
+						  [[_albumIDArray objectAtIndex:indexPath.row - 1] objectForKey:@"title"]];
+		
+		//如果是选中行的话 打钩钩
+		if ([indexPath compare:self.oldSelectedIndexPath] == NSOrderedSame) { 
+			UIImageView * addIconView = [[[UIImageView alloc]initWithImage:
+										  [[RCResManager getInstance]imageForKey:@"hook_icon"]]autorelease];
+			addIconView.frame = CGRectMake(81, 16, addIconView.image.size.width, addIconView.image.size.height);//设置加号标记
+			
+			cell.accessoryView = addIconView;
+		}else {
+			cell.accessoryView = nil;
+		}
 	}
 	
 	//设置Cell背景
@@ -751,11 +1120,13 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	cell.detailTextLabel.backgroundColor = [UIColor clearColor];
 	[cell setBackgroundColor:[UIColor clearColor]];
 	UIImageView *backView = [[[UIImageView alloc]initWithImage:
-							  [UIImage imageNamed: @"album_table_cell.png"]]autorelease];
+							  [[RCResManager getInstance]imageForKey: @"album_table_cell"]]autorelease];
+//	backView.alpha = 0.8; 
 	[cell setBackgroundView:backView]; //设置Cell背景图
 	
 	UIImageView *backViewSel = [[[UIImageView alloc]initWithImage:
-								 [UIImage imageNamed:@"album_table_cell_hl.png"]]autorelease];
+								 [[RCResManager getInstance]imageForKey:@"album_table_cell_hl"]]autorelease];
+//	backViewSel.alpha = 0.2;
 	[cell setSelectedBackgroundView:backViewSel]; //设置Cell选中的背景图片
 
 	cell.height = backView.size.height;  //设置高度
@@ -767,23 +1138,18 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 #pragma mark - 网络请求相关
 //网络请求成功
 - (void)requestDidSucceed:(NSDictionary *)result {
-
-
-	
     if (result) {
 			[self.albumIDArray removeAllObjects];
             [self.albumIDArray addObjectsFromArray:[result objectForKey:@"album_list"]];
     }
-	
-	
 	[self showAlbumTable];//展开下拉列表
 	
 }
 
 //网络请求失败
 - (void)requestDidError:(RCError *)error {
-	UIAlertView *view = [[UIAlertView alloc]initWithTitle:nil message:@"获取相册失败" delegate:nil
-										cancelButtonTitle:@"取消" otherButtonTitles: nil];
+	UIAlertView *view = [[UIAlertView alloc]initWithTitle:nil message:NSLocalizedString(@"获取相册失败", @"获取相册失败")  delegate:nil
+										cancelButtonTitle:NSLocalizedString(@"取消", @"取消")  otherButtonTitles: nil];
 	[view show];
 	[view release];
 }
@@ -795,7 +1161,7 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	[self tapAlbumSelectBar];//强制重载列表
 }
 
-#pragma -mark 照片拖动
+#pragma  mark - 照片拖动
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event  
 {  
     UITouch *touch = [touches anyObject];  
@@ -821,14 +1187,14 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
     }
 }  
 
-//返回经过越界调整之后的中心坐标
+/* 
+	返回图片经过越界调整之后的中心坐标
+ */
 - (CGPoint)adjustPhotoLocation{
-
-
 	//显示的最小矩形框高度和宽度
 	CGFloat minSize = MIN(_lastDisplayFrame.size.height, _lastDisplayFrame.size.width);
 	
-	CGRect cutFrame = CGRectMake(160 -  minSize / 2, 230 - minSize / 2, minSize, minSize);
+	CGRect cutFrame = CGRectMake(160 -  minSize / 2, 230 - minSize / 2 + 10, minSize, minSize);
 	CGFloat cutLeft = cutFrame.origin.x ;
 	CGFloat cutRight = cutFrame.origin.x + cutFrame.size.width;
 	CGFloat cutTop = cutFrame.origin.y;
@@ -862,13 +1228,10 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 		[self.currentImageView setCenter:[self adjustPhotoLocation]];//限制调整范围
 
 	}];
-}
+} 
 
-#pragma -mark 照片相关操作
-/**
- * 图片加载
- */
--(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size  isToLoadHDImage:(BOOL) isToLoadHDImage  
+#pragma mark - 照片编辑
+-(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size   
 {   
     int kMaxResolution = size; // Or whatever   
 	
@@ -969,48 +1332,12 @@ static CGFloat DegreesToRadians(CGFloat degrees) { return degrees * M_PI / 180; 
 	
     CGContextConcatCTM(context, transform);   
 	
-//    if(isToLoadHDImage){ //是否导入的是高清图片
-//        CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);   
-//    } else {
-        CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width+2, height), imgRef);   
-//    }
+	CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);   
+
     UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();   
     UIGraphicsEndImageContext();   
 	
     return imageCopy;   
 } 
-
-
-/*
- * 旋转视图
- */
-- (UIImage *)imageRotated:(UIImage*)img andByDegrees:(CGFloat)degrees
-{  
-    // calculate the size of the rotated view's containing box for our drawing space
-    UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0,img.size.width, img.size.height)];
-    CGAffineTransform t = CGAffineTransformMakeRotation(DegreesToRadians(degrees));
-    rotatedViewBox.transform = t;
-    CGSize rotatedSize = rotatedViewBox.frame.size;
-    [rotatedViewBox release];
-    
-    // Create the bitmap context
-    UIGraphicsBeginImageContext(rotatedSize);
-    CGContextRef bitmap = UIGraphicsGetCurrentContext();
-    
-    // Move the origin to the middle of the image so we will rotate and scale around the center.
-    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
-    
-    // Rotate the image context
-    CGContextRotateCTM(bitmap, DegreesToRadians(degrees));
-    
-    // Now, draw the rotated/scaled image into the context
-    CGContextScaleCTM(bitmap, 1.0, -1.0);
-    CGContextDrawImage(bitmap, CGRectMake(-img.size.width / 2, -img.size.height / 2, img.size.width, img.size.height), [img CGImage]);
-    
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
 
 @end

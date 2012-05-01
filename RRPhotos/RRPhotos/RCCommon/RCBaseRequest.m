@@ -21,6 +21,8 @@
 {
     RL_RELEASE_SAFELY(_fields);
     RL_RELEASE_SAFELY(_secretKey);
+    RL_RELEASE_SAFELY(_onCompletion);
+    RL_RELEASE_SAFELY(_onError);
     [super dealloc];
 }
 
@@ -31,10 +33,10 @@
         _operation = nil;
 
         RCMainUser* mainUser = [RCMainUser getInstance];
-        if(mainUser.mprivateSecretKey)
-            _secretKey = mainUser.mprivateSecretKey;
+        if(mainUser.userSecretKey)
+            self.secretKey = mainUser.userSecretKey;
         else
-            _secretKey = [RCConfig globalConfig].opSecretKey;
+            self.secretKey = [RCConfig globalConfig].appSecretKey;
     }
     
     return self;
@@ -53,10 +55,10 @@
     self.fields = [NSMutableDictionary dictionaryWithDictionary:query];
     
     RCConfig *config = [RCConfig globalConfig];
-    NSString *loginUrl = config.mApiUrl;
+    NSString *loginUrl = config.apiUrl;
     
     if(![self.fields objectForKey:@"api_key"])
-        [self.fields setObject:config.opApiKey forKey:@"api_key"];
+        [self.fields setObject:config.apiKey forKey:@"api_key"];
     
     if(![self.fields objectForKey:@"v"])
         [self.fields setObject:@"1.0" forKey:@"v"];
@@ -68,7 +70,7 @@
         [self.fields setObject:@"json" forKey:@"format"];
     
     if(![self.fields objectForKey:@"client_info"])
-        [self.fields setObject:config.clientInfoJSONString forKey:@"client_info"];
+        [self.fields setObject:config.clientInfo forKey:@"client_info"];
     
     if(![self.fields objectForKey:@"call_id"])
         [self.fields setObject:[NSNumber numberWithLong:[[NSDate date] timeIntervalSince1970]] forKey:@"call_id"];
@@ -80,6 +82,8 @@
     MKNetworkOperation* operation = [[MKNetworkOperation alloc] initWithURLString:hostname
                                                                            params:self.fields 
                                                                        httpMethod:@"POST"];
+    
+    NSLog(@"<fields>%@ </fields>",self.fields);
     
     NSString* contentType = @"application/x-www-form-urlencoded";
     [operation setCustomPostDataEncodingHandler:[self postDataEncodingHandler] forType:contentType];
@@ -105,7 +109,7 @@
         
     };
     
-    return [block copy];
+    return [[block copy] autorelease];
 }
 
 -(MKNKResponseBlock)completionHandler
@@ -203,7 +207,7 @@
             self.onCompletion(rootObject);
     };
     
-    return [block copy];
+    return [[block copy] autorelease];
 }
 
 -(MKNKErrorBlock)errorHandler
@@ -213,7 +217,7 @@
             self.onError([RCError errorWithNSError:error]);
     };
     
-    return [block copy];
+    return [[block copy] autorelease];
 }
 
 @end

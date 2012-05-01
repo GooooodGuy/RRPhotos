@@ -13,14 +13,6 @@
      * 分页列表数据项
      */
 	NSMutableArray* _items;	
-	/**
-	 * 表示每一页大小.
-	 */
-	NSInteger _pageSize;
-	/**
-	 * 表示当前页索引.
-	 */
-	NSInteger _currentPageIndex;
     /**
      * 数据总数
      */
@@ -29,12 +21,15 @@
      * 总页数
      */
     NSInteger _totalPage;
+    /**
+     * 加载更多
+     */
+    BOOL _loadMore;
 }
 
 @property (nonatomic, retain) NSMutableArray* items;
-@property (nonatomic, assign)NSInteger pageSize;
-@property (nonatomic, assign)NSInteger currentPageIndex;
 @property (nonatomic, assign,readonly)NSInteger totalPage;
 @property (nonatomic, assign) NSInteger totalItem;
+@property (nonatomic, assign) BOOL loadMore;
 
 @end

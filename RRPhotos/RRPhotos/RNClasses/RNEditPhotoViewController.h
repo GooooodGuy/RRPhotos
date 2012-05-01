@@ -8,8 +8,14 @@
 
 #import <UIKit/UIKit.h>
 //#import "RNNavigationViewController.h"
-//#import "RNBaseViewController.h"
+#import "RNBaseViewController.h"
 #import "RNCreateAlbumViewController.h"
+
+typedef enum{
+	PhotoUploadTypeNormal,//普通照片上传
+	PhotoUploadTypeHead, //头像上传
+	
+}PhotoUploadType; //照片上传模式
 
 /*
   照片编辑完成回调 
@@ -26,20 +32,31 @@
 
 @end
 
-@interface RNEditPhotoViewController : UIViewController<UIActionSheetDelegate,UIGestureRecognizerDelegate,
+@interface RNEditPhotoViewController : RNBaseViewController<UIActionSheetDelegate,UIGestureRecognizerDelegate,
 	UINavigationControllerDelegate,UIImagePickerControllerDelegate,RNCreateAlbumFinishDelegate,
 	UITableViewDelegate,UITableViewDataSource>
 {
+	//上传类型，是普通照片上传还是头像上传
+	PhotoUploadType _uploadType;
 			
 	//存储当前显示在编辑界面的照片
 	UIImageView *_currentImageView;
+	//背景剪切框
+	UIImageView *_cutPhotoBgView;
+	
 	//缩放手势
-	UIPinchGestureRecognizer *_pinchRecognizer;
+	UIPinchGestureRecognizer *_pinchGesture;
 	//双击手势
     UITapGestureRecognizer *_doubleTapGesture;
 	//单击手势
     UITapGestureRecognizer *_singleTapGesture;
+
+	//拖动手势
+	UIPanGestureRecognizer *_panGesture;
 	
+	// 上次pan手势的横坐标
+    CGFloat _preLocationX;
+
 	//高清图片
 	UIImage* _highQualityImage;
 	
@@ -67,6 +84,12 @@
 	//高清文字label
 	UILabel *_hdTextLabel;
 	
+	//左旋按钮
+	UIButton *_photoTurnLeftButton;
+	
+	//右旋转
+	UIButton *_photoTurnRightButton;
+	//工具栏
 	UIImageView *_toolBarView;
 	
 	//相册选择bar
@@ -77,6 +100,9 @@
 	
 	//选中的相册ID
 	NSString *_albumID;
+    
+    //相册名称
+    NSString *_albumName;
 	
 	//当前选中的相册列表
 	UILabel *_albumNameLabel;
@@ -100,10 +126,8 @@
 	CGRect _lastDisplayFrame;
 	
 	CGPoint _gestureStartPoint;
-		
-	//相册列表名称数组
-	NSMutableArray *_IDArray;
 
+	NSMutableArray *_albumIDArray;
 	//编辑完成回调
 	id<RNEditPhotoFinishDelegate> _delegate;
 	
@@ -114,6 +138,8 @@
 	NSIndexPath* _oldSelectedIndexPath;
 }
 @property(nonatomic,retain)UIImageView *currentImageView;
+
+@property(nonatomic,retain)UIImageView *cutPhotoBgView;
 
 @property(nonatomic,retain)UIImage *highQualityImage;
 
@@ -131,6 +157,8 @@
 
 @property(nonatomic,retain)UIButton *photoTurnLeftButton;
 
+@property(nonatomic,retain)UIButton *photoTurnRightButton;
+
 @property(nonatomic,retain)UIImageView *toolBarView;
 
 @property(nonatomic,retain)UIImageView *albumSelectBarView;
@@ -138,6 +166,8 @@
 @property(nonatomic,retain)UITableView *albumNameTableView;
 
 @property(nonatomic,copy)NSString *albumID;
+
+@property(nonatomic,copy)NSString *albumName;
 
 @property(nonatomic,retain)UILabel* albumNameLabel;
 
@@ -151,9 +181,22 @@
 
 @property (nonatomic,retain) NSIndexPath* oldSelectedIndexPath;
 
+
 /**
  * 设置要编辑的照片
  */
 - (void)loadImageToEdit:(UIImage *)editImage;
 
+/**
+ * uploadType :默认是普通照片上传
+ */
+- (id)initWithType: (PhotoUploadType)uploadType; 
+ 
+/**
+ * 向指定相册上传照片
+ * @param albumId 相册id
+ * @param albumName 相册名称
+ * @author siglea 
+ */
+- (id)initWithAlbumId:(NSString *)albumId withAlbumName:(NSString *)albumname;
 @end

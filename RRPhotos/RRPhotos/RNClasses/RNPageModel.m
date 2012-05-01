@@ -9,34 +9,43 @@
 #import "RNPageModel.h"
 
 @implementation RNPageModel
-
 @synthesize items = _items;
-@synthesize pageSize = _pageSize;
-@synthesize currentPageIndex = _currentPageIndex;
 @synthesize totalItem = _totalItem;
 @synthesize totalPage = _totalPage;
+@synthesize loadMore = _loadMore;
 
+-(id)init{
+    if (self = [super init]) {
+        self.pageSize = 30;
+        self.items = [NSMutableArray array];
+        self.loadMore = NO;
+    }
+    return self;
+}
 - (void)dealloc{
     self.items = nil;
     [super dealloc];
 }
 - (void)load:(BOOL)more {
+    self.loadMore = more;
     if (self.method == nil) {
         return;
     }
     if (more) {
-        self.currentPageIndex ++;
+        self.currentPageIdx ++;
     }else {
-        self.currentPageIndex = 1;
+        self.currentPageIdx = 1;
         self.totalItem = 0;
-        [self.items removeAllObjects];
     }
-    [_query setObject:[NSNumber numberWithInteger:self.currentPageIndex] forKey:@"page"];
+    [_query setObject:[NSNumber numberWithInteger:self.currentPageIdx] forKey:@"page"];
     [_request sendQuery:_query withMethod:_method];
     [self didStartLoad];
 }
 
 - (void)didFinishLoad:(id)result{
+    if (!self.loadMore) {
+        [self.items removeAllObjects];
+    }
 //    在子类中实现
 //    self.result = result;
 //    self.totalItem = [result intForKey:@"count" withDefault:0];

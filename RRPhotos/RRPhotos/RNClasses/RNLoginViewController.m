@@ -28,14 +28,14 @@
 @synthesize lastPassword = _lastPassword;
 @synthesize activityIndicatorView = _activityIndicatorView;
 @synthesize loginDelegate = _loginDelegat;
-
+//@synthesize loginR
 - (void)dealloc {	
 	[emailField release];
 	[passwordField release];
 	TT_RELEASE_SAFELY(_activityIndicatorView);
 	TT_RELEASE_SAFELY(_lastUsername);
 	TT_RELEASE_SAFELY(_lastPassword);
-	
+	TT_RELEASE_SAFELY(_loginRequest);
     [super dealloc];
 }
 
@@ -66,13 +66,13 @@
     [_activityIndicatorView removeFromSuperview];
     // 保存登录信息
     RCMainUser* mainUser = [RCMainUser getInstance];
-    mainUser.msessionKey = [result objectForKey:@"session_key"];
+    mainUser.sessionKey = [result objectForKey:@"session_key"];
     
-    mainUser.mticket = [result objectForKey:@"ticket"];
-    mainUser.ticket = mainUser.mticket;
+//    mainUser.mticket = [result objectForKey:@"ticket"];
+    mainUser.ticket = [result objectForKey:@"ticket"];
     
     mainUser.userId = [result objectForKey:@"uid"];
-    mainUser.mprivateSecretKey = [result objectForKey:@"secret_key"];
+    mainUser.userSecretKey = [result objectForKey:@"secret_key"];
     //	mainUser.loginStatus = RRLoginStatusLogined;
     mainUser.userName = [result objectForKey:@"user_name"];
     NSNumber * checkValue = [result objectForKey:@"fill_stage"];
@@ -251,6 +251,17 @@
 	[super viewWillDisappear:animated];
 
 }
+
+- (void)viewDidUnload{
+	[super viewDidUnload];
+	
+	[emailField release];
+	[passwordField release];
+	TT_RELEASE_SAFELY(_activityIndicatorView);
+	TT_RELEASE_SAFELY(_lastUsername);
+	TT_RELEASE_SAFELY(_lastPassword);
+	TT_RELEASE_SAFELY(_loginRequest); 
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	
 	[self goAction];
@@ -319,13 +330,51 @@
         [defaults setObject:u forKey:@"loginUserName"];
         [defaults setObject:pwd forKey:@"loginPassword"];
         
-        NSMutableDictionary* dics = [NSMutableDictionary dictionary];
-        [dics setObject:[passwordField.text md5] forKey:@"password"];
-        [dics setObject:emailField.text forKey:@"user"];
+//        NSMutableDictionary* dics = [NSMutableDictionary dictionary];
+//        [dics setObject:[passwordField.text md5] forKey:@"password"];
+//        [dics setObject:emailField.text forKey:@"user"];
 		//        RNModel *model = [[RNModel alloc] initWithQuery:dics andMethod:@"client/login"];
 		//        self.model = model;
 		//        RL_RELEASE_SAFELY(model);
-		[self sendQueryWithDic:dics andMethod:@"client/login"];//chenyi modify		
+	
+		
+//		[self sendQueryWithDic:dics andMethod:@"client/login"];//chenyi modify
+		
+		
+		NSLog(@"###启动：开始自动登陆");
+		RCClientLoginRequest *loginRequest = [[RCClientLoginRequest alloc] init];
+		loginRequest.onLoginSuccess = ^(){
+			NSLog(@"###启动：自动登陆成功");
+//			[self startUpdateServerKVData];
+			
+			RNMainViewController *mainController = [[RNMainViewController alloc]init];
+			AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+													   sharedApplication].delegate;
+			UIViewController *view = [[UIViewController alloc]init ];
+			view.view.backgroundColor = [UIColor greenColor];
+			[appDelegate.rootNavController pushViewController:mainController animated:YES];
+			[mainController release];
+		};
+		
+		loginRequest.onError = ^(RCError *error){
+			NSLog(@"###启动：自动登陆失败 %@", error);
+			// 错误处理 
+			UIAlertView *pAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"错误", @"错误" )
+															 message:[error titleForError] 
+															delegate:nil 
+												   cancelButtonTitle:NSLocalizedString(@"确定", @"确定") otherButtonTitles:nil, nil ];
+			
+			[pAlert show];
+			[pAlert release];
+		};
+		
+		[loginRequest loginWithAccount:u
+                                passwordMD5:[pwd md5]
+                                   isVerify:NO
+                                 verifyCode:nil];
+		RL_RELEASE_SAFELY(loginRequest);
+
+		
 	}
 	
 	

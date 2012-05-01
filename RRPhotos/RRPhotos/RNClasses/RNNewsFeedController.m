@@ -34,6 +34,7 @@
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
 	
+	self.navBar.hidden = YES;
 	//测试按钮
 	UIButton *testbutton = [UIButton buttonWithType:UIButtonTypeCustom];
 	self.testButton = testbutton;

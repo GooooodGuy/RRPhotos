@@ -15,17 +15,22 @@
 @implementation RNModel
 @synthesize query = _query;
 @synthesize method = _method;
-@synthesize delegates = _delegates;
 @synthesize request = _request;
 @synthesize result = _result;
+@synthesize currentPageIdx = _currentPageIdx;
+@synthesize pageSize = _pageSize;
+@synthesize total = _total;
+@synthesize resultAry = _resultAry;
+@synthesize isLoadMore=_isLoadMore;
 
 - (void)dealloc {
+    RN_DEBUG_LOG;
     self.query = nil;
     self.method = nil;
-    //self.delegates = nil;
     RL_RELEASE_SAFELY(_delegates);
     self.request = nil;
     self.result = nil;
+    self.resultAry = nil;
     
     [super dealloc];
 }
@@ -35,18 +40,24 @@
     if (self = [super init]) {
         self.query = [NSMutableDictionary dictionary];
         RCMainUser *mainUser = [RCMainUser getInstance];
-        [self.query setValue:mainUser.msessionKey forKey:@"session_key"];
+        [self.query setValue:mainUser.sessionKey forKey:@"session_key"];
         
         self.method = nil;
-        self.delegates = [NSMutableArray array];
+        self.currentPageIdx = 1;
+        self.pageSize = 10;
+        self.total = 10;
+        self.resultAry = [NSMutableArray arrayWithCapacity:10];
+
+        _delegates = TTCreateNonRetainingArray();
         
         RCBaseRequest *request = [[RCBaseRequest alloc] init];
+        __block typeof(self) bself = self;
         request.onCompletion = ^(id result){
-            [self didFinishLoad:result];
+            [bself didFinishLoad:result];
         };
         
         request.onError = ^(RCError* error) {
-            [self didFailLoadWithError:error];
+            [bself didFailLoadWithError:error];
         };
         
         self.request = request;
@@ -55,11 +66,28 @@
     
     return self;
 }
+- (NSMutableArray *)delegates {
+    return _delegates;
+}
 
 - (void)load:(BOOL)more {
     if (self.method == nil) {
         return;
     }
+    self.isLoadMore = more;
+    // 已经请求所有数据，不需要加载更多
+    if (more && self.total <= [_resultAry count]) {
+        return;
+    }
+    
+    if (more) {
+        _currentPageIdx = [_resultAry count] / _pageSize + 1;
+    } else {
+        _currentPageIdx = 1;
+    }
+    
+    [_query setObject:[NSNumber numberWithInt:_currentPageIdx] forKey:@"page"];
+    [_query setObject:[NSNumber numberWithInt:_pageSize] forKey:@"page_size"];
     [_request sendQuery:_query withMethod:_method];
     [self didStartLoad];
 }

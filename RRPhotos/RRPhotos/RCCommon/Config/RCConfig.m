@@ -9,196 +9,167 @@
 #import "RCConfig.h"
 #import "UIDevice+UIDeviceExt.h"
 #import "NSString+NSStringEx.h"
+#import "SBJsonWriter.h"
 
 static RCConfig *_globalConfig = nil;
+
 @implementation RCConfig
 
-@synthesize opApiKey = _opApiKey;
-@synthesize opApiUrl = _opApiUrl;
-@synthesize opAppId = _opAppId;
-@synthesize mApiUrl = _mApiUrl;
-@synthesize opSecretKey = _opSecretKey;
-@synthesize opLoginUrl = _opLoginUrl;
+@synthesize appStoreId = _appStoreId;
+@synthesize appBundleID = _appBundleID;
+@synthesize appId = _appId;
+@synthesize fromID = _fromID;
+@synthesize apiUrl = _apiUrl;
+@synthesize apiKey = _apiKey;
+@synthesize appSecretKey = _appSecretKey;
 @synthesize clientName = _clientName;
 @synthesize version = _version;
-@synthesize fromType = _fromType;
-@synthesize fromID = _fromID;
-@synthesize model = _model;
-@synthesize clientInfoJSONString = _clientInfoJSONString;
-@synthesize imgConvertUrl = _imgConvertUrl;
-@synthesize imageCachePath = _imageCachePath;
-@synthesize emotionsPath = _emotionsPath;
-@synthesize databasePath = _databasePath;
-@synthesize pubdate = _pubdate;
-@synthesize configFilePath = _configFilePath;
-@synthesize registerUrl = _registerUrl;
-
-@synthesize httpTimeout = _httpTimeout;
+@synthesize deviceModel = _deviceModel;
+@synthesize clientInfo = _clientInfo;
 @synthesize chatHostUrl = _chatHostUrl;
-@synthesize findPeopleUrl = _findPeopleUrl;
-@synthesize appId = _appId;
-@synthesize appStoreId = _appStoreId;
-
-@synthesize appHomepageUrl=_appHomepageUrl;
-@synthesize dataVersion = _dataVersion; // 数据库文件
-@synthesize fromPolistHtf = _fromPolistHtf;
-@synthesize fromMinifeedHtf = _fromMinifeedHtf;
-@synthesize fromNewsfeedHtf = _fromNewsfeedHtf;
-@synthesize fromHomeListHtf = _fromHomeListHtf;
-@synthesize fromStatusMinifeedHtf = _fromStatusMinifeedHtf;
-@synthesize fromStatusNewsfeedHtf = _fromStatusNewsfeedHtf;
-
 @synthesize chatServerVersion = _chatServerVersion;
+@synthesize talkServerAddr = _talkServerAddr; 
+@synthesize talkServerPort = _talkServerPort;
+@synthesize findPeopleUrl = _findPeopleUrl;
+@synthesize registerUrl = _registerUrl;
+@synthesize findPasswordUrl = _findPasswordUrl;
+@synthesize helpUrl = _helpUrl;
 
 - (void)dealloc
 {
-    [_appId release];
-    [_appStoreId release];
-    [_opApiKey release];
-    [_opApiUrl release];
-    [_opAppId release];
-    [_mApiUrl release];
-    [_opSecretKey release];
-    [_opLoginUrl release];
-    [_clientName release];
-    [_version release];
-    [_fromType release];
-    [_fromID release];
-    [_model release];
-    [_clientInfoJSONString release];
-    [_imgConvertUrl release];
-    [_imageCachePath release];
-    [_emotionsPath release];
-    [_databasePath release];
-    [_pubdate release];
-    [_configFilePath release];
-    [_registerUrl release];
-    [_chatHostUrl release];
-    [_findPeopleUrl release];
-    [_fromPolistHtf release];
-	[_fromMinifeedHtf release];
-	[_fromNewsfeedHtf release];
-	[_fromHomeListHtf release];
-	[_fromStatusMinifeedHtf release];
-	[_fromStatusNewsfeedHtf release];
+    self.appStoreId = nil;
+    self.appBundleID = nil;
+    self.appId = nil;
+    self.fromID = nil;
+    self.apiUrl = nil;
+    self.apiKey = nil;
+    self.appSecretKey = nil;
+    self.clientName = nil;
+    self.version = nil;
+    self.deviceModel = nil;
+    self.clientInfo = nil;
+    self.chatHostUrl = nil;
     self.chatServerVersion = nil;
+    self.talkServerAddr = nil; 
+    self.findPeopleUrl = nil;
+    self.registerUrl = nil;
+    self.findPasswordUrl = nil;
+    self.helpUrl = nil;
     
-    [super dealloc];
+    [super dealloc]; 
 }
 
 - (id)init {
     self = [super init]; 
     if (self) {
-       // self.opApiKey = @"04ada73d2e1040d3a0cb0d9c4f8daadb"; // 3.0 
-        self.opApiKey = @"982f1025964b461099ac889453b700d1";   // iPhone 4.0 2011-08-08
-        self.opApiUrl = @"http://m3.api.renren.com/restserver.do";
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        UIDevice *device = [UIDevice currentDevice];
+        UIScreen *screen = [UIScreen mainScreen];
+        //应用App Store的ID（AppleID）
+        self.appStoreId = @"316709252";
+    
+        // 应用App Store的Bundle ID
+        self.appBundleID = [infoDictionary objectForKey:(NSString *)kCFBundleIdentifierKey];
         
-        //self.mApiUrl = @"http://mc1.test.renren.com/api";//开发服务器
-        //self.mApiUrl = @"http://m1.apis.tk/api";
-        //self.mApiUrl = @"http://stage.apis.tk/api"; // 定版服务器
-        self.mApiUrl = @"http://api.m.renren.com/api";//正式服务器
-        //self.mApiUrl = @"http://mc1.test.renren.com/api";
-        //self.opSecretKey = @"6f67620dddb24c668607d8cbf1f37a85";
-        self.opSecretKey = @"91110a41072e4d0bac3ac05a547f3ece"; // iPhone 4.0 2011-08-08
+        // 应用App ID (服务分配)
+        self.appId = @"185292";
+        //self.appId = @"169485";
         
-        //self.opLoginUrl = @"http://stage.apis.tk/api";
-        self.opLoginUrl = @"http://login.api.renren.com/CL.do";
-        //self.opLoginUrl = @"http://m1.apis.tk/api";
+        //注册url
+        self.registerUrl = @"http://client2.test.renren.com/register";
+        //帮助中心
+        self.helpUrl = @"http://3g.renren.com/help/guestbook.do?";
         
-       // self.clientName = @"xiaonei_iPad";
-       // self.version = @"1.0.0";
-       // self.fromType = @"2000505";
-        self.fromType = @"9100301";
-        self.fromID = self.fromType;
-       // self.model = @"iPad";
-       // self.pubdate = @"20101223";
-        self.pubdate = @"20111101";
-        self.imgConvertUrl = @"http://ic.m.renren.com";
+        //找回密码
+        self.findPasswordUrl = @"http://client2.test.renren.com/reset_password";
+
+        // 客户端 FromID（服务分配）
+        self.fromID = @"9100301";
+        // self.fromID = @"2000505";
         
-        self.version = @"4.0.1"; // 版本号必须保持三位的格式
+        // API 地址（服务分配）
+
+        self.apiUrl = @"http://mc3.test.renren.com/api";//开发服务器
+        //self.apiUrl = @"http://mc3.test.renren.com/api";//开发服务器
+        //self.apiUrl = @"http://api.m.renren.com/api";//正式服务器
+        
+        // API Key（服务分配）
+        self.apiKey = @"980aca4002b744f1bf37df8ee28e2c92";
+        
+        // App Secret Key（服务分配）
+        self.appSecretKey = @"1610a966b2fe4270866aeb78f34de191";
+        
+        // 客户端名称
         self.clientName = @"xiaonei_iphone";
-        self.model = @"iphone";
         
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *docDir = [paths objectAtIndex:0];
-        // 图片缓存的路径
-        self.imageCachePath = [docDir stringByAppendingPathComponent:@"imageCache"];
+        // 客户端版本
+        self.version = [infoDictionary objectForKey:(NSString *)kCFBundleVersionKey];
         
-        // Path for cache database file
-        self.databasePath = [docDir stringByAppendingPathComponent:@"cachedb.sql"];
+        // 设备型号
+        self.deviceModel = [UIDevice machineModelName];
         
-        // 数据版本
-        self.dataVersion = 1;
+        // 客户端信息（client_info）
+        CGSize screenSize = screen.bounds.size;
+        NSString *otherStr = @"";
+        NSString *carrierCode = [UIDevice carrierCode];
+        if (carrierCode) {
+            otherStr = [otherStr stringByAppendingString:carrierCode];
+        }
+        otherStr = [otherStr stringByAppendingString:@","];
         
-        self.configFilePath = [docDir stringByAppendingPathComponent:@"renren.plist"];
-        // 表情路径
-        self.emotionsPath = [docDir stringByAppendingPathComponent:@"emotions"];
+        NSDictionary *clientInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    self.deviceModel, @"model",
+                                    [UIDevice macAddress], @"mac",
+                                    [NSString stringWithFormat:@"%@%@", device.systemName, device.systemVersion], @"os" , 
+                                    [NSString stringWithFormat:@"%.0fX%.0f", screenSize.width, screenSize.height], @"screen",
+                                    self.fromID, @"from",
+                                    self.version, @"version",
+                                    otherStr, @"other",
+                                    nil];
+        SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
+        self.clientInfo = [jsonWriter stringWithObject:clientInfo];
+        [jsonWriter release];
         
-        self.httpTimeout = 45;
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // 线上聊天服务
-        //self.chatHostUrl = @"talk.m.renren.com";//@"111.13.4.34";////@"talk.apis.tk";//@"123.125.47.15";
-        // 测试聊天服务
-        self.chatHostUrl = @"talk.apis.tk";
-        
-        self.findPeopleUrl = @"http://mt.renren.com/client/search";// 搜索好友地址
-        
-        self.appHomepageUrl = @"http://3gapp.renren.com/access"; // 正式应用新域名
-        
-        /*
-         报到poilist进入POI终端页：htf=184
-         报到产生的个人主页的新鲜事(minifeed)进入POI终端页：htf=185
-         报到产生的新鲜事（newsfeed）进入POI终端页：htf=186
-         位置首页附近好友的feed进入POI终端页：htf=187
-         状态带位置产生的个人主页的新鲜事(minifeed)进入POI终端页：htf=194
-         状态带位置产生的新鲜事(newsfeed)进入POI终端页：htf=195
-         */
-        self.fromPolistHtf = @"184";
-        self.fromMinifeedHtf = @"185";
-        self.fromNewsfeedHtf = @"186";
-        self.fromHomeListHtf = @"187";
-        self.fromStatusMinifeedHtf = @"194";
-        self.fromStatusNewsfeedHtf = @"195";
-        
+        //self.chatServerVersion = @"talk.m.renren.com";
+        //self.chatServerVersion = @"talk.apis.tk";
         // 聊天服务器版本
         self.chatServerVersion = @"5";
+        //self.chatServerVersion = @"8";
+        //self.talkServerAddr = @"10.3.18.204";
+        self.talkServerAddr = @"talk.apis.tk";
+        self.talkServerPort = 25553;
         
+        // 搜索好友地址
+        self.findPeopleUrl = @"http://mt.renren.com/client/search";
     }
     return self;
 }
-- (NSString *)userAgent {
-    return [NSString stringWithFormat:@"%@%@", self.clientName, self.version];
-}
-- (NSString *)udid {
-    UIDevice *device = [UIDevice currentDevice];
-    NSString *udid = device.uniqueIdentifier;
 
-    if (!udid) {
-        udid = [[device macaddress] md5];
-    }
-    if (!udid) {
-        udid = @"";
-    }
-    return udid;
+- (NSString *)udid{
+    return [UIDevice macAddress];
 }
-- (NSString *)clientInfoJSONString {
-    UIDevice *device = [UIDevice currentDevice];
-	if([device.model hasPrefix:@"iPad"])
-    {
-        return [NSString stringWithFormat:@"{\"model\":\"%@\", \"os\":\"%@%@\", \"uniqid\":\"%@\", \"screen\":\"768x1024\", \"font\":\"system 12\", \"ua\":\"%@\", \"from\":\"%@\", \"version\":\"%@\"}",
-                device.model, device.systemName, device.systemVersion, [self udid], [self userAgent], self.fromID, self.version];
-    }
-	return [NSString stringWithFormat:@"{\"model\":\"%@\", \"os\":\"%@%@\", \"uniqid\":\"%@\", \"screen\":\"320x480\", \"font\":\"system 12\", \"ua\":\"%@%@\", \"from\":\"%@\", \"version\":\"%@\"}",
-			device.model, device.systemName, device.systemVersion, [self udid], self.clientName, self.version, self.fromID, self.version];
 
+// API 统计信息
++ (NSString *)miscWithHtf:(int)htfCode{
+    NSString *misc = @"";
+    Reachability *reachability = [Reachability reachabilityWithHostname:[RCConfig globalConfig].apiUrl];
+    misc = [misc stringByAppendingFormat:@"%d", htfCode];
+    misc = [misc stringByAppendingString:@","];
+    misc = [misc stringByAppendingString:[reachability isReachable]?@"0":@"1"];
+    misc = [misc stringByAppendingString:[reachability isReachableViaWiFi]?@"1":@"0"];
+    return misc;
 }
+
 + (RCConfig* )globalConfig {
     if(!_globalConfig) {
         _globalConfig = [[RCConfig alloc] init];
     }
     
     return _globalConfig;
-    
 }
+
 + (void)setGlobalConfig:(RCConfig *)config {
     if (_globalConfig != config) {
         [_globalConfig release];

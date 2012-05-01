@@ -17,7 +17,9 @@
 
 -(void)dealloc
 {
-    [_fields release];
+    RL_RELEASE_SAFELY(_fields);
+    RL_RELEASE_SAFELY(_onCompletion);
+    RL_RELEASE_SAFELY(_onError);
     [super dealloc];
 }
 
@@ -39,54 +41,66 @@
 
 -(void)sendQuery:(NSDictionary *)query withMethod:(NSString*)method
 {
-    self.fields = [NSMutableDictionary dictionaryWithDictionary:query];
-    
     NSString *loginUrl = nil;
     NSString *secretKey = nil;
     
+    RCMainUser* mainUser = [RCMainUser getInstance];
+    
+    NSString *key = [query objectForKey:@"key"];
+    //网络请求key不一样，故此判断传入参数query中是否有key，有则用query中加密；否则用默认　2012-04-06 modify by lyfing
+    if ( !key ) {
+        if(mainUser.userSecretKey)
+            secretKey = mainUser.userSecretKey;
+        else
+            secretKey = [RCConfig globalConfig].appSecretKey;
+    }
+    else {
+        secretKey = key;
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:query];
+        [dic removeObjectForKey:@"key"];
+        query = [NSDictionary dictionaryWithDictionary:dic];
+    }
+    self.fields = [NSMutableDictionary dictionaryWithDictionary:query];
+    
     RCConfig *config = [RCConfig globalConfig];
     
-    RCMainUser* mainUser = [RCMainUser getInstance];
-    if(mainUser.mprivateSecretKey)
-        secretKey = mainUser.mprivateSecretKey;
-    else
-        secretKey = [RCConfig globalConfig].opSecretKey;
-    
-    loginUrl = config.mApiUrl;
+    loginUrl = config.apiUrl;
+   //app/getInfo方法不需下面部分参数，故作此判断　　　　2012-04-06 modify by lyfing
+   if (![method isEqualToString:@"app/getInfo"]) {
     
     if(![self.fields objectForKey:@"api_key"])
-        [self.fields setObject:config.opApiKey forKey:@"api_key"];
-     
-    if(![self.fields objectForKey:@"v"])
-        [self.fields setObject:@"1.0" forKey:@"v"];
+        [self.fields setObject:config.apiKey forKey:@"api_key"];
     
     if(![self.fields objectForKey:@"uniq_id"])
         [self.fields setObject:[config udid] forKey:@"uniq_id"];
     
     if(![self.fields objectForKey:@"format"])
         [self.fields setObject:@"json" forKey:@"format"];
-    
+      
     if(![self.fields objectForKey:@"client_info"])
-        [self.fields setObject:config.clientInfoJSONString forKey:@"client_info"];
+        [self.fields setObject:config.clientInfo forKey:@"client_info"];
     
     if(![self.fields objectForKey:@"call_id"])
         [self.fields setObject:[NSNumber numberWithLong:[[NSDate date] timeIntervalSince1970]] forKey:@"call_id"];
+    }
+    
+    if(![self.fields objectForKey:@"v"])
+        [self.fields setObject:@"1.0" forKey:@"v"];
     
     if(![self.fields objectForKey:@"gz"])
         [self.fields setObject:@"compression" forKey:@"gz"];
-    
+
     NSString* hostname = [NSString stringWithFormat:@"%@/%@", loginUrl, method];
     MKNetworkOperation* op = [[MKNetworkOperation alloc] initWithURLString:hostname
                                                                            params:self.fields 
                                                                        httpMethod:@"POST"];
     operation = op;
-    
-    
     [op setCustomPostDataEncodingHandler:^NSString *(NSDictionary *postDataDict) {
         NSString *queryStr = nil;
         queryStr = [NSString queryStringWithSignature:postDataDict 
                                           opSecretKey:secretKey
                                         valueLenLimit:50];
+        NSLog(@"MK queryStr = %@",queryStr);
         
         return queryStr;
         

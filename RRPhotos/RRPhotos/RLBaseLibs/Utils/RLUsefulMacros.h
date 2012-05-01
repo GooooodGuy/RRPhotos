@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #define RL_RELEASE_SAFELY(__POINTER) { [__POINTER release]; __POINTER = nil; }
+#define RL_INVALIDATE_TIMER(__TIMER) { [__TIMER invalidate]; __TIMER = nil; }
 
 /*
  * 通过RGB创建UIColor

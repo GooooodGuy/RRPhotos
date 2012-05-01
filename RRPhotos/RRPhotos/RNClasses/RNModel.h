@@ -38,9 +38,18 @@
     RCBaseRequest *_request;
     // 网络请求结果，为dictionary或者array类型
     id _result;
+    // 分页记录的位置
+    NSInteger _currentPageIdx;
+    // 分页大小
+    NSInteger _pageSize;
+    // 返回结果总个数
+    NSInteger _total;
+    // 返回总数据
+    NSMutableArray *_resultAry;
+    BOOL _isLoadMore;
 }
 
-
+- (NSMutableArray *)delegates;
 /*
  * 发送网络请求
  *
@@ -59,8 +68,13 @@
 
 @property (nonatomic, retain) NSMutableDictionary *query;
 @property (nonatomic, copy) NSString *method;
-@property (nonatomic, retain) NSMutableArray *delegates;
+//@property (nonatomic, retain) NSMutableArray *delegates;
 @property (nonatomic, retain) RCBaseRequest *request;
 @property (nonatomic, retain) id result;
+@property (nonatomic, assign) NSInteger currentPageIdx;
+@property (nonatomic, assign) NSInteger pageSize;
+@property (nonatomic, assign) NSInteger total;
+@property (nonatomic, retain) NSMutableArray *resultAry;
+@property (nonatomic, assign) BOOL isLoadMore;
 
 @end

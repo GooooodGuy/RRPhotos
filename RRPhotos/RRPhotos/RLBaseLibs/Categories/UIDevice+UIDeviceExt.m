@@ -7,27 +7,21 @@
 //
 
 #import "UIDevice+UIDeviceExt.h"
-
-#include <sys/socket.h> // Per msqr
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#include <sys/socket.h>
 #include <sys/sysctl.h>
 #include <net/if.h>
 #include <net/if_dl.h>
-
-@interface UIDevice(Private)
-
-
-@end
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mount.h>
 
 @implementation UIDevice (IdentifierAddition)
 
-#pragma mark -
-#pragma mark Private Methods
-
 // Return the local MAC addy
 // Courtesy of FreeBSD hackers email list
-
-- (NSString *) macaddress{
-    
++ (NSString *)macAddress{
     int                 mib[6];
     size_t              len;
     char                *buf;
@@ -69,6 +63,106 @@
     free(buf);
     
     return outstring;
+}
+
++ (BOOL)isDeviceiPad{
+    BOOL iPadDevice = NO;
+    
+    // Is userInterfaceIdiom available?
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)])
+    {
+        // Is device an iPad?
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+            iPadDevice = YES;
+    }
+    
+    return iPadDevice;
+}
+
++ (NSString *) machineModel{
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *machineModel = [NSString stringWithUTF8String:machine];
+    free(machine);
+    return machineModel;
+}
+
++ (NSString *) machineModelName{
+    NSString *machineModel = [UIDevice machineModel];
+    
+    // iPhone
+    if ([machineModel isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
+    if ([machineModel isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
+    if ([machineModel isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
+    if ([machineModel isEqualToString:@"iPhone3,1"])    return @"iPhone 4 (GSM)";
+    if ([machineModel isEqualToString:@"iPhone3,3"])    return @"iPhone 4 (CDMA)";
+    if ([machineModel isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
+    
+    // iPod
+    if ([machineModel isEqualToString:@"iPod1,1"])      return @"iPod Touch 1G";
+    if ([machineModel isEqualToString:@"iPod2,1"])      return @"iPod Touch 2G";
+    if ([machineModel isEqualToString:@"iPod3,1"])      return @"iPod Touch 3G";
+    if ([machineModel isEqualToString:@"iPod4,1"])      return @"iPod Touch 4G";
+    
+    // iPad
+    if ([machineModel isEqualToString:@"iPad1,1"])      return @"iPad";
+    if ([machineModel isEqualToString:@"iPad2,1"])      return @"iPad 2 (WiFi)";
+    if ([machineModel isEqualToString:@"iPad2,2"])      return @"iPad 2 (GSM)";
+    if ([machineModel isEqualToString:@"iPad2,3"])      return @"iPad 2 (CDMA)";
+    if ([machineModel isEqualToString:@"iPad3,1"])      return @"iPad 3";
+    
+    // Simulator
+    if ([machineModel isEqualToString:@"i386"])         return @"Simulator";
+    if ([machineModel isEqualToString:@"x86_64"])       return @"Simulator";
+    
+    return machineModel;
+}
+
++(NSNumber *)freeSpace{
+    struct statfs buf;
+    long long freespace = -1;
+    if(statfs("/private/var", &buf) >= 0){
+        freespace = (long long)buf.f_bsize * buf.f_bfree;
+    }
+
+    return [NSNumber numberWithLongLong:freespace];
+}
+
++(NSNumber *)totalSpace{
+	struct statfs buf;	
+	long long totalspace = -1;
+	if(statfs("/private/var", &buf) >= 0){
+		totalspace = (long long)buf.f_bsize * buf.f_blocks;
+	} 
+	return [NSNumber numberWithLongLong:totalspace];
+}
+
+// 获取运营商信息
++ (NSString *)carrierName{
+    CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+    CTCarrier *carrier = [netInfo subscriberCellularProvider];
+    if (carrier == nil) {
+        return nil;
+    }
+    NSString *carrierName = [carrier carrierName];
+    NSString *mcc = [carrier mobileCountryCode];
+    NSString *mnc = [carrier mobileNetworkCode];
+    NSLog(@"Carrier Name: %@ mcc: %@ mnc: %@", carrierName, mcc, mnc);
+    return carrierName;
+}
+
++ (NSString *)carrierCode{
+    CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+    CTCarrier *carrier = [netInfo subscriberCellularProvider];
+    if (carrier == nil) {
+        return nil;
+    }
+    NSString *mcc = [carrier mobileCountryCode];
+    NSString *mnc = [carrier mobileNetworkCode];
+    NSString *carrierCode = [NSString stringWithFormat:@"%@%@", mcc, mnc];
+    return carrierCode;
 }
 
 @end

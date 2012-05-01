@@ -23,6 +23,8 @@ typedef enum {
     EPostTypeBlog = 2
 } RCPostItemType;
 
+#define kPostTypeWebView @"PostTypeWebView"
+
 /* --------------------------------------------------------- */
 /*         网络状态类                                          */
 /* --------------------------------------------------------- */
@@ -36,7 +38,7 @@ typedef enum {
 /**
  * 网络错误码
  */
-@property (nonatomic, retain) NSError* error;
+@property (nonatomic, copy) NSString* error;
 
 /**
  * 发送标题
@@ -46,12 +48,12 @@ typedef enum {
 /**
  * 发送描述
  */
-@property (nonatomic, copy) NSString* description;
+@property (nonatomic, copy) NSString* sendTime;
 
 /**
- * 每个发送请求的唯一标志
+ * 缩略图
  */
-@property (nonatomic, copy) NSString* uniqueIdentifier;
+@property (nonatomic, copy) UIImage* thumbnails;
 
 /**
  * post的类型
@@ -62,6 +64,8 @@ typedef enum {
  * 是否可从发送队列中删除
  */
 @property (nonatomic) BOOL canRemoveFromQueue;
+
+@property (nonatomic, readonly) NSString* uniqueID;
 
 @end
 

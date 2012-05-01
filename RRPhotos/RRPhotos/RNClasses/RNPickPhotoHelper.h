@@ -37,6 +37,9 @@
 	NSDictionary * _photoInfoDic;
 	
 	id <RNPickPhotoDelegate> _delegate;
+	
+	//传进来的父类viewcontroller,如果有传直接用于弹出UIImagePickerController,如果没传,则用AppDelegate
+	UIViewController *_parentViewController;
 }
 
 @property(nonatomic,retain)UIImagePickerController *imagePickerController;
@@ -50,9 +53,24 @@
 @property(nonatomic,retain)NSDictionary *photoInfoDic;
 
 @property(nonatomic,assign)id<RNPickPhotoDelegate> delegate;
+
+@property(nonatomic,assign)UIViewController *parentViewContrller;
+
 /**
  * 获取照片，数据通过回调传回
  */
 - (void)pickPhotoWithSoureType:(UIImagePickerControllerSourceType) sourceType;
 
+/**
+ * uploadType :默认是普通照片上传
+ */
+- (id)initWithType: (PhotoUploadType)uploadType; 
+
+/**
+ * 向指定相册上传照片
+ * @param albumId 相册id
+ * @param albumName 相册名称
+ * @author siglea 
+ */
+- (id)initWithAlbumId:(NSString *)albumId withAlbumName:(NSString *)albumname;
 @end

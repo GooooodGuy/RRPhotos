@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "RNBaseViewController.h"
 //新相册创建完成代理
 @protocol RNCreateAlbumFinishDelegate <NSObject>
 
@@ -16,7 +16,7 @@
 @end
 
 
-@interface RNCreateAlbumViewController : UIViewController<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
+@interface RNCreateAlbumViewController : RNBaseViewController<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 {
 	//顶部导航栏
 	UIImageView *_topNavView;
@@ -33,8 +33,9 @@
 	//相册名称
 	UITextField *_albumNameField;
 	
-	//相册类型选择按钮
-	UIButton *_albumTypeButton;
+	
+	//相册权限类型
+	UITextField *_albumTypeField;
 	
 	//密码
 	UITextField *_passwordField;
@@ -55,7 +56,7 @@
 	id<RNCreateAlbumFinishDelegate> _delegate;
 	
 	//网络请求
-	RCGeneralRequestAssistant *_requestAssistant;
+//	RCGeneralRequestAssistant *_requestAssistant;
 }
 
 @property(nonatomic,retain)UIImageView *topNavView;
@@ -74,7 +75,7 @@
 
 @property(nonatomic,retain)NSArray *typesArray;
 
-@property(nonatomic,retain)UIButton *albumTypeButton;
+@property(nonatomic,retain)UITextField *albumTypeField;
 
 @property(nonatomic,retain)UITextField *passwordField;
 

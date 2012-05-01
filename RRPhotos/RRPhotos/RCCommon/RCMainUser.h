@@ -9,163 +9,115 @@
 #import <Foundation/Foundation.h>
 #import "RCUser.h"
 
-@interface RCMainUser : RCUser<NSCoding> {
-	
-	BOOL isFirst;
-	
-	/**
-     * 表示登录时填写的登录帐号。
-	 */
+//2012-03-29 add by lyfing.
+typedef enum
+{
+    RRLoginStatusDomeamLogined,     //表示已经通过后台自动方式登录
+    RRLoginStatusLogined,          //表示已经通过输入用户名密码登录
+}RRLoginStatus;
+
+@interface RCMainUser : RCUser <NSCoding> {
+	// 登录时填写的登录帐号。
 	NSString* _loginAccount;
-	
-	/**
-     * 表示登录时填写的登录密码。
-	 */
-    //	NSString* _loginPassword;
-	
-	/**
-     * 表示人人开放平台的ticket。登录人人开放平台成功后获得。
-	 */
-	NSString* _ticket;
-	
-	/**
-     * 表示3G手机开放平台的ticket。登录3G手机开放平台成功后获得。
-	 */
-	NSString* _mticket;
-	
-    /**
-     * 表示人人开放平台的session key。登录人人开放平台成功后获得。
-     */
-	NSString* _sessionKey;
-	
-    /**
-     * 表示3G手机开放平台的session key。登录3G手机开放平台成功后获得。
-     */
-	NSString* _msessionKey;
-	
-    /**
-     * 表示3G手机开放平台的private secret key。登录3G手机开放平台成功后获得。
-     */
-	NSString* _mprivateSecretKey;
-	
-	// 表示经过md5加密的password。
+    
+    // 经过md5加密的password。
 	NSString* _md5Password;
 	
+    // 3G手机开放平台的ticket。登录3G手机开放平台成功后获得。
+	NSString* _ticket;
+
+    // 3G手机开放平台的session key。登录3G手机开放平台成功后获得。
+	NSString* _sessionKey;
+
+    // 3G手机开放平台的private secret key。登录3G手机开放平台成功后获得。
+	NSString* _userSecretKey;
+    
+    // 最后一次登陆时间，登录3G手机开放平台成功后获得。（now）
+	double _lastLoginDate;
+    
+    // 用户登陆次数
+    NSUInteger _loginCount;
+	
 	// 表示当前登录用户的状态。
-    //RRLoginStatus _loginStatus;
+    RRLoginStatus _loginStatus;
 	
-	BOOL checkFriendList;
-	
-	double lastLoginDate;
-	
-	// 在一次刷新操作中请求的新鲜事条数
-	int requestNewsfeedCount;
-	
-	// 在一次刷新操作中请求的站内信条数
-	int requestMessageCount;
-	
-	// 心跳次数.
-	int _heartBeatCount;
-	
-	// 头像相册ID
-	NSString *headAlbumID;
-	
-	CFURLRef soundFileURLRef;
-	
-	//SystemSoundID soundFileObject;
-	
-	BOOL isSavingFriendsList;
-	
-	//RRLoginModel *_loginModel;
-    
-    BOOL checkFavourite;
-    
-    // check信用户完善资料
+    // 是否是新注册用户 (fill_stage)
     BOOL _checkIsNewUser;
     
-    /**
-     *聊天时所需要的会话ID,登录后可以取得
-     */
+    // 是否已登陆
+    BOOL _isLogin;
+    
+    // 聊天时所需要的会话ID,登录后可以取得
     NSString *_sessionId;
-    
-    float _keyboardY;
-    BOOL cannotGoProfile;
-    BOOL fromNoTudou;
-    
 }
 /**
  * 表示当前登录用户的状态。
  */
-//@property RRLoginStatus loginStatus;
+@property RRLoginStatus loginStatus;
 
 /**
  * 表示登录时填写的登录帐号。
  */
-@property (copy)NSString* loginAccount;
+@property (nonatomic, copy) NSString* loginAccount;
 
-/**
- * 表示登录时填写的登录密码。
+/*
+ * 经过md5加密的password
  */
-//@property (copy)NSString* loginPassword;
-
-/**
- * 表示人人开放平台的ticket。登录人人开放平台成功后获得。
- */
-@property (copy)NSString* ticket;
+@property (nonatomic, copy) NSString* md5Password;
 
 /**
  * 表示3G手机开放平台的ticket。登录3G手机开放平台成功后获得。
  */
-@property (copy)NSString* mticket;
-
-/**
- * 表示人人开放平台的session key。登录人人开放平台成功后获得。
- */
-@property (copy)NSString* sessionKey;
+@property (nonatomic, copy) NSString* ticket;
 
 /**
  * 表示3G手机开放平台的session key。登录3G手机开放平台成功后获得。
  */
-@property (copy)NSString* msessionKey;
+@property (nonatomic, copy) NSString* sessionKey;
 
 /**
  * 表示3G手机开放平台的private secret key。登录3G手机开放平台成功后获得。
  */
-@property (copy)NSString* mprivateSecretKey;
+@property (nonatomic, copy) NSString* userSecretKey;
 
-@property (copy) NSString* md5Password;
+/*
+ * 用户登陆次数
+ */
+@property (nonatomic, assign) NSUInteger loginCount;
 
-@property (copy) NSString* headAlbumID;
+/*
+ * 是否已登陆
+ */
+@property (nonatomic, assign) BOOL isLogin;
 
-@property double lastLoginDate;
+/*
+ * 最后一次登陆时间，登录3G手机开放平台成功后获得。（now）
+ */
+@property (nonatomic, assign) double lastLoginDate;
 
-@property BOOL checkFriendList;
+/*
+ * 是否是新注册用户 (fill_stage)
+ */
+@property (nonatomic, assign) BOOL checkIsNewUser;
 
-@property BOOL checkFavourite;
+/*
+ * 聊天时所需要的会话ID,登录后可以取得
+ */
+@property (nonatomic, copy) NSString *sessionId;
 
-@property BOOL checkIsNewUser;
-
-@property (copy) NSString *sessionId;
-
-@property (readwrite)	CFURLRef		soundFileURLRef;
-//@property (readonly)	SystemSoundID	soundFileObject;
-//@property (copy)NSString *fillStageStr;
-@property float keyboardY;
-@property BOOL cannotGoProfile;
-@property BOOL fromNoTudou;
 #pragma mark -
 #pragma mark Public
-
-/**
- * 持久化存档。
- */
-- (void)persist;
 
 /**
  * 创建一个Main User对象.
  * 首先从持久化层.初始化,如果没有的话,那么直接生成新的对象.
  */
 + (RCMainUser*)getInstance;
+
+/**
+ * 持久化存档。
+ */
+- (void)persist;
 
 /**
  * 登出动作，仅修改了MainUser的状态和数值。
@@ -185,34 +137,25 @@
  */
 - (BOOL)isMainUserId:(NSNumber*)userId;
 
-//- (void) updateStatus:(NSString*)content;
-
-// users中的元素必须是XNUser的实例
-//- (void) sendMultiMessages:(NSString*)theTitle 
-//				   content:(NSString*)theContent 
-//				   toUsers:(NSArray*)users;
-
-// 后台登录
-//- (void) daemonLogin;
-
-
+/*
+ * 是否包含了登陆信息，若包含可进行自动登陆
+ */
 - (BOOL) checkLoginInfo;
 
-//- (void) _checkNewXNData;
+// 注册远程push
++ (void)registerPushNotification;
 
-//- (void) saveDeviceInfoIfNeeded;
-//- (void) saveTokenIsSentFlag:(BOOL)isSent;
-//
-//
-//// 保存Token是否发出的标志位
-//- (void) saveTokenIsSentFlag:(BOOL)isSent;
-//
-//- (BOOL)isTokenIsSentToServer;
-//
-///**
-// * 
-// */
-//- (void)handleMultiLogin;
+// 一些相关目录
+
+// App Document 路径
++ (NSString *)documentPath;
+
+// 公共文件夹路径
++ (NSString *)commonPath;
+
+// 用户路径
+- (NSString *)userDocumentPath;
+
 
 @end
 

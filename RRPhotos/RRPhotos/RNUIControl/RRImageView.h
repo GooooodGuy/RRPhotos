@@ -14,23 +14,23 @@
 	 *图片的URL
 	 */
 	NSString *_url;
-	
+    
 	/**
 	 *图像内容
 	 */
 	UIImageView *_imageView;
-	
+    
 	/**
 	 *默认图像内容
 	 */
 	UIImageView *_defaultImageView;
-	
+    
 	/**
 	 * MK 网络请求
 	 */
 	MKNetworkEngine *_engine;
-	
-	
+    
+    
 }
 @property(nonatomic, copy) NSString *url;
 

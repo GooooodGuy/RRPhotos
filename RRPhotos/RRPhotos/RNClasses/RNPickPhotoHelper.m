@@ -16,12 +16,14 @@
 @synthesize imageToReturn = _imageToReturn;
 @synthesize photoInfoDic =_photoInfoDic;
 @synthesize delegate = _delegate;
+@synthesize parentViewContrller = _parentViewController;
 - (void)dealloc{
 	self.imagePickerController = nil;
 	self.editPhotoController = nil;
 	self.imageToReturn = nil;
 	self.photoInfoDic = nil;
 	self.delegate = nil;
+	self.parentViewContrller = nil;
 	
 	[super dealloc];
 }
@@ -30,7 +32,28 @@
 	if (self = [super init]) {
 		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
 		_imagePickerController = [[UIImagePickerController alloc]init];
-		_editPhotoController = [[RNEditPhotoViewController alloc]init];
+	}
+	return  self;
+}
+ 
+ /**
+ * uploadType :默认是普通照片上传
+ */
+- (id)initWithType: (PhotoUploadType)uploadType{
+	
+	if (self = [super init]) {
+		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
+		_imagePickerController = [[UIImagePickerController alloc]init];
+		_editPhotoController = [[RNEditPhotoViewController alloc]initWithType:uploadType];
+	}
+	return self;
+}
+
+- (id)initWithAlbumId:(NSString *)albumId withAlbumName:(NSString *)albumname{
+    if (self = [super init]) {
+		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
+		_imagePickerController = [[UIImagePickerController alloc]init];
+		_editPhotoController = [[RNEditPhotoViewController alloc] initWithAlbumId:albumId withAlbumName:albumname];
 	}
 	return  self;
 }
@@ -40,14 +63,17 @@
  */
 - (void)pickPhotoWithSoureType:(UIImagePickerControllerSourceType) sourceType{
 	self.sourceType = sourceType;
-	
-	self.imagePickerController.sourceType = self.sourceType;
-	self.imagePickerController.delegate = self;
-	
-	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+	if ([UIImagePickerController isSourceTypeAvailable:sourceType]) {
+		
+		self.imagePickerController.sourceType = self.sourceType;
+		self.imagePickerController.delegate = self;
+		
+		AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 												   sharedApplication].delegate;
-
-	[appDelegate.rootNavController  presentModalViewController:self.imagePickerController  animated:YES];
+		
+		[appDelegate.rootNavController  presentModalViewController:self.imagePickerController  animated:YES];
+	}
+	
 }
 #pragma -mark UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
@@ -59,6 +85,10 @@
 		UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
 		if(image){
 			NSLog(@"found an image");
+			RNEditPhotoViewController *editViewController = [[RNEditPhotoViewController alloc]init];
+			self.editPhotoController = editViewController;
+			TT_RELEASE_SAFELY(editViewController);
+			
 		    [_editPhotoController loadImageToEdit:image];//初始化编辑界面
 			_editPhotoController.delegate = self; //设置代理
 			[picker pushViewController:self.editPhotoController animated:YES];
@@ -85,6 +115,7 @@
 	//回调传回数据
 	[self.delegate pickPhotoFinished:self.imageToReturn photoInfoDic:self.photoInfoDic];
 	
+    
 	[self.imagePickerController dismissModalViewControllerAnimated:YES];
 
 }

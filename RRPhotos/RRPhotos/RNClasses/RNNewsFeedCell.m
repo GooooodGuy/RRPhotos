@@ -341,6 +341,8 @@
 																		 kCellContentViewWidth / 3,  
 																		 kCellContentViewWidth / 3)];
 		_contentImageView.backgroundColor = [UIColor clearColor];
+		_contentImageView.contentMode = UIViewContentModeScaleAspectFill;
+		
 		CGRect r = _contentImageView.frame;
 		
 		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
