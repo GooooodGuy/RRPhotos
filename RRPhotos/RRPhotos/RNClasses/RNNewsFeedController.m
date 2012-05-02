@@ -7,7 +7,8 @@
 //
 
 #import "RNNewsFeedController.h"
-
+#import "RNAlbumWaterViewController.h"
+#import "RNPhotoViewController.h"
 @interface RNNewsFeedController ()
 
 @end
@@ -33,8 +34,8 @@
 - (void)loadView{
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
-	
 	self.navBar.hidden = YES;
+	
 	//测试按钮
 	UIButton *testbutton = [UIButton buttonWithType:UIButtonTypeCustom];
 	self.testButton = testbutton;
@@ -52,10 +53,20 @@
 	
 	
 	UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
-	temporaryBarButtonItem.title = @"返回";
+	temporaryBarButtonItem.title = @"测试";
 	self.navigationItem.rightBarButtonItem = temporaryBarButtonItem;
 	[temporaryBarButtonItem release];
 	
+	//中间栏
+	UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:
+										  [NSArray arrayWithObjects:@"好友动态",@"热门分享",nil]];
+	segmentControl.frame = CGRectMake(110, 10, 100, 30);
+	segmentControl.backgroundColor = [UIColor colorWithPatternImage:[[RCResManager getInstance]imageForKey:@"button_bar"]];
+	segmentControl.tintColor = self.navigationController.navigationBar.tintColor;
+	
+	self.navigationItem.titleView  = segmentControl;
+	TT_RELEASE_SAFELY(segmentControl);
+
 	//新鲜事表
 	UITableView *newsFeedTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 
 																				  0, 
@@ -89,9 +100,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
 	[super viewWillAppear:animated];
-	
-//	[self.navigationController setNavigationBarHidden:YES animated:NO];
-
+	[self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -159,6 +168,7 @@
 	if (!cell) {
 		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault 
 									 reuseIdentifier:cellIdentifier]autorelease];
+		cell.delegate = self;
 	}else {
 //		while ([cell.contentView.subviews lastObject] != nil) {  
 //            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
@@ -168,5 +178,37 @@
 	[cell setCellWithItem:item]; 
 //	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 	return cell;	
+}
+
+#pragma mark - RNNewsFeedCellDelegate
+
+/*
+ 点击新鲜事附件照片
+ */
+- (void)onClickAttachView: (NSNumber *)userId photoId:(NSNumber *)photoId {
+	if (userId && photoId) {
+//		RNAlbumWaterViewController *albumViewContoller = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
+		NSString *userIdStr = [userId stringValue];
+		NSString *photoIdStr = [photoId stringValue];
+		RNPhotoViewController *viewController = [[RNPhotoViewController alloc]initWithUid:userIdStr
+																				  withPid:photoIdStr
+																				  shareId:nil 
+																				 shareUid:nil];
+//		[self presentModalViewController:viewController animated:YES];
+//		self.hidesBottomBarWhenPushed = YES;
+//		viewController.wantsFullScreenLayout = YES;
+//		[self.navigationController pushViewController:viewController animated:YES];
+//		TT_RELEASE_SAFELY(viewController);
+		
+		NSLog(@"进入照片内容页");
+		UINavigationController *currentNav = self.navigationController;
+		currentNav.hidesBottomBarWhenPushed = YES;
+		if (!currentNav) {
+			currentNav = [[UINavigationController alloc]initWithRootViewController:self];
+		}
+		[currentNav pushViewController:viewController animated:YES];
+		TT_RELEASE_SAFELY(viewController);
+
+	}
 }
 @end

@@ -8,7 +8,6 @@
 
 #import "RNNewsFeedCell.h"
 #import <QuartzCore/QuartzCore.h>
-
 @interface RNNewsFeedCell(/*私有方法*/)
 
 @end
@@ -23,7 +22,7 @@
 @synthesize updateTimeLabel = _updateTimeLabel;
 @synthesize fromAddress = _fromAddress;
 @synthesize attachmentsTableView = _attachmentsTableView;
-
+@synthesize delegate = _delegate;
 - (void)dealloc{
 	self.newsFeedItem = nil;
 	self.headImageView = nil;
@@ -33,6 +32,7 @@
 	self.updateTimeLabel = nil;
 	self.fromAddress = nil;
 	self.attachmentsTableView = nil;
+	self.delegate = nil;
 	
 	[super dealloc];
 }
@@ -282,6 +282,24 @@
 	//最多每次只显示三张
 	return kCellContentViewWidth / 3;
 }
+
+//
+//	选中某个照片，当前只支持进入相册内容
+//
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+//	NSNumber *sourceId = self.newsFeedItem.sourceId;
+//
+//	RNAlbumWaterViewController *albumWaterViewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
+	RRAttachment *attachMent = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
+	NSNumber *mediaId = attachMent.mediaId;
+	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
+		NSNumber *userId = self.newsFeedItem.userId;
+
+		[self.delegate onClickAttachView:userId photoId:mediaId];
+	}
+}
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -210,17 +210,17 @@ static NSInteger compareString(id str1, id str2, void *context)
 //todo: 如果包含lbs相关数据则需要回调lbs
 -(void)operationSucceeded
 {
-    [super operationSucceeded];
-    if (self.isLocation) {
-        RCLBSCacheManager* manager = [RCLBSCacheManager sharedInstance];
-        if(manager){
-            [manager dealPublisherDataResponse:self postData:_pair isPostPhoto:_isPhoto];
-        }
-    }
-    if (self.isPhoto) {
+//    [super operationSucceeded];
+//    if (self.isLocation) {
+//        RCLBSCacheManager* manager = [RCLBSCacheManager sharedInstance];
+//        if(manager){
+//            [manager dealPublisherDataResponse:self postData:_pair isPostPhoto:_isPhoto];
+//        }
+//    }
+//    if (self.isPhoto) {
 //        NSString* thaid = (NSString*)[[NSUserDefaults standardUserDefaults] objectForKey:@"PublishPhotoId"];
 //        [[NSNotificationCenter defaultCenter] postNotificationName:kUploadPhotoSuccessNotification object:thaid];
-    }
+//    }
 
 }
 -(void)operationFailedWithError:(NSError *)error

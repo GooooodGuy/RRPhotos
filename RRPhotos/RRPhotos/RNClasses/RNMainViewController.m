@@ -71,8 +71,10 @@
 				nav = [[UINavigationController alloc]initWithRootViewController:mainView];
 				nav.tabBarItem.image = [UIImage imageNamed: @"main_p_model.png"];
 				nav.navigationBar.barStyle = UIBarStyleDefault;
-
+				[controllers addObject: nav];
 				TT_RELEASE_SAFELY(mainView);
+				TT_RELEASE_SAFELY(nav);
+
 			}break;
 			
 			case 1:{
@@ -84,6 +86,9 @@
 			
 				nav.tabBarItem.image = [UIImage imageNamed: @"navigation_extend_icon.png"];
 				nav.view.frame = CGRectZero;
+				[controllers addObject: nav];
+				TT_RELEASE_SAFELY(nav);
+
 			}break;
 				
 			case 2:{
@@ -95,6 +100,9 @@
 				
 				nav.tabBarItem.image = [UIImage imageNamed: @"publisher_photo.png"];
 				nav.view.frame = CGRectZero;
+				[controllers addObject: nav];
+				TT_RELEASE_SAFELY(nav);
+
 			}break;
 				
 			case 3:{
@@ -104,6 +112,8 @@
 				nav = [[UINavigationController alloc]initWithRootViewController:mainView];
 				TT_RELEASE_SAFELY(mainView);
 				nav.tabBarItem.image = [UIImage imageNamed: @"publisher_status.png"];
+				[controllers addObject: nav];
+				TT_RELEASE_SAFELY(nav);
 
 			}break;
 				
@@ -114,6 +124,9 @@
 				nav = [[UINavigationController alloc]initWithRootViewController:mainView];
 				TT_RELEASE_SAFELY(mainView);
 				nav.tabBarItem.image = [UIImage imageNamed:@"main_p_set.png"];
+				[controllers addObject: nav];
+				TT_RELEASE_SAFELY(nav);
+
 			}break;
 				
 			default:
@@ -121,8 +134,6 @@
 				break;
 		}
 
-		[controllers addObject: nav];
-		TT_RELEASE_SAFELY(nav);
 	}
 	
 	UITabBarController *tabBarController = [[UITabBarController alloc]init];
@@ -147,7 +158,6 @@
 //	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
-
 
 }
 - (void)viewDidLoad
@@ -185,6 +195,7 @@
 
 	}else {
 		_lastSelectIndex = [tabBarController selectedIndex];
+		[tabBarController setSelectedViewController:[tabBarController.viewControllers objectAtIndex: _lastSelectIndex]];
 	}
 	
 	[self viewWillAppear:YES];

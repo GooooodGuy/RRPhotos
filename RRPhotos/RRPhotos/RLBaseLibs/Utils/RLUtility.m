@@ -70,4 +70,25 @@
 	return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (UIImage *)getCentralSquareImage:(UIImage *)img Length:(CGFloat)length {    
+    CGFloat x = 0;
+    CGFloat y = 0;
+    if (img.size.width > length && img.size.height > length) {
+        x = (img.size.width - length) / 2;
+        y = (img.size.height - length) / 2;
+    }else {
+        //        if (img.size.width > img.size.height) {
+        //            CGFloat cw = (img.size.width * length) / img.size.height;
+        //            x = (cw - length) / 2;
+        //        }else {
+        //            CGFloat ch = img.size.height * length / img.size.width;
+        //            y = (ch - length) / 2;
+        //        }
+    }
+    return [UIImage imageWithCGImage:
+            CGImageCreateWithImageInRect(img.CGImage, 
+                                         CGRectMake(x, y, length, length))];
+}
+
 @end

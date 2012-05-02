@@ -66,7 +66,7 @@
                  params:(NSMutableDictionary *)body
              httpMethod:(NSString *)method;
 
--(NSData*) bodyData;
+
 -(BOOL) isCacheable;
 
 -(NSString*) encodedPostDataString;
@@ -376,7 +376,6 @@
     
     [_connection cancel];
     _connection = nil;
-	[super dealloc];//chenyi add
 }
 
 -(void) updateHandlersFromOperation:(MKNetworkOperation*) operation {
@@ -1141,5 +1140,10 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 -(NSMutableURLRequest *)operationRequest
 {
 	return self.request;
+}
+
+-(NSMutableDictionary *)operationQueries
+{
+	return self.fieldsToBePosted;
 }
 @end

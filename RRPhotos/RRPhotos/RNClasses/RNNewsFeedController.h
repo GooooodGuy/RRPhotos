@@ -11,7 +11,7 @@
 #import "RNNewsFeedModel.h"
 #import "RRNewsFeedItem.h"
 #import "RNNewsFeedCell.h"
-@interface RNNewsFeedController : RNModelViewController<UITableViewDataSource,UITableViewDelegate>
+@interface RNNewsFeedController : RNModelViewController<UITableViewDataSource,UITableViewDelegate,RNNewsFeedCellDelegate>
 {
 	UIButton *testButton;
 	

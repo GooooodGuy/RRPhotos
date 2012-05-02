@@ -39,7 +39,6 @@
 
 -(void) saveCache;
 -(void) saveCacheData:(NSData*) data forKey:(NSString*) cacheDataKey;
-
 -(void) freezeOperations;
 -(void) checkAndRestoreFrozenOperations;
 
@@ -120,7 +119,6 @@ static NSOperationQueue *_sharedNetworkQueue;
 #if TARGET_OS_IPHONE    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
-	[super dealloc];//chenyi add
 }
 
 +(void) dealloc {
@@ -313,6 +311,17 @@ static NSOperationQueue *_sharedNetworkQueue;
     return nil;
 }
 
+/*-(NSString*)pathOfcachedDataWithURL:(NSString*)url
+{
+    NSString* uid = nil;
+    NSString *filePath = [[self cacheDirectoryName] stringByAppendingPathComponent:uid];    
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+        return filePath;    
+    return nil;
+
+}*/
+
 -(void) enqueueOperation:(MKNetworkOperation*) operation {
     
     [self enqueueOperation:operation forceReload:NO];
@@ -492,7 +501,7 @@ static NSOperationQueue *_sharedNetworkQueue;
     {
         self.cacheInvalidationParams = [NSMutableDictionary dictionaryWithContentsOfFile:cacheInvalidationPlistFilePath];
     }
-    
+ /*   
 #if TARGET_OS_IPHONE        
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveCache)
                                                  name:UIApplicationDidReceiveMemoryWarningNotification
@@ -509,7 +518,7 @@ static NSOperationQueue *_sharedNetworkQueue;
 #warning POSSIBLY INCOMPLETE FUNCTION (Subscribe to Mac related notification for serializing caches)
     
 #endif
-    
+    */
     
 }
 

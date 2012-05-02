@@ -35,7 +35,7 @@
 	TT_RELEASE_SAFELY(_activityIndicatorView);
 	TT_RELEASE_SAFELY(_lastUsername);
 	TT_RELEASE_SAFELY(_lastPassword);
-	TT_RELEASE_SAFELY(_loginRequest);
+
     [super dealloc];
 }
 
@@ -260,7 +260,7 @@
 	TT_RELEASE_SAFELY(_activityIndicatorView);
 	TT_RELEASE_SAFELY(_lastUsername);
 	TT_RELEASE_SAFELY(_lastPassword);
-	TT_RELEASE_SAFELY(_loginRequest); 
+
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	
@@ -346,7 +346,6 @@
 		loginRequest.onLoginSuccess = ^(){
 			NSLog(@"###启动：自动登陆成功");
 //			[self startUpdateServerKVData];
-			
 			RNMainViewController *mainController = [[RNMainViewController alloc]init];
 			AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 													   sharedApplication].delegate;
@@ -359,10 +358,17 @@
 		loginRequest.onError = ^(RCError *error){
 			NSLog(@"###启动：自动登陆失败 %@", error);
 			// 错误处理 
+			
+			[_activityIndicatorView removeFromSuperview];
+			emailField.enabled = TRUE;
+			passwordField.enabled = TRUE;
+			[passwordField becomeFirstResponder];
+		
 			UIAlertView *pAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"错误", @"错误" )
 															 message:[error titleForError] 
 															delegate:nil 
-												   cancelButtonTitle:NSLocalizedString(@"确定", @"确定") otherButtonTitles:nil, nil ];
+												   cancelButtonTitle:NSLocalizedString(@"确定", @"确定")
+												   otherButtonTitles:nil, nil ];
 			
 			[pAlert show];
 			[pAlert release];

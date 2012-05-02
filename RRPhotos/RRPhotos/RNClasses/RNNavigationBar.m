@@ -11,8 +11,8 @@
 #define MAX_EXTENDBUTTON_COUNT 3
 #define BACKBUTTON_X 5
 #define RIGHTBUTTON_X_OFFSET 5
-#define TITLE_HASBACK_X_OFFSET 10 // 有返回按钮时title相对返回按钮的位移
-#define TITLE_X_OFFSET 12 // 没有返回按钮时title相对边界的位移
+#define TITLE_HASBACK_X_OFFSET 140 // 有返回按钮时title相对返回按钮的位移
+#define TITLE_X_OFFSET 140 // 没有返回按钮时title相对边界的位移
 #define EXPANDFLAG_X_OFFSET 6
 #define BUTTONS_X_OFFSET 11
 #define BUTTONS_SPACE_WIDTH 21
@@ -64,7 +64,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UIImage *background = [UIImage middleStretchableImageWithKey:@"navigationbar_background"];
+        UIImage *background = [UIImage middleStretchableImageWithKey:@"button_bar"];
         //[[RCResManager getInstance] imageForKey:@"navigationbar_background"];
         UIImageView *backgroundView = [[UIImageView alloc] initWithImage:background];
         backgroundView.frame =CGRectMake(0, 0, PHONE_SCREEN_SIZE.width, CONTENT_NAVIGATIONBAR_HEIGHT);

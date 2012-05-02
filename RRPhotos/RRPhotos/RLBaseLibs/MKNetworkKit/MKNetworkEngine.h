@@ -259,4 +259,6 @@
 // jiachengwen add. 获取所有当前连接状态
 -(NetworkStatus)reachabilityStatus;
 
+//-(NSString*)pathOfcachedDataWithURL:(NSString*)url;
+
 @end

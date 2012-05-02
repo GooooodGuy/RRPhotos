@@ -14,4 +14,10 @@
 
 +(id)convertAsacIItoUTF8:(NSDictionary*)dictionary;
 
+/**
+ 截取中央方图像
+ */
+
++ (UIImage *)getCentralSquareImage:(UIImage *)img Length:(CGFloat)length;  
+
 @end

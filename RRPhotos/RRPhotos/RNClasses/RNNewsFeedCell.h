@@ -34,9 +34,12 @@
 
 @optional
 /*
-	点击新鲜事附件照片的滚动
+	点击新鲜事附件照片
  */
-- (void)onClickScrollView ;
+- (void)onClickAttachView: (NSNumber *)userId albumId: (NSNumber *)albumId ;
+
+
+- (void)onClickAttachView:(NSNumber *)userId photoId:(NSNumber *)photoId;
 @end
 
 /*	-------------------------------------	*/
@@ -67,6 +70,8 @@
 	
 	//附件照片
 	UITableView	*_attachmentsTableView;
+	
+	id<RNNewsFeedCellDelegate> _delegate;
 }
 @property(nonatomic, retain)RRNewsFeedItem *newsFeedItem;	
 @property(nonatomic, retain)UIImageView *headImageView;
@@ -76,6 +81,7 @@
 @property(nonatomic, retain)UILabel *updateTimeLabel;
 @property(nonatomic, copy)NSString *fromAddress;
 @property(nonatomic, retain)UITableView	*attachmentsTableView;
+@property(nonatomic, assign)id<RNNewsFeedCellDelegate>delegate;
 
 
 /*

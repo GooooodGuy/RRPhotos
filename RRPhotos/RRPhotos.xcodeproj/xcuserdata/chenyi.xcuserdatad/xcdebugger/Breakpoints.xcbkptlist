@@ -19,110 +19,6 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedController.m"
-         timestampString = "357547528.972012"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "141"
-         endingLineNumber = "141"
-         landmarkName = "-tableView:numberOfRowsInSection:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedController.m"
-         timestampString = "357547528.972012"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "136"
-         endingLineNumber = "136"
-         landmarkName = "-numberOfSectionsInTableView:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedController.m"
-         timestampString = "357547528.972012"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "155"
-         endingLineNumber = "155"
-         landmarkName = "-tableView:cellForRowAtIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedModel.m"
-         timestampString = "357445618.052105"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "93"
-         endingLineNumber = "93"
-         landmarkName = "-didFinishLoad:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedModel.m"
-         timestampString = "357447032.625883"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "111"
-         endingLineNumber = "111"
-         landmarkName = "-didFinishLoad:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedModel.m"
-         timestampString = "357447032.625883"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "109"
-         endingLineNumber = "109"
-         landmarkName = "-didFinishLoad:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedModel.m"
-         timestampString = "357446092.072871"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "84"
-         endingLineNumber = "84"
-         landmarkName = "-clearData"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNNewsFeedModel.m"
-         timestampString = "357446093.278893"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "85"
-         endingLineNumber = "85"
-         landmarkName = "-clearData"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "RRPhotos/RNClasses/RRNewsFeedItem.m"
          timestampString = "357447032.625883"
          startingColumnNumber = "9223372036854775807"
@@ -136,154 +32,117 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNModel.m"
-         timestampString = "357534589.704819"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622153.643938"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "6"
-         endingLineNumber = "6">
-         <Locations>
-            <Location
-               shouldBeEnabled = "Yes"
-               ignoreCount = "0"
-               continueAfterRunningActions = "No"
-               symbolName = "-[RNModel query]"
-               urlString = "file://localhost/Users/chenyi/RRPhotos5.1/RRPhotos/RRPhotos/RNClasses/RNModel.m"
-               timestampString = "357547692.735876"
-               startingColumnNumber = "9223372036854775807"
-               endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "16"
-               endingLineNumber = "16">
-            </Location>
-            <Location
-               shouldBeEnabled = "Yes"
-               ignoreCount = "0"
-               continueAfterRunningActions = "No"
-               symbolName = "-[RNModel setQuery:]"
-               urlString = "file://localhost/Users/chenyi/RRPhotos5.1/RRPhotos/RRPhotos/RNClasses/RNModel.m"
-               timestampString = "357547692.736219"
-               startingColumnNumber = "9223372036854775807"
-               endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "16"
-               endingLineNumber = "16">
-            </Location>
-         </Locations>
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357545877.071189"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "114"
-         endingLineNumber = "114"
-         landmarkName = "-getClientInfo"
+         startingLineNumber = "393"
+         endingLineNumber = "393"
+         landmarkName = "-adjustSubviews"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357545889.260062"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622154.526458"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "35"
-         endingLineNumber = "35"
-         landmarkName = "-init"
+         startingLineNumber = "401"
+         endingLineNumber = "401"
+         landmarkName = "-adjustSubviews"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNLoginViewController.m"
-         timestampString = "357546809.53112"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622190.934455"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "371"
-         endingLineNumber = "371"
-         landmarkName = "-goAction"
+         startingLineNumber = "407"
+         endingLineNumber = "407"
+         landmarkName = "-adjustSubviews"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357546014.878204"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622211.050643"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "110"
-         endingLineNumber = "110"
-         landmarkName = "-getClientInfo"
+         startingLineNumber = "1384"
+         endingLineNumber = "1384"
+         landmarkName = "-touchOneCountBegin:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357546749.11386"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622213.119058"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "42"
-         endingLineNumber = "42"
-         landmarkName = "-init"
+         startingLineNumber = "1399"
+         endingLineNumber = "1399"
+         landmarkName = "-touchOneCountBegin:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNLoginViewController.m"
-         timestampString = "357546827.59954"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622292.042742"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "347"
-         endingLineNumber = "347"
-         landmarkName = "-goAction"
+         startingLineNumber = "165"
+         endingLineNumber = "165"
+         landmarkName = "-loadView"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNLoginViewController.m"
-         timestampString = "357546829.87697"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622299.584731"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "360"
          endingLineNumber = "360"
-         landmarkName = "-goAction"
+         landmarkName = "-changeQuickTableView:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357546840.557709"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622413.315132"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "104"
-         endingLineNumber = "104"
-         landmarkName = "-loginWithAccount:passwordMD5:isVerify:verifyCode:"
+         startingLineNumber = "372"
+         endingLineNumber = "372"
+         landmarkName = "-changeQuickTableView:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RCCommon/RCClientLoginRequest.m"
-         timestampString = "357546847.16055"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "357622426.420349"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "68"
-         endingLineNumber = "68"
-         landmarkName = "-init"
+         startingLineNumber = "387"
+         endingLineNumber = "387"
+         landmarkName = "-adjustSubviews"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -199,6 +199,11 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+	
+	//chenyi add
+	[self.navigationController setNavigationBarHidden:YES animated:YES];
+	//////////
+	
     self.navBar.frame = CGRectMake(0, 0, 320, CONTENT_NAVIGATIONBAR_HEIGHT);
     if (_miniPublisherView) {
         _miniPublisherView.frame = CGRectMake(0, 460 - 48, 320, 48);
