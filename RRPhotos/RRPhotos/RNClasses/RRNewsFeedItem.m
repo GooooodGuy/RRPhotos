@@ -124,7 +124,7 @@
 /*
 	返回第一个附件
  */
-- (RRAttachment*)firstAttachment {
+- (RRAttachmentItem*)firstAttachment {
 	if (!_attachments || 0 == _attachments.count) {
 		return nil;
 	} else {
@@ -135,7 +135,7 @@
 /*
 	返回最后一个附件
  */
-- (RRAttachment*)lastAttachment {
+- (RRAttachmentItem*)lastAttachment {
 	return [_attachments lastObject];
 }
 
@@ -167,7 +167,7 @@
 		NSArray* jAttachments = [dictionary objectForKey:@"attachement_list"];
 		NSMutableArray* attachments = [[[NSMutableArray alloc] initWithCapacity:jAttachments.count] autorelease];
 		for (NSDictionary* jAttachment in jAttachments) {
-			RRAttachment* attachment = [RRAttachment attachmentWithDictionary:jAttachment];
+			RRAttachmentItem* attachment = [RRAttachmentItem attachmentWithDictionary:jAttachment];
 			[attachments addObject:attachment ];
 		}
 		self.attachments = attachments;
@@ -213,7 +213,7 @@
 /*
 	表示新鲜事中包含的媒体内容附件，例如照片，视频
  */
-@implementation RRAttachment
+@implementation RRAttachmentItem
 
 @synthesize mediaId = _mediaId;
 @synthesize mediaType = _mediaType;
@@ -223,7 +223,7 @@
 
 
 + (id)attachmentWithDictionary:(NSDictionary*) dictionary {
-	RRAttachment* attachment = [[[RRAttachment alloc] initWithDictionary:dictionary] autorelease];
+	RRAttachmentItem* attachment = [[[RRAttachmentItem alloc] initWithDictionary:dictionary] autorelease];
 	return attachment;
 }
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class RRAttachment;
+@class RRAttachmentItem;
 ///新鲜事的类型
 #define ITEM_TYPES_NEWSFEED_FOR_PAGE	@"2002,2003,2004,2005,2006,2008,2009,2012,2013,2015"
 #define ITEM_TYPES_NEWSFEED_FOR_USER	@"102,103,104,107,110,501,502,601,701,709,1101,1104,2002,2003,2004,2005,2006,2008,2009,2012,2013,2015,8001,8002,8003,8004"
@@ -146,12 +146,12 @@ typedef enum {
 /*
  * 返回最后一个附件。
  */
-- (RRAttachment*)lastAttachment;
+- (RRAttachmentItem*)lastAttachment;
 
 /**
  * 返回第一个附件。
  */
-- (RRAttachment*)firstAttachment;
+- (RRAttachmentItem*)firstAttachment;
 
 /**
  * 表示新鲜事摘要
@@ -179,7 +179,7 @@ typedef enum {
 /*
 	表示新鲜事中包含的媒体内容，例如照片，视频
  */
-@interface RRAttachment : NSObject
+@interface RRAttachmentItem : NSObject
 {
 	//表示媒体内容的类型,目前有"photo","album", "link","video","audio"
 	NSString* _mediaType;

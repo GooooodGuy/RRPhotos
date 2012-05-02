@@ -11,6 +11,21 @@
 NSInteger strCompare(id str1, id str2, void *context);
 
 @interface NSString(NSStringEx)
+
+/**
+ *SSO　SecretKey　AES加密
+ *
+ *＠param　key　密钥
+ */
+- (NSString *)AES128EncryptWithKey:(NSString *)key;
+
+/**
+ *SSO　SecretKey　AES解密
+ *
+ *＠param　key　密钥
+ */
+- (NSString *)AES128DecryptWithKey:(NSString *)key;
+
 - (NSNumber*) stringToNumber;
 
 /**
@@ -161,5 +176,9 @@ NSInteger strCompare(id str1, id str2, void *context);
  * 
  */
 - (NSString*) stringByDecodeAes;
-
+/**
+ * 字符串中包含的字数，
+ * 汉子占一个字，英文或标点占用半个字
+ */
+-(NSInteger)CountWord;
 @end

@@ -34,36 +34,26 @@
 - (void)loadView{
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
-	self.navBar.hidden = YES;
-	
-	//测试按钮
-	UIButton *testbutton = [UIButton buttonWithType:UIButtonTypeCustom];
-	self.testButton = testbutton;
-	[self.testButton setImage:[UIImage imageNamed:@"main_p_pub.png" ]forState:UIControlStateNormal];
-	[self.testButton addTarget:self action:@selector(onClickTestButton) forControlEvents:UIControlEventTouchDown];
-	self.testButton.frame = CGRectMake(0, 100, 40, 40);
-	[self.view addSubview:self.testButton];
-
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setImage:[UIImage imageNamed:@"main_p_set.png"] forState:UIControlStateNormal];
-	button.frame = CGRectMake(5, 5, 40, 40);
-	UIBarButtonItem *leftButton = [[UIBarButtonItem alloc]initWithCustomView:button];
-	self.navigationItem.leftBarButtonItem = leftButton;
-	TT_RELEASE_SAFELY(leftButton);
-	
+	self.navBar.hidden = YES; //采用系统的navbar
 	
 	UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
-	temporaryBarButtonItem.title = @"测试";
+	temporaryBarButtonItem.title = @"刷新";
 	self.navigationItem.rightBarButtonItem = temporaryBarButtonItem;
 	[temporaryBarButtonItem release];
 	
 	//中间栏
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:
 										  [NSArray arrayWithObjects:@"好友动态",@"热门分享",nil]];
-	segmentControl.frame = CGRectMake(110, 10, 100, 30);
+
+	CGFloat width = 150;
+	segmentControl.frame = CGRectMake((PHONE_SCREEN_SIZE.width - width ) / 2.0, 10, width, 30);
+	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segmentControl.backgroundColor = [UIColor colorWithPatternImage:[[RCResManager getInstance]imageForKey:@"button_bar"]];
 	segmentControl.tintColor = self.navigationController.navigationBar.tintColor;
-	
+	NSMutableDictionary * attributes = [NSMutableDictionary dictionaryWithCapacity:5];
+	[attributes setObject:[UIFont fontWithName:MED_HEITI_FONT size: 12] forKey:UITextAttributeFont];
+	[segmentControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
+	[segmentControl setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
 	self.navigationItem.titleView  = segmentControl;
 	TT_RELEASE_SAFELY(segmentControl);
 
@@ -108,16 +98,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-//点击测试按钮
-- (void)onClickTestButton{
-	UIViewController *viewController = [[UIViewController alloc]init ];
-	viewController.view.backgroundColor = [UIColor redColor];
-	viewController.hidesBottomBarWhenPushed = YES;//push 的时候隐藏tabbar
-	[viewController.navigationController setNavigationBarHidden:NO animated:YES];
-	[self.navigationController pushViewController:viewController animated:YES];
-	TT_RELEASE_SAFELY(viewController);
-}
-
 /*
 	重载父类的创建model
  */
@@ -152,7 +132,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
-	if ([item.attachments count] == 1) {
+	if ([item.attachments count] < 3) {
 		return  (kCellTopPadding + kCellHeadImageHeight + \
 				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ); //如果是单张图片高度变宽
 	}
@@ -202,10 +182,11 @@
 		
 		NSLog(@"进入照片内容页");
 		UINavigationController *currentNav = self.navigationController;
-		currentNav.hidesBottomBarWhenPushed = YES;
 		if (!currentNav) {
 			currentNav = [[UINavigationController alloc]initWithRootViewController:self];
 		}
+		viewController.hidesBottomBarWhenPushed = YES;
+
 		[currentNav pushViewController:viewController animated:YES];
 		TT_RELEASE_SAFELY(viewController);
 

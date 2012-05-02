@@ -341,7 +341,7 @@
 		E5B90ECE1521616400F1E4D2 /* userInfo_head_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5B90E2C1521616400F1E4D2 /* userInfo_head_bg@2x.png */; };
 		E5C80D7E1521BCDB00DE6C84 /* RRImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D7D1521BCDB00DE6C84 /* RRImageView.m */; };
 		E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */; };
-		E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */; };
+		E5C80D8F1521C48B00DE6C84 /* RRAttachScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D8E1521C48B00DE6C84 /* RRAttachScrollView.m */; };
 		E5C80D9A1521E5C900DE6C84 /* RRFriendItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80D991521E5C800DE6C84 /* RRFriendItem.m */; };
 		E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C80DA41522B75E00DE6C84 /* RNConstomTabBarController.m */; };
 		E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E5C80DBE1522E7A000DE6C84 /* Icon.png */; };
@@ -850,8 +850,8 @@
 		E5C80D7D1521BCDB00DE6C84 /* RRImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRImageView.m; sourceTree = "<group>"; };
 		E5C80D861521BE3700DE6C84 /* RNNewsFeedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNNewsFeedCell.h; sourceTree = "<group>"; };
 		E5C80D871521BE3700DE6C84 /* RNNewsFeedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedCell.m; sourceTree = "<group>"; };
-		E5C80D8D1521C48A00DE6C84 /* RRCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRCellScrollView.h; sourceTree = "<group>"; };
-		E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRCellScrollView.m; sourceTree = "<group>"; };
+		E5C80D8D1521C48A00DE6C84 /* RRAttachScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RRAttachScrollView.h; sourceTree = "<group>"; };
+		E5C80D8E1521C48B00DE6C84 /* RRAttachScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRAttachScrollView.m; sourceTree = "<group>"; };
 		E5C80D981521E5C800DE6C84 /* RRFriendItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRFriendItem.h; sourceTree = "<group>"; };
 		E5C80D991521E5C800DE6C84 /* RRFriendItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRFriendItem.m; sourceTree = "<group>"; };
 		E5C80DA31522B75D00DE6C84 /* RNConstomTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNConstomTabBarController.h; sourceTree = "<group>"; };
@@ -1654,8 +1654,8 @@
 				E5A4040C154F84C500CF128F /* RRNextPageFooterView.m */,
 				E5C80D7C1521BCDB00DE6C84 /* RRImageView.h */,
 				E5C80D7D1521BCDB00DE6C84 /* RRImageView.m */,
-				E5C80D8D1521C48A00DE6C84 /* RRCellScrollView.h */,
-				E5C80D8E1521C48B00DE6C84 /* RRCellScrollView.m */,
+				E5C80D8D1521C48A00DE6C84 /* RRAttachScrollView.h */,
+				E5C80D8E1521C48B00DE6C84 /* RRAttachScrollView.m */,
 			);
 			path = RNUIControl;
 			sourceTree = "<group>";
@@ -2081,7 +2081,7 @@
 				E5B0853215216CF700F87B46 /* RCUser.m in Sources */,
 				E5C80D7E1521BCDB00DE6C84 /* RRImageView.m in Sources */,
 				E5C80D881521BE3700DE6C84 /* RNNewsFeedCell.m in Sources */,
-				E5C80D8F1521C48B00DE6C84 /* RRCellScrollView.m in Sources */,
+				E5C80D8F1521C48B00DE6C84 /* RRAttachScrollView.m in Sources */,
 				E5C80D9A1521E5C900DE6C84 /* RRFriendItem.m in Sources */,
 				E5C80DA51522B76000DE6C84 /* RNConstomTabBarController.m in Sources */,
 				E5C80DC81522E81D00DE6C84 /* ImageProcessingViewController.m in Sources */,

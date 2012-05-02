@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "RRImageView.h"
-#import "RRCellScrollView.h"
+#import "RRAttachScrollView.h"
 #import "RRNewsFeedItem.h"
 #import "UIImageView+RRWebImage.h"
 
@@ -34,18 +34,22 @@
 
 @optional
 /*
+	点击新鲜事标题,即相册名称
+	
+ */
+- (void)onTapTitleLabel: (NSNumber *)userId albumId: (NSNumber *)albumId ;
+
+/*
 	点击新鲜事附件照片
  */
-- (void)onClickAttachView: (NSNumber *)userId albumId: (NSNumber *)albumId ;
-
-
 - (void)onClickAttachView:(NSNumber *)userId photoId:(NSNumber *)photoId;
+
 @end
 
 /*	-------------------------------------	*/
 /*			新鲜事主列表的cell					*/
 /*	-------------------------------------	*/
-@interface RNNewsFeedCell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
+@interface RNNewsFeedCell : UITableViewCell</*UITableViewDataSource,UITableViewDelegate,*/RRAttachScrollViewDelegate>
 {
 	//新鲜事主体数据
 	RRNewsFeedItem *_newsFeedItem;
@@ -71,6 +75,9 @@
 	//附件照片
 	UITableView	*_attachmentsTableView;
 	
+	//附件照片滚动视图
+	RRAttachScrollView *_attachScrollView;
+	
 	id<RNNewsFeedCellDelegate> _delegate;
 }
 @property(nonatomic, retain)RRNewsFeedItem *newsFeedItem;	
@@ -81,6 +88,7 @@
 @property(nonatomic, retain)UILabel *updateTimeLabel;
 @property(nonatomic, copy)NSString *fromAddress;
 @property(nonatomic, retain)UITableView	*attachmentsTableView;
+@property(nonatomic, retain)RRAttachScrollView *attachScrollView;
 @property(nonatomic, assign)id<RNNewsFeedCellDelegate>delegate;
 
 

@@ -35,6 +35,7 @@
 #import "NSData+TTCategory.h"
 #import "NSDate+TTCategory.h"
 #import "NSString+TTAdditions.h"
+#import "NSString+NSStringEx.h"
 #import "TTEntityTables.h"
 #import "TTGlobalCore.h"
 #import "TTGlobalCoreLocale.h"

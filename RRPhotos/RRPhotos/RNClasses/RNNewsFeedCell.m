@@ -22,6 +22,7 @@
 @synthesize updateTimeLabel = _updateTimeLabel;
 @synthesize fromAddress = _fromAddress;
 @synthesize attachmentsTableView = _attachmentsTableView;
+@synthesize attachScrollView = _attachScrollView;
 @synthesize delegate = _delegate;
 - (void)dealloc{
 	self.newsFeedItem = nil;
@@ -32,6 +33,7 @@
 	self.updateTimeLabel = nil;
 	self.fromAddress = nil;
 	self.attachmentsTableView = nil;
+	self.attachScrollView = nil;
 	self.delegate = nil;
 	
 	[super dealloc];
@@ -57,7 +59,13 @@
 	self.selectionStyle = UITableViewCellSelectionStyleNone; 
 	self.backgroundColor = [UIColor clearColor];
     self.accessoryType = UITableViewCellAccessoryNone;
-
+	
+	NSString *s = self.prefixLabel.text;
+	UIFont *font = self.prefixLabel.font;
+	CGSize singleLineStringSize = [s sizeWithFont:font];
+	self.prefixLabel.width = singleLineStringSize.width;
+	self.titleLabel.left = self.prefixLabel.right;
+	self.titleLabel.width = kCellWidth - self.prefixLabel.right - self.updateTimeLabel.width;
 }
 
 /*
@@ -70,6 +78,15 @@
 	
 	//新鲜事主题的数据结构存储
 	self.newsFeedItem = newsFeedItem;
+
+	[self.contentView removeAllSubviews];
+	[self.contentView addSubview:self.userNameLabel];
+	[self.contentView addSubview:self.headImageView];
+	[self.contentView addSubview:self.prefixLabel];
+	[self.contentView addSubview:self.titleLabel];
+	[self.contentView addSubview:self.updateTimeLabel];
+	//	[self.contentView addSubview:self.attachmentsTableView];
+	[self.contentView addSubview:self.attachScrollView];
 
 	//头像
 	if (self.newsFeedItem.headUrl) {
@@ -84,38 +101,43 @@
 	
 	if (self.newsFeedItem.prefix) {
 		NSMutableString  *prefixAndTitleString = [NSMutableString stringWithString: self.newsFeedItem.prefix];
-		if (self.newsFeedItem.title) {
-			[prefixAndTitleString appendString:self.newsFeedItem.title];
-		}
 		self.prefixLabel.text  = prefixAndTitleString;
 	}
+
+	self.titleLabel.text = self.newsFeedItem.title;
 		
 	if (self.newsFeedItem.updateTime) {
 		self.updateTimeLabel.text = [self.newsFeedItem.updateTime stringForSectionTitle3];
 	}
 	
 	//新鲜事主体，照片附件,加载图片
-	if (self.newsFeedItem.attachments) {	
-		
-		if ([self.newsFeedItem.attachments count] == 1) {
-			CGRect r = 	self.attachmentsTableView.frame;
-			self.attachmentsTableView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
+//	if (self.newsFeedItem.attachments) {	
+//		
+//		if ([self.newsFeedItem.attachments count] == 1) {
+//			CGRect r = 	self.attachmentsTableView.frame;
+//			self.attachmentsTableView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
+//			
+//		}else {
+//			CGRect r = 	self.attachmentsTableView.frame;
+//			self.attachmentsTableView.frame = CGRectMake(r.origin.x,
+//														 r.origin.y, 
+//														  kCellContentViewWidth, 
+//														  kCellContentViewHeight);
+//		}
+//		[self.attachmentsTableView reloadData];
+//		NSLog(@"附件的照片的数目1 = %d", [self.newsFeedItem.attachments count]);
+//	}
+	
+	if (self.newsFeedItem.attachments) {
+		//重置滚动试图里面的照片
+		if ([self.newsFeedItem.attachments count] < 3) {
+			self.attachScrollView.height = 320;
 		}else {
-			CGRect r = 	self.attachmentsTableView.frame;
-			self.attachmentsTableView.frame = CGRectMake(r.origin.x,
-														 r.origin.y, 
-														  kCellContentViewWidth, 
-														  kCellContentViewHeight);
+			self.attachScrollView.height = kCellContentViewHeight;
 		}
-		[self.attachmentsTableView reloadData];
-		NSLog(@"附件的照片的数目1 = %d", [self.newsFeedItem.attachments count]);
+		[self.attachScrollView setWithAttachments:self.newsFeedItem.attachments];
 	}
-	[self.contentView removeAllSubviews];
-	[self.contentView addSubview:self.userNameLabel];
-	[self.contentView addSubview:self.headImageView];
-	[self.contentView addSubview:self.prefixLabel];
-	[self.contentView addSubview:self.updateTimeLabel];
-	[self.contentView addSubview:self.attachmentsTableView];
+	
 }
 
 /*
@@ -185,13 +207,59 @@
 	return _prefixLabel;
 }
 
+/*
+	新鲜事主体内容
+ */
+- (UILabel *)titleLabel{
+	
+	if (!_titleLabel) {
+		_titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.prefixLabel.right + 10, 
+															  self.prefixLabel.origin.y, 
+															  100, 
+															  kCellHeadImageHeight / 2)];
+		_titleLabel.textColor = RGBCOLOR(120, 150, 100);
+		_titleLabel.font = [UIFont fontWithName:MED_HEITI_FONT size:13];
+		_titleLabel.backgroundColor = [UIColor clearColor];
+		
+		//添加点击事件
+		UITapGestureRecognizer *singleTap = [[[UITapGestureRecognizer alloc]   
+											  initWithTarget:self action:@selector(onTapTitleLabel)]autorelease];
+		[_titleLabel addGestureRecognizer:singleTap]; 
+	}
+	return _titleLabel;
+}
+
+/*
+	点击标题
+ */
+- (void)onTapTitleLabel{
+	
+	if ([self.delegate respondsToSelector:@selector(onTapTitleLabel:albumId:)]) {
+		[self.delegate onTapTitleLabel:nil albumId:nil];
+	}
+}
+/*
+	附件照片滚动视图
+ */
+- (RRAttachScrollView *)attachScrollView{
+		
+	if (!_attachScrollView) {
+		_attachScrollView = [[RRAttachScrollView alloc]initWithFrame:CGRectMake(0, 
+																			   kCellHeadImageHeight + kCellTopPadding + kCellHeadContentSpace,
+																			   kCellContentViewWidth, 
+																				kCellContentViewHeight)];
+		_attachScrollView.attachScrollViewDelgate  = self;
+	}
+	return _attachScrollView;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
 }
-
+/*
 - (UITableView *)attachmentsTableView{
 	
 	if (!_attachmentsTableView) {
@@ -253,8 +321,8 @@
 
 	if (indexPath.row < [self.newsFeedItem.attachments count]) { //重新加载新鲜事的照片内容
 		id attachment = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
-		if (attachment && [attachment isKindOfClass:RRAttachment.class]) {
-			NSURL *url = [NSURL URLWithString:[(RRAttachment*)attachment main_url]];
+		if (attachment && [attachment isKindOfClass:RRAttachmentItem.class]) {
+			NSURL *url = [NSURL URLWithString:[(RRAttachmentItem*)attachment main_url]];
 			[((RNAttachmentCell *)cell).contentImageView setImageWithURL:url];
 			
 			//仅有一张照片的时候高度做调整
@@ -291,11 +359,22 @@
 //	NSNumber *sourceId = self.newsFeedItem.sourceId;
 //
 //	RNAlbumWaterViewController *albumWaterViewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
-	RRAttachment *attachMent = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
+	RRAttachmentItem *attachMent = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
 	NSNumber *mediaId = attachMent.mediaId;
 	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
 		NSNumber *userId = self.newsFeedItem.userId;
 
+		[self.delegate onClickAttachView:userId photoId:mediaId];
+	}
+}
+*/
+#pragma mark - RRAttachScrollViewDelegate
+- (void)tapAttachImageAtIndex:(NSInteger)index andAttachItem:(RRAttachmentItem *)item{
+	RRAttachmentItem *attachMent = [self.newsFeedItem.attachments objectAtIndex:index];
+	NSNumber *mediaId = attachMent.mediaId;
+	
+	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
+		NSNumber *userId = self.newsFeedItem.userId;
 		[self.delegate onClickAttachView:userId photoId:mediaId];
 	}
 }
