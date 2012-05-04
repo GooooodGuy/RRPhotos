@@ -167,9 +167,13 @@
     [view release];
     
     self.navBar.backgroundView.image = [[RCResManager getInstance] imageForKey:@"photo_narbar_bg"];
-    [self.navBar.backButton setImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_back"] forState:UIControlStateNormal];
-    [self.navBar.backButton setImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_back"] forState:UIControlStateHighlighted];
-    
+    [self.navBar.backButton setImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_back"] 
+							forState:UIControlStateNormal];
+    [self.navBar.backButton setImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_back"] 
+							forState:UIControlStateHighlighted];
+	[self.navBar.backButton addTarget: self action:@selector(backButtonAction)  
+					 forControlEvents:UIControlEventTouchUpInside];
+
     _nextPageFooterView = [[RRNextPageFooterView alloc] initWithFrame:CGRectMake(0, _flowView.contentSize.height, 
                                                                                  _flowView.contentSize.width, 200)];
 	[_flowView addSubview:_nextPageFooterView];	
@@ -364,23 +368,24 @@
                          _miniPublisherView.frame = CGRectMake(0, 460, 320, 48);
                      } 
                      completion:^(BOOL finished) {
-//                        if (finished) {
-////                             RNPhotoItem *item = [self.photoListModel photoItemForIndex:index];
-//                             _invokeIndex = index;
-//                             RNPhotoViewController *photoViewController = [[RNPhotoViewController alloc] 
-//                                                                         initWithPhotoesData:[self photoListModel]
-//                                                                                        withAlbum:_albumInfo
-//                                                                                    withPhotoIndex:index];
-//                            RNNavigationController *navigationController = [[RNNavigationController alloc] 
-//                                                                           initWithRootViewController:photoViewController];
-//                            navigationController.navigationBarHidden = YES;
+                        if (finished) {
+//                             RNPhotoItem *item = [self.photoListModel photoItemForIndex:index];
+                             _invokeIndex = index;
+                             RNPhotoViewController *photoViewController = [[RNPhotoViewController alloc] 
+                                                                         initWithPhotoesData:[self photoListModel]
+                                                                                        withAlbum:_albumInfo
+                                                                                    withPhotoIndex:index];
+                            UINavigationController *navigationController = [[UINavigationController alloc] 
+                                                                           initWithRootViewController:photoViewController];
+                            navigationController.navigationBarHidden = YES;
 //                            navigationController.wantsFullScreenLayout = YES;
-//                             RSAppDelegate *appDelegate = (RSAppDelegate *)[UIApplication 
+//							AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 //                                                                            sharedApplication].delegate;
 //                            [appDelegate pushModelViewController:navigationController];
-//                            [photoViewController release];
-//                            [navigationController release];
-//                        }
+							[self presentModalViewController:navigationController animated:NO];
+                            [photoViewController release];
+                            [navigationController release];
+                        }
                      }];
    [UIView commitAnimations];
     
@@ -693,7 +698,14 @@
     _miniPublisherView.bIsShowCommentCount = YES;
     //导航标题
     self.navBar.title = _albumInfo.title;
-    
+	
+}
+
+/*
+	退出照片相册内容页
+ */
+- (void)backButtonAction{
+	[self.navigationController popViewControllerAnimated:YES];
 }
 #pragma mark - HUD
 - (void)showSimpleHUD:(NSString *)tip{

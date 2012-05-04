@@ -146,9 +146,9 @@
 //}
 - (void)loadView{
     [super loadView];
-//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackTranslucent;
-//    [UIApplication sharedApplication].statusBarHidden = _startSource == PhotoStartSourceAlbum ;
-	[UIApplication sharedApplication].statusBarHidden = YES;
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackTranslucent;
+    [UIApplication sharedApplication].statusBarHidden = _startSource == PhotoStartSourceAlbum ;
+//	[UIApplication sharedApplication].statusBarHidden = YES;
 	// chenyi modify
 	self.view.backgroundColor = [UIColor blackColor];
 
@@ -162,7 +162,7 @@
     _narBarView = [[UIView alloc] init];
     if (_startSource == PhotoStartSourceShare) {
         // 从分享页面进入 显示导航
-        _narBarView.frame = CGRectMake(0, 20, _rWidth, 44);
+        _narBarView.frame = CGRectMake(0, 0, _rWidth, 44);
     }
 
     _narBarView.backgroundColor = [UIColor colorWithPatternImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_bg"]];
@@ -384,7 +384,7 @@
 - (void)adjustSubviews{
     
     //不依赖数据布局
-	[UIApplication sharedApplication].statusBarHidden = NO;
+//	[UIApplication sharedApplication].statusBarHidden = NO;
 //	chenyi add
 	
     if (![UIApplication sharedApplication].isStatusBarHidden) {
@@ -478,7 +478,11 @@
     if (sender == _narBarBackBtn) {
         [self scrollAlbumController];
 //        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
-		[self.navigationController popViewControllerAnimated:YES];
+		if (_startSource == PhotoStartSourceAlbum) {
+			[self dismissModalViewControllerAnimated:NO];
+		}else if (_startSource == PhotoStartSourceShare){
+			[self.navigationController popViewControllerAnimated:YES];
+		}
     }else if(sender == _navBarMoreBtn){
         RNUIActionSheet *actionSheet = [[RNUIActionSheet alloc] initWithTitle:NSLocalizedString(@"更多操作", @"更多操作")];
         if (_startSource == PhotoStartSourceShare) {
@@ -1343,7 +1347,8 @@ static NSInteger compareString(id str1, id str2, void *context)
             [self showAlertForPwd];
         }
 	}else {
-        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
+//        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
+		[self.navigationController popViewControllerAnimated:YES]; //chenyi modify
     }
 }
 - (void)showAlertForError:(RCError *)error{

@@ -70,11 +70,11 @@
  */
 - (void)load:(BOOL)more {
     
-	if (more) {
-		//分页加载
-	}else {
+//	if (more) {
+//		//分页加载
+//	}else {
 		[super load:more];
-	}
+//	}
 }
 
 /*
@@ -104,7 +104,8 @@
 				[self.newsFeeds  addObject:newsFeedItem];
 			}
 		}
-	}
+	} 
+	_resultAry = self.newsFeeds; //记录用于分页加载
 	
 	self.newsFeedCount = [self.newsFeeds count];
 	

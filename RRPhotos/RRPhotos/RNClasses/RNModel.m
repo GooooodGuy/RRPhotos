@@ -44,9 +44,9 @@
         
         self.method = nil;
         self.currentPageIdx = 1;
-        self.pageSize = 10;
-        self.total = 10;
-        self.resultAry = [NSMutableArray arrayWithCapacity:10];
+        self.pageSize = 100;
+        self.total = 100;
+        self.resultAry = [NSMutableArray arrayWithCapacity:100];
 
         _delegates = TTCreateNonRetainingArray();
         

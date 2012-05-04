@@ -17,7 +17,9 @@
 - (void)loadView
 {
     [super loadView];
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CONTENT_NAVIGATIONBAR_HEIGHT, 
+
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 
+															   0, 
                                                                320, 460 - CONTENT_NAVIGATIONBAR_HEIGHT) style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -36,6 +38,12 @@
     [self performSelectorInBackground:@selector(reqAlbums) withObject:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+	[super viewWillAppear:animated];
+	[self.navigationController setNavigationBarHidden:NO animated:YES];
+
+}
+
 #pragma mark - reqAlbums
 - (void)reqAlbums{
     NSLog(@"_____%s------%d",__FUNCTION__,__LINE__);
@@ -44,8 +52,8 @@
     if (_userInfo.sessionKey) {
         NSMutableDictionary* dics = [NSMutableDictionary dictionary];
         [dics setObject:_userInfo.sessionKey forKey:@"session_key"];
-//        [dics setObject:_userInfo.userId forKey:@"uid"];//439643362
-        [dics setObject:@"439643362" forKey:@"uid"];
+        [dics setObject:_userInfo.userId forKey:@"uid"];//439643362
+//        [dics setObject:@"439643362" forKey:@"uid"];
         [dics setObject:[NSNumber numberWithInt:160] forKey:@"page_size"];
         RCGeneralRequestAssistant *mReqAssistant = [RCGeneralRequestAssistant requestAssistant];
         mReqAssistant.onCompletion = ^(NSDictionary* result){
@@ -72,7 +80,8 @@
     NSString *uid = [[_arrAlbums objectAtIndex:indexPath.row] objectForKey:@"user_id"];
     RNAlbumWaterViewController *aw = indexPath.row % 2 == 0 ?[[RNAlbumWaterViewController alloc] initWithUid:(NSNumber *)uid albumId:(NSNumber *)aid]:
     [[RNAlbumWaterViewController alloc] initWithUid:uid albumId:aid shareId:nil shareUid:nil];
-    [self.navigationController pushViewController:aw animated:YES];
+	aw.hidesBottomBarWhenPushed = YES;
+	[self.navigationController pushViewController:aw animated:YES];
     [aw release];
     RN_DEBUG_LOG;
      NSLog(@"------%d---%@",aw.retainCount,self.navigationController);

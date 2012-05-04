@@ -10,7 +10,7 @@
 #import "RNNewsFeedController.h"
 #import "ImageProcessingViewController.h"
 #import "RNPickPhotoHelper.h"
-
+#import "RNAlbumListViewController.h"
 @interface RNMainViewController ()
 
 //初始设置
@@ -118,7 +118,7 @@
 			}break;
 				
 			case 4:{
-				mainView = [[UIViewController alloc]init];
+				mainView = [[RNAlbumListViewController alloc]init];
 				mainView.view.backgroundColor = [UIColor blueColor];
 				mainView.title = [item objectAtIndex:i];
 				nav = [[UINavigationController alloc]initWithRootViewController:mainView];

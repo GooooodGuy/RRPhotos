@@ -36,19 +36,29 @@
 	self.view.backgroundColor = [UIColor blackColor];
 	self.navBar.hidden = YES; //采用系统的navbar
 	
-	UIBarButtonItem *temporaryBarButtonItem = [[UIBarButtonItem alloc] init];
-	temporaryBarButtonItem.title = @"刷新";
-	self.navigationItem.rightBarButtonItem = temporaryBarButtonItem;
-	[temporaryBarButtonItem release];
+//	UIButton *temporaryBarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	[temporaryBarButton setTitle:@"加载" forState:UIControlStateNormal];
+//	[temporaryBarButton setImage:[[RCResManager getInstance] imageForKey:@"main_btn_set_hl.png"]
+//						forState:UIControlStateNormal];
+//	[temporaryBarButton setImage:[[RCResManager getInstance] imageForKey:@"main_btn_set_hl.png"]
+//						forState:UIControlStateHighlighted];
+//	[temporaryBarButton addTarget:self action:@selector(testLoadMore)
+//				 forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithTitle:@"加载" 
+															style:UIBarButtonItemStylePlain
+														   target:self 
+														   action:@selector(testLoadMore)];
+	self.navigationItem.rightBarButtonItem = item;
+//	[temporaryBarButton release];
 	
 	//中间栏
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:
 										  [NSArray arrayWithObjects:@"好友动态",@"热门分享",nil]];
-
 	CGFloat width = 150;
 	segmentControl.frame = CGRectMake((PHONE_SCREEN_SIZE.width - width ) / 2.0, 10, width, 30);
 	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentControl.backgroundColor = [UIColor colorWithPatternImage:[[RCResManager getInstance]imageForKey:@"button_bar"]];
+	segmentControl.backgroundColor = [UIColor colorWithPatternImage:
+									  [[RCResManager getInstance]imageForKey:@"button_bar"]];
 	segmentControl.tintColor = self.navigationController.navigationBar.tintColor;
 	NSMutableDictionary * attributes = [NSMutableDictionary dictionaryWithCapacity:5];
 	[attributes setObject:[UIFont fontWithName:MED_HEITI_FONT size: 12] forKey:UITextAttributeFont];
@@ -108,7 +118,7 @@
 	
 	RNNewsFeedModel *model = [[RNNewsFeedModel alloc]initWithTypeString:typeString];
 	self.model = (RNModel *) model;
-	[self.model load:NO];//加载数据
+	[self.model load:YES];//加载数据
 }
 
 
@@ -117,7 +127,12 @@
     [_newFeedTableView reloadData];
 }
 
-#pragma -mark UITableViewDataSource
+#pragma mark - 测试加载更多
+- (void)testLoadMore{
+	
+	[self.model load:YES];
+}
+#pragma mark - UITableViewDataSource
 //@required
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
