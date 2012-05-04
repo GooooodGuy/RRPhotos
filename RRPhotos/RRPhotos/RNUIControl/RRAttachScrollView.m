@@ -78,7 +78,15 @@
 			[layer setCornerRadius:5.0];
 			layer.masksToBounds = YES;
 
-			NSURL *url =[NSURL URLWithString: ((RRAttachmentItem *)attachment).main_url];
+			//导入高清图片
+			NSURL *url;
+			if ([attachments count] > 2) {
+				//如果图片数目大于2张显示缩略图
+				url =[NSURL URLWithString: ((RRAttachmentItem *)attachment).miniUrl];
+			}else {
+				//否则加载高清图片
+				url =[NSURL URLWithString: ((RRAttachmentItem *)attachment).largeUrl];
+			}
 			[attachImageView setImageWithURL:url]; //从url导入图片
 			[self.attachImageViews addObject:attachImageView];
 			[self addSubview:attachImageView];

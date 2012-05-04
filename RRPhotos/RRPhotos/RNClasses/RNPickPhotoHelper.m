@@ -31,7 +31,11 @@
 - (id)init{
 	if (self = [super init]) {
 		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
-		_imagePickerController = [[UIImagePickerController alloc]init];
+		if (!_imagePickerController) {
+			_imagePickerController = [[UIImagePickerController alloc]init];
+		}
+//		_imagePickerController.allowsEditing = YES;
+		//主要是下边的两能数，@"public.movie", @"public.image"  一个是录像，一个是拍照
 	}
 	return  self;
 }
@@ -41,18 +45,16 @@
  */
 - (id)initWithType: (PhotoUploadType)uploadType{
 	
-	if (self = [super init]) {
-		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
-		_imagePickerController = [[UIImagePickerController alloc]init];
+	if (self = [self init]) {
 		_editPhotoController = [[RNEditPhotoViewController alloc]initWithType:uploadType];
+		
 	}
 	return self;
 }
 
 - (id)initWithAlbumId:(NSString *)albumId withAlbumName:(NSString *)albumname{
-    if (self = [super init]) {
-		self.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;//默认从照片库里面取
-		_imagePickerController = [[UIImagePickerController alloc]init];
+    if (self = [self init]) {
+	
 		_editPhotoController = [[RNEditPhotoViewController alloc] initWithAlbumId:albumId withAlbumName:albumname];
 	}
 	return  self;

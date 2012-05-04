@@ -65,7 +65,7 @@
 	CGSize singleLineStringSize = [s sizeWithFont:font];
 	self.prefixLabel.width = singleLineStringSize.width;
 	self.titleLabel.left = self.prefixLabel.right;
-	self.titleLabel.width = kCellWidth - self.prefixLabel.right - self.updateTimeLabel.width;
+	self.titleLabel.width = kCellWidth - self.prefixLabel.right ;
 }
 
 /*
@@ -369,12 +369,14 @@
 }
 */
 #pragma mark - RRAttachScrollViewDelegate
+/**
+ * 点击附件照片
+ */
 - (void)tapAttachImageAtIndex:(NSInteger)index andAttachItem:(RRAttachmentItem *)item{
-	RRAttachmentItem *attachMent = [self.newsFeedItem.attachments objectAtIndex:index];
-	NSNumber *mediaId = attachMent.mediaId;
 	
+	NSNumber *mediaId = item.mediaId;
+	NSNumber *userId = item.ownerId;
 	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
-		NSNumber *userId = self.newsFeedItem.userId;
 		[self.delegate onClickAttachView:userId photoId:mediaId];
 	}
 }
@@ -439,10 +441,10 @@
 																		 kCellContentViewWidth / 3)];
 		_contentImageView.backgroundColor = [UIColor clearColor];
 		_contentImageView.contentMode = UIViewContentModeScaleAspectFill;
-		
 		CGRect r = _contentImageView.frame;
+		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",
+			  r.origin.x,r.origin.y,r.size.width,r.size.height);
 		
-		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
 		_contentImageView.transform = CGAffineTransformRotate(self.transform,  M_PI / 2);
 	}
 	return _contentImageView;

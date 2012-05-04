@@ -189,21 +189,28 @@ typedef enum {
 	
 	//表示媒体内容的id,例如相片的id
 	NSNumber* _mediaId;
-	
+	//所有者id
+	NSNumber *_ownerId;
 	//媒体的评论描述
 	NSString *_digest;
     
-	//如type为 “photo”时 此项表示清晰的地址 （200X200）
-    NSString* _main_url;
-	
+	//普通质量的图片地址
+    NSString* _mainUrl;
+	//如type为 “photo”时 此项表示清晰的地址
+	NSString *_largeUrl;
+	//缩略图
+	NSString *_miniUrl;
 }
 
 
-@property (nonatomic, copy) NSString* mediaType;
-@property (nonatomic, copy) NSString* href;
-@property (nonatomic, retain) NSNumber* mediaId;
-@property (nonatomic, copy) NSString *digest;
-@property (nonatomic, copy) NSString *main_url;
+@property(nonatomic, copy)NSString *mediaType;
+@property(nonatomic, copy)NSString *href;
+@property(nonatomic, copy)NSNumber *mediaId;
+@property(nonatomic, copy)NSNumber *ownerId;
+@property(nonatomic, copy)NSString *digest;
+@property(nonatomic, copy)NSString *mainUrl;
+@property(nonatomic, copy)NSString *largeUrl;
+@property(nonatomic, copy)NSString *miniUrl;
 
 + (id)attachmentWithDictionary:(NSDictionary*) dictionary;
 

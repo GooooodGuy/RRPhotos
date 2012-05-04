@@ -11,16 +11,24 @@
 #import "RNNewsFeedModel.h"
 #import "RRNewsFeedItem.h"
 #import "RNNewsFeedCell.h"
-@interface RNNewsFeedController : RNModelViewController<UITableViewDataSource,UITableViewDelegate,RNNewsFeedCellDelegate>
+#import "RRRefreshTableHeaderView.h"
+@interface RNNewsFeedController : RNModelViewController
+	<UITableViewDataSource,
+	UITableViewDelegate,
+	RNNewsFeedCellDelegate,
+	RRRefreshTableHeaderDelegate>
 {
 	UIButton *testButton;
 	
 	//新鲜事列表
 	UITableView *_newFeedTableView;
 	
+	//下拉刷新
+	RRRefreshTableHeaderView *_rrRefreshTableHeaderView;
+	//正在更新列表数据标志
+	BOOL _bIsLoading;
 }
 @property(nonatomic,retain)UIButton *testButton;
-
 @property(nonatomic,retain)UITableView *newsFeedTableView;
-
+@property(nonatomic,retain)RRRefreshTableHeaderView *rrRefreshTableHeaderView;
 @end

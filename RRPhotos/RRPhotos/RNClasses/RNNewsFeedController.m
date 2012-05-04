@@ -16,10 +16,11 @@
 @implementation RNNewsFeedController
 @synthesize testButton;
 @synthesize newsFeedTableView = _newFeedTableView;
-
+@synthesize rrRefreshTableHeaderView = _rrRefreshTableHeaderView;
 - (void)dealloc{
 	self.testButton = nil;
 	self.newsFeedTableView = nil;
+	self.rrRefreshTableHeaderView = nil;
 	[super dealloc];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -79,6 +80,23 @@
 	newsFeedTableView.delegate = self;
 	[self.view addSubview:newsFeedTableView];
 	TT_RELEASE_SAFELY(newsFeedTableView);
+	
+	//下拉刷新
+	if (_rrRefreshTableHeaderView == nil) {
+		RRRefreshTableHeaderView *view = [[RRRefreshTableHeaderView alloc]
+										  initWithFrame:CGRectMake(0.0f,
+																   0.0f - self.newsFeedTableView.bounds.size.height,
+																   PHONE_SCREEN_SIZE.width,
+																   self.newsFeedTableView.bounds.size.height)];
+		view.delegate = self;
+		[self.newsFeedTableView addSubview:view];
+		self.rrRefreshTableHeaderView = view;
+		view.backgroundColor = RGBCOLOR(222, 222, 222);
+		TT_RELEASE_SAFELY(view);
+	}
+	[_rrRefreshTableHeaderView refreshLastUpdatedDate];
+	_bIsLoading = NO;
+
 }
 
 - (void)viewDidLoad
@@ -95,6 +113,7 @@
     // Release any retained subviews of the main view.
 	self.testButton = nil;
 	self.newsFeedTableView = nil;
+	self.rrRefreshTableHeaderView = nil;
 }
 
 
@@ -123,8 +142,10 @@
 
 
 - (void)modelDidFinishLoad:(RNModel *)model{
-
     [_newFeedTableView reloadData];
+	_bIsLoading = NO; //正在刷新标记NO
+
+	[self.rrRefreshTableHeaderView rrRefreshScrollViewDataSourceDidFinishedLoading:self.newsFeedTableView];
 }
 
 #pragma mark - 测试加载更多
@@ -175,6 +196,38 @@
 	return cell;	
 }
 
+
+
+#pragma mark - UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{	//列表拖动
+	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{	//拖动结束
+	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - RRRefreshTableHeaderDelegate Methods
+
+- (void)rrRefreshTableHeaderDidTriggerRefresh:(RRRefreshTableHeaderView*)view{
+
+	[self.model load:YES];//加载数据
+	_bIsLoading = YES;
+
+}
+
+- (BOOL)rrRefreshTableHeaderDataSourceIsLoading:(RRRefreshTableHeaderView*)view{
+	return  _bIsLoading;
+}
+
+- (NSDate*)rrRefreshTableHeaderDataSourceLastUpdated:(RRRefreshTableHeaderView*)view
+{	
+	return [NSDate date]; // should return date data source was last changed
+}
+
 #pragma mark - RNNewsFeedCellDelegate
 
 /*
@@ -202,7 +255,8 @@
 		}
 		viewController.hidesBottomBarWhenPushed = YES;
 
-		[currentNav pushViewController:viewController animated:YES];
+//		[currentNav pushViewController:viewController animated:YES];
+		[self presentModalViewController:viewController animated:NO];
 		TT_RELEASE_SAFELY(viewController);
 
 	}

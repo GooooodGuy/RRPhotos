@@ -107,7 +107,6 @@
         _shareId = [(NSNumber *)sid copy];
         _shareUid = [(NSNumber *)suid copy];
         _startSource = PhotoStartSourceShare;
-//		_startSource  = PhotoStartSourceAlbum;
     }
     return self;
 }
@@ -148,9 +147,7 @@
     [super loadView];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackTranslucent;
     [UIApplication sharedApplication].statusBarHidden = _startSource == PhotoStartSourceAlbum ;
-//	[UIApplication sharedApplication].statusBarHidden = YES;
-	// chenyi modify
-	self.view.backgroundColor = [UIColor blackColor];
+    self.view.backgroundColor = [UIColor blackColor];
 
     _photosScrollView = [[UIScrollView alloc] init];
     _photosScrollView.pagingEnabled = YES;
@@ -162,7 +159,7 @@
     _narBarView = [[UIView alloc] init];
     if (_startSource == PhotoStartSourceShare) {
         // 从分享页面进入 显示导航
-        _narBarView.frame = CGRectMake(0, 0, _rWidth, 44);
+        _narBarView.frame = CGRectMake(0, 20, _rWidth, 44);
     }
 
     _narBarView.backgroundColor = [UIColor colorWithPatternImage:[[RCResManager getInstance] imageForKey:@"photo_narbar_bg"]];
@@ -176,9 +173,12 @@
     _narBarTitleLabel = [[UILabel alloc] init];
     _narBarTitleLabel.textColor = [UIColor whiteColor];
     _narBarTitleLabel.backgroundColor = [UIColor clearColor];
-    _viewShareCountLable.font = [UIFont systemFontOfSize:16];
-    _viewShareCountLable.lineBreakMode = UILineBreakModeTailTruncation;
-    _viewShareCountLable.textAlignment = UITextAlignmentLeft;
+
+    _narBarTitleLabel.font = [UIFont boldSystemFontOfSize:20];  
+    _narBarTitleLabel.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.3];
+    _narBarTitleLabel.shadowOffset = CGSizeMake(0, -1);
+    _narBarTitleLabel.lineBreakMode = UILineBreakModeTailTruncation;
+    _narBarTitleLabel.textAlignment = UITextAlignmentLeft;
     [_narBarView addSubview:_narBarTitleLabel];
     
     _narBarFirstBtn = [[UIButton alloc] init];
@@ -274,11 +274,9 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-	//chen yi add
-	[self.navigationController setNavigationBarHidden:YES animated:NO];
-
-  ////////////
-	if (_miniPublisherView) {
+	//chenyi add 
+	[self.navigationController setNavigationBarHidden:YES animated:YES];
+    if (_miniPublisherView) {
         [_miniPublisherView pullViewDown];
     }
     [self willAnimateRotationToInterfaceOrientation:self.interfaceOrientation duration:0];
@@ -384,9 +382,6 @@
 - (void)adjustSubviews{
     
     //不依赖数据布局
-//	[UIApplication sharedApplication].statusBarHidden = NO;
-//	chenyi add
-	
     if (![UIApplication sharedApplication].isStatusBarHidden) {
         if ((int)_narBarView.top == 20) {
             _narBarView.hidden = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
@@ -477,12 +472,9 @@
 - (void)buttonAction:(id)sender{
     if (sender == _narBarBackBtn) {
         [self scrollAlbumController];
-//        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
-		if (_startSource == PhotoStartSourceAlbum) {
-			[self dismissModalViewControllerAnimated:NO];
-		}else if (_startSource == PhotoStartSourceShare){
-			[self.navigationController popViewControllerAnimated:YES];
-		}
+
+//		[self.navigationController popViewControllerAnimated:YES];
+		[self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
     }else if(sender == _navBarMoreBtn){
         RNUIActionSheet *actionSheet = [[RNUIActionSheet alloc] initWithTitle:NSLocalizedString(@"更多操作", @"更多操作")];
         if (_startSource == PhotoStartSourceShare) {
@@ -1347,8 +1339,7 @@ static NSInteger compareString(id str1, id str2, void *context)
             [self showAlertForPwd];
         }
 	}else {
-//        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
-		[self.navigationController popViewControllerAnimated:YES]; //chenyi modify
+        [self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
     }
 }
 - (void)showAlertForError:(RCError *)error{
@@ -1418,7 +1409,7 @@ static NSInteger compareString(id str1, id str2, void *context)
 -(void)lsbAction:(id)sender{
 //    if (self.currentPhotoItem && self.currentPhotoItem.lbsItem) {
 //        NSString *url = [NSString stringWithFormat:@"http://%@/place/poi/%@/%ld?no_feed=1",
-//                         [HummerSettings shareInstance].host,
+//                         [HummerSettings shareInstance].defaultHost,
 //                         [self.currentPhotoItem.userId stringValue],
 //                         self.currentPhotoItem.lbsItem.lbsId ];
 //        viewController = [[RNFeedCommentViewController alloc] initWithUrlString:url];
@@ -1440,7 +1431,7 @@ static NSInteger compareString(id str1, id str2, void *context)
 - (void)onClickCommentCountButton{
 //    if (self.currentPhotoItem) {
 //        NSString *url = [NSString stringWithFormat:@"http://%@/photo/%@/%@/comments?no_feed=1",
-//                         [HummerSettings shareInstance].host,
+//                         [HummerSettings shareInstance].defaultHost,
 //                         [self.currentPhotoItem.userId stringValue],
 //                         [self.currentPhotoItem.pid stringValue]];
 //        viewController = [[RNFeedCommentViewController alloc] initWithUrlString:url];

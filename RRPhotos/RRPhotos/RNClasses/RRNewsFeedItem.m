@@ -214,13 +214,14 @@
 	表示新鲜事中包含的媒体内容附件，例如照片，视频
  */
 @implementation RRAttachmentItem
-
+@synthesize ownerId = _ownerId;
 @synthesize mediaId = _mediaId;
 @synthesize mediaType = _mediaType;
 @synthesize digest = _digest;
 @synthesize href = _href;
-@synthesize main_url = _main_url;
-
+@synthesize mainUrl = _mainUrl;
+@synthesize largeUrl = _largeUrl;
+@synthesize miniUrl = _miniUrl;
 
 + (id)attachmentWithDictionary:(NSDictionary*) dictionary {
 	RRAttachmentItem* attachment = [[[RRAttachmentItem alloc] initWithDictionary:dictionary] autorelease];
@@ -231,11 +232,14 @@
 {
 	if (self = [super init]) {
         
+		self.ownerId = [dictionary objectForKey:@"owner_id"];
 		self.mediaId = [dictionary objectForKey:@"media_id"];
 		self.mediaType = [dictionary objectForKey:@"type"];
 		self.digest = [dictionary objectForKey:@"digest"];
 		self.href = [dictionary objectForKey:@"url"];
-		self.main_url = [dictionary objectForKey:@"main_url"];
+		self.mainUrl = [dictionary objectForKey:@"main_url"];
+		self.largeUrl = [dictionary objectForKey:@"large_url"];
+		self.miniUrl = [dictionary objectForKey:@"url"];
         //		self.ownerId = [dictionary objectForKey:@"owner_id"];
         //		// 有些接口返回的数据类型是字符串.
         //		if ([self.ownerId isKindOfClass:[NSString class]]) {
@@ -249,11 +253,14 @@
 }
 - (void) dealloc {
 	
+	TT_RELEASE_SAFELY(_ownerId);
 	TT_RELEASE_SAFELY(_mediaId);
 	TT_RELEASE_SAFELY(_mediaType);
 	TT_RELEASE_SAFELY(_digest);
 	TT_RELEASE_SAFELY(_href);
-    TT_RELEASE_SAFELY(_main_url);
+    TT_RELEASE_SAFELY(_mainUrl);
+	TT_RELEASE_SAFELY(_largeUrl);
+	TT_RELEASE_SAFELY(_miniUrl);
     //	TT_RELEASE_SAFELY(_ownerId);
     //	TT_RELEASE_SAFELY(_ownerName);
 	
