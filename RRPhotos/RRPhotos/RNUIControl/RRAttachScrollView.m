@@ -74,6 +74,11 @@
 			NSLog(@"tag= %d",tag);
 			attachImageView.tag = tag;
 			
+			UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAttachImage:)];
+			tapGesture.numberOfTapsRequired = 1;
+			[attachImageView addGestureRecognizer:tapGesture];
+			TT_RELEASE_SAFELY(tapGesture);
+			
 			CALayer* layer = [attachImageView layer];
 			[layer setCornerRadius:5.0];
 			layer.masksToBounds = YES;
@@ -189,20 +194,25 @@
 
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {  
-    UITouch *touch = [touches anyObject];  
-	
+/**
+ *	附件照片单击手势
+ */
+- (void)tapAttachImage:(UITapGestureRecognizer *)recognizer{
 	for (int i = 0; i < [self.attachImageViews count]; i++) {
-		NSLog(@"tag ======= %d",[touch view].tag);
-		if ([touch view].tag == [[self.attachImageViews objectAtIndex:i] tag]) {
+		NSLog(@"tag ======= %d",[recognizer view].tag);
+		if ([recognizer view].tag == [[self.attachImageViews objectAtIndex:i] tag]) {
 			if ([self.attachScrollViewDelgate respondsToSelector:@selector(tapAttachImageAtIndex:andAttachItem:)]) {
-				[self.attachScrollViewDelgate tapAttachImageAtIndex:i andAttachItem:[self.attachments objectAtIndex:i]];
+				[self.attachScrollViewDelgate tapAttachImageAtIndex:i 
+													  andAttachItem:[self.attachments objectAtIndex:i]];
 			}
 		}
 	}
-}  
-- (BOOL)touchesShouldCancelInContentView:(UIView *)view
-{
-	return NO;
+
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+	
+	return YES;
 }
 @end

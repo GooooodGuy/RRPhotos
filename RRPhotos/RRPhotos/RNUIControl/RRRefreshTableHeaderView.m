@@ -32,7 +32,7 @@
 
 
 @interface RRRefreshTableHeaderView (Private)
-- (void)setState:(RRPullRefreshState)aState;
+
 @end
 
 @implementation RRRefreshTableHeaderView

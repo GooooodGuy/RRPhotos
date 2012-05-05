@@ -571,16 +571,21 @@
 }
 //查看相册
 - (void)lookupAlbum{
-//    RN_DEBUG_LOG;
-//    [self dismissModalViewControllerAnimated:NO];
-//    RNAlbumWaterViewController *albumViewController = [[RNAlbumWaterViewController alloc] 
-//                                                       initWithPhotoesData:self.model withAlbum:_albumInfo];
-//    RSAppDelegate *appDelegate = (RSAppDelegate *)[UIApplication 
-//                                                   sharedApplication].delegate;
-//    if (appDelegate.mainViewController) {
-//        [appDelegate.mainViewController.activeContentViewController pushViewController:albumViewController animated:NO];
-//    }
-//    [albumViewController release];
+    RN_DEBUG_LOG;
+    [self dismissModalViewControllerAnimated:NO];
+    RNAlbumWaterViewController *albumViewController = [[RNAlbumWaterViewController alloc] 
+                                                       initWithPhotoesData:self.model withAlbum:_albumInfo];
+    albumViewController.hidesBottomBarWhenPushed = YES;
+	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+                                                   sharedApplication].delegate;
+    if (appDelegate.mainViewController) {
+		UIViewController *activeController = ((RNMainViewController *)appDelegate.mainViewController).activeViewController;
+		if ([activeController isKindOfClass: UINavigationController.class ]) {
+			UINavigationController *nav = (UINavigationController *) activeController;
+			[nav pushViewController:albumViewController animated:YES];
+		}
+    }
+    [albumViewController release];
 }
 //收藏照片
 - (void)favPhoto{

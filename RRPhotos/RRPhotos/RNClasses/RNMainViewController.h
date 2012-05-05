@@ -19,9 +19,9 @@
 	//新鲜事界面
 	RNNewsFeedController *_newsFeedController;
 	
-	
 	//记录上次选中的TabBarItem
 	NSInteger _lastSelectIndex;
+	
 }
 @property(nonatomic,retain)UITabBarController *tabBarController;
 
@@ -31,4 +31,8 @@
 
 @property(nonatomic,assign)NSInteger lastSelectIndex;
 
+/**
+ *	取出当前活动的controller
+ */
+- (UIViewController *)activeViewController;
 @end

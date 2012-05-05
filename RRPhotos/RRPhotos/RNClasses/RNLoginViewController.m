@@ -101,11 +101,19 @@
 //		}
 //	}
 	
-	RNMainViewController *mainController = [[RNMainViewController alloc]init];
+//	RNMainViewController *mainController = [[RNMainViewController alloc]init];
+//	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+//											   sharedApplication].delegate;
+//	UIViewController *view = [[UIViewController alloc]init ];
+//	view.view.backgroundColor = [UIColor greenColor];
+//	[appDelegate.rootNavController pushViewController:mainController animated:YES];
+//	[mainController release];
+	
 	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 											   sharedApplication].delegate;
-	UIViewController *view = [[UIViewController alloc]init ];
-	view.view.backgroundColor = [UIColor greenColor];
+	
+	UIViewController *mainController = appDelegate.mainViewController;
+
 	[appDelegate.rootNavController pushViewController:mainController animated:YES];
 	[mainController release];
 }
@@ -346,11 +354,9 @@
 		loginRequest.onLoginSuccess = ^(){
 			NSLog(@"###启动：自动登陆成功");
 //			[self startUpdateServerKVData];
-			RNMainViewController *mainController = [[RNMainViewController alloc]init];
 			AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 													   sharedApplication].delegate;
-			UIViewController *view = [[UIViewController alloc]init ];
-			view.view.backgroundColor = [UIColor greenColor];
+			UIViewController *mainController = appDelegate.mainViewController;
 			[appDelegate.rootNavController pushViewController:mainController animated:YES];
 			[mainController release];
 		};

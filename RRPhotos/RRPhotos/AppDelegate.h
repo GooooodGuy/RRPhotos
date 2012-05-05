@@ -10,9 +10,14 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
+	//根,第一个界面是登陆界面,登陆后进入主界面
 	UINavigationController *_rootNavController;
+	
+	//主界面
+	UIViewController *_mainViewController;
 }
 @property (strong, nonatomic) UIWindow *window;
+//最根的Controller
 @property (nonatomic,retain) UINavigationController *rootNavController;
-
+@property (nonatomic,retain) UIViewController *mainViewController;
 @end

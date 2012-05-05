@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "RNLoginViewController.h"
 //#import "RNLoginController.h"
-
+#import "RNMainViewController.h"
 #import "ImageProcessingViewController.h"
 #import "RNConstomTabBarController.h"
 
@@ -27,9 +27,12 @@
 
 @synthesize window = _window;
 @synthesize rootNavController = _rootNavController;
+@synthesize mainViewController = _mainViewController;
 - (void)dealloc
 {
 	[_window release];
+	[_rootNavController release];
+	[_mainViewController release];
     [super dealloc];
 }
 
@@ -47,11 +50,17 @@
 	
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	
+	//登陆界面
 	RNLoginViewController *loginController = [[RNLoginViewController alloc]init];
 	UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:loginController];
 	TT_RELEASE_SAFELY(loginController);
 	self.rootNavController = navController;
 	self.rootNavController.view.backgroundColor = [UIColor grayColor];
+	
+	//主界面
+	RNMainViewController *mainViewController = [[RNMainViewController alloc]init];
+	self.mainViewController = mainViewController;
+	TT_RELEASE_SAFELY(mainViewController);
 	
 	self.window.rootViewController = navController;
 	TT_RELEASE_SAFELY(navController);

@@ -220,7 +220,7 @@
 		_titleLabel.textColor = RGBCOLOR(120, 150, 100);
 		_titleLabel.font = [UIFont fontWithName:MED_HEITI_FONT size:13];
 		_titleLabel.backgroundColor = [UIColor clearColor];
-		
+		_titleLabel.userInteractionEnabled = YES;
 		//添加点击事件
 		UITapGestureRecognizer *singleTap = [[[UITapGestureRecognizer alloc]   
 											  initWithTarget:self action:@selector(onTapTitleLabel)]autorelease];
@@ -230,12 +230,16 @@
 }
 
 /*
-	点击标题
+	点击标题,将进入相册内容页面（流式布局）
  */
 - (void)onTapTitleLabel{
+	//暂时这样处理，日后想办法改进
+	RRAttachmentItem *item = self.newsFeedItem.firstAttachment;
+	NSNumber *mediaId = item.mediaId;
+	NSNumber *userId = item.ownerId;
 	
 	if ([self.delegate respondsToSelector:@selector(onTapTitleLabel:albumId:)]) {
-		[self.delegate onTapTitleLabel:nil albumId:nil];
+		[self.delegate onTapTitleLabel:userId albumId:mediaId];
 	}
 }
 /*

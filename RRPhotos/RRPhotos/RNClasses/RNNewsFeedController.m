@@ -37,20 +37,14 @@
 	self.view.backgroundColor = [UIColor blackColor];
 	self.navBar.hidden = YES; //采用系统的navbar
 	
-//	UIButton *temporaryBarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//	[temporaryBarButton setTitle:@"加载" forState:UIControlStateNormal];
-//	[temporaryBarButton setImage:[[RCResManager getInstance] imageForKey:@"main_btn_set_hl.png"]
-//						forState:UIControlStateNormal];
-//	[temporaryBarButton setImage:[[RCResManager getInstance] imageForKey:@"main_btn_set_hl.png"]
-//						forState:UIControlStateHighlighted];
-//	[temporaryBarButton addTarget:self action:@selector(testLoadMore)
-//				 forControlEvents:UIControlEventTouchUpInside];
-	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithTitle:@"加载" 
-															style:UIBarButtonItemStylePlain
-														   target:self 
-														   action:@selector(testLoadMore)];
+	UIButton *refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+	UIImage *refreshButtonImage = [[RCResManager getInstance]imageForKey:@"webbrowser_refresh"];
+	[refreshButton setImage:refreshButtonImage forState:UIControlStateNormal];
+	[refreshButton setImage:refreshButtonImage forState:UIControlStateSelected];
+	[refreshButton addTarget:self action:@selector(onClickRefreshButton) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:refreshButton];
+
 	self.navigationItem.rightBarButtonItem = item;
-//	[temporaryBarButton release];
 	
 	//中间栏
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:
@@ -139,7 +133,10 @@
 	self.model = (RNModel *) model;
 	[self.model load:YES];//加载数据
 }
-
+// 开始
+- (void)modelDidStartLoad:(RNModel *)model {
+	_bIsLoading = YES;
+}
 
 - (void)modelDidFinishLoad:(RNModel *)model{
     [_newFeedTableView reloadData];
@@ -148,10 +145,21 @@
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDataSourceDidFinishedLoading:self.newsFeedTableView];
 }
 
-#pragma mark - 测试加载更多
-- (void)testLoadMore{
+#pragma mark - 刷新
+- (void)onClickRefreshButton{
+	if (_bIsLoading) {
+		return;
+	}
 	
-	[self.model load:YES];
+	[UIView animateWithDuration:0.3 animations:^() {
+		[self.newsFeedTableView setContentOffset : CGPointMake(0, - 150) animated:NO];
+	} completion:^(BOOL finished){
+		if (finished) {
+			[self.rrRefreshTableHeaderView setState:RROPullRefreshPulling];
+			[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:self.newsFeedTableView];
+			[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:self.newsFeedTableView];
+		}
+	}];
 }
 #pragma mark - UITableViewDataSource
 //@required
@@ -203,20 +211,27 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {	//列表拖动
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:scrollView];
+	float time = [[NSDate date]timeIntervalSince1970];
+	NSLog(@"拖动开始%f",time);
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {	//拖动结束
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:scrollView];
+	float time = [[NSDate date]timeIntervalSince1970];
+	NSLog(@"拖动结束%f",time);
+
 }
 
 #pragma mark - RRRefreshTableHeaderDelegate Methods
 
 - (void)rrRefreshTableHeaderDidTriggerRefresh:(RRRefreshTableHeaderView*)view{
-
+	if (_bIsLoading) {
+		return;
+	}
+	
 	[self.model load:YES];//加载数据
 	_bIsLoading = YES;
-
 }
 
 - (BOOL)rrRefreshTableHeaderDataSourceIsLoading:(RRRefreshTableHeaderView*)view{
@@ -231,22 +246,16 @@
 #pragma mark - RNNewsFeedCellDelegate
 
 /*
- 点击新鲜事附件照片
+	点击新鲜事附件照片,查看照片
  */
 - (void)onClickAttachView: (NSNumber *)userId photoId:(NSNumber *)photoId {
 	if (userId && photoId) {
-//		RNAlbumWaterViewController *albumViewContoller = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
 		NSString *userIdStr = [userId stringValue];
 		NSString *photoIdStr = [photoId stringValue];
 		RNPhotoViewController *viewController = [[RNPhotoViewController alloc]initWithUid:userIdStr
 																				  withPid:photoIdStr
 																				  shareId:nil 
 																				 shareUid:nil];
-//		[self presentModalViewController:viewController animated:YES];
-//		self.hidesBottomBarWhenPushed = YES;
-//		viewController.wantsFullScreenLayout = YES;
-//		[self.navigationController pushViewController:viewController animated:YES];
-//		TT_RELEASE_SAFELY(viewController);
 		
 		NSLog(@"进入照片内容页");
 		UINavigationController *currentNav = self.navigationController;
@@ -255,10 +264,38 @@
 		}
 		viewController.hidesBottomBarWhenPushed = YES;
 
-//		[currentNav pushViewController:viewController animated:YES];
 		[self presentModalViewController:viewController animated:NO];
 		TT_RELEASE_SAFELY(viewController);
 
 	}
+}
+
+/*
+	点击新鲜事标题,即相册名称,进入相册内容页
+ */
+- (void)onTapTitleLabel: (NSNumber *)userId albumId: (NSNumber *)photoId {
+	if (userId && photoId) {
+		NSMutableDictionary* dics = [NSMutableDictionary dictionary];
+		[dics setObject:[RCMainUser getInstance].sessionKey forKey:@"session_key"];
+		[dics setObject:photoId forKey:@"pid"];
+		[dics setObject:userId forKey:@"uid"];
+		
+		RCGeneralRequestAssistant *mReqAssistant = [RCGeneralRequestAssistant requestAssistant];
+		//    __block typeof(self) self = self;
+		mReqAssistant.onCompletion = ^(NSDictionary* result){
+			NSNumber *albumId = [result objectForKey:@"album_id"];
+			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
+			[self.navigationController pushViewController:viewController animated:YES];
+			NSLog(@"进入相册内容页");
+			//查看相册
+			TT_RELEASE_SAFELY(viewController);
+		};
+		mReqAssistant.onError = ^(RCError* error) {
+			NSLog(@"error....%@",error.titleForError);
+
+		};
+		[mReqAssistant sendQuery:dics withMethod:@"photos/get"];
+	}
+
 }
 @end

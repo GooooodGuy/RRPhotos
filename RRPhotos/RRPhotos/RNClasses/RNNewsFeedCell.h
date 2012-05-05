@@ -35,9 +35,9 @@
 @optional
 /*
 	点击新鲜事标题,即相册名称
-	
+	ps:此处albumId 传入的还是照片id
  */
-- (void)onTapTitleLabel: (NSNumber *)userId albumId: (NSNumber *)albumId ;
+- (void)onTapTitleLabel: (NSNumber *)userId albumId: (NSNumber *)photoId ;
 
 /*
 	点击新鲜事附件照片

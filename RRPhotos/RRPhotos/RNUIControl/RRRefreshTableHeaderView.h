@@ -52,6 +52,9 @@ typedef enum{
 - (void)rrRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView;
 - (void)rrRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView;
 
+//陈毅modify 暴露接口
+- (void)setState:(RRPullRefreshState)aState;
+
 @end
 @protocol RRRefreshTableHeaderDelegate
 - (void)rrRefreshTableHeaderDidTriggerRefresh:(RRRefreshTableHeaderView*)view;

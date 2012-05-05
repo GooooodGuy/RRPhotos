@@ -135,7 +135,7 @@
 		}
 
 	}
-	
+
 	UITabBarController *tabBarController = [[UITabBarController alloc]init];
 	tabBarController.viewControllers = controllers;//设置tabbar所对应的视图控制器
 	tabBarController.delegate = self;
@@ -180,6 +180,17 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+/**
+ *	取出当前活动的controller
+ */
+- (UIViewController *)activeViewController{
+	UIViewController * activeViewController = [self.tabBarController selectedViewController];
+	if (activeViewController) {
+		return activeViewController;
+	}
+	return nil;
 }
 
 #pragma -mark UITabBarControllerDelegate
