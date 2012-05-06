@@ -378,11 +378,11 @@
                             UINavigationController *navigationController = [[UINavigationController alloc] 
                                                                            initWithRootViewController:photoViewController];
                             navigationController.navigationBarHidden = YES;
-//                            navigationController.wantsFullScreenLayout = YES;
-//							AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
-//                                                                            sharedApplication].delegate;
-//                            [appDelegate pushModelViewController:navigationController];
-							[self presentModalViewController:navigationController animated:NO];
+
+							AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+                                                                            sharedApplication].delegate;
+                            [appDelegate.mainViewController presentModalViewController:navigationController animated:NO];
+
                             [photoViewController release];
                             [navigationController release];
                         }

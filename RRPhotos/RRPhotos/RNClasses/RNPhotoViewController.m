@@ -808,6 +808,7 @@ static NSInteger compareString(id str1, id str2, void *context)
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+	NSLog(@"interfaceOrientation = %d",interfaceOrientation);
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown); 
 }
 

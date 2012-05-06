@@ -176,11 +176,16 @@
 	self.newsFeedController = nil;
 
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
+//
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+//	if (self.tabBarController.selectedIndex == 0) {
+//		UIViewController *controller = self.tabBarController.selectedViewController;
+//		if ([controller isKindOfClass:[UINavigationController class]])
+//			controller = [(UINavigationController *)controller visibleViewController];
+//		return [controller shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+//	}
+//	return NO;
+//}
 
 /**
  *	取出当前活动的controller

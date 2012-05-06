@@ -258,13 +258,11 @@
 																				 shareUid:nil];
 		
 		NSLog(@"进入照片内容页");
-		UINavigationController *currentNav = self.navigationController;
-		if (!currentNav) {
-			currentNav = [[UINavigationController alloc]initWithRootViewController:self];
-		}
+		//此处用AppDelegate presentModalViewController 否则支持横竖屏会有问题
+		AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
 		viewController.hidesBottomBarWhenPushed = YES;
 
-		[self presentModalViewController:viewController animated:NO];
+		[appDelegate.mainViewController presentModalViewController:viewController animated:NO];
 		TT_RELEASE_SAFELY(viewController);
 
 	}
@@ -286,6 +284,7 @@
 			NSNumber *albumId = [result objectForKey:@"album_id"];
 			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
 			[self.navigationController pushViewController:viewController animated:YES];
+			viewController.hidesBottomBarWhenPushed = YES;
 			NSLog(@"进入相册内容页");
 			//查看相册
 			TT_RELEASE_SAFELY(viewController);
