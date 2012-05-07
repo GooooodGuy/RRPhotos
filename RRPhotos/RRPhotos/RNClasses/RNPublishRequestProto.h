@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol RNPublishRequestProto <NSObject>
-
+@optional
 -(void)publishRequestData:(NSMutableDictionary*)requestdata;
 
 @end

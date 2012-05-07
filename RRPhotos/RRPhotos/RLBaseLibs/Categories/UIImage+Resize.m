@@ -9,11 +9,7 @@
 
 // Private helper methods
 @interface UIImage ()
-- (UIImage *)resizedImage:(CGSize)newSize
-                transform:(CGAffineTransform)transform
-           drawTransposed:(BOOL)transpose
-     interpolationQuality:(CGInterpolationQuality)quality;
-- (CGAffineTransform)transformForOrientation:(CGSize)newSize;
+
 @end
 
 @implementation UIImage (Resize)
@@ -144,7 +140,7 @@
     return newImage;
 }
 
-// Returns an affine transform that takes into account the image orientation when drawing a scaled image
+ Returns an affine transform that takes into account the image orientation when drawing a scaled image
 - (CGAffineTransform)transformForOrientation:(CGSize)newSize {
     CGAffineTransform transform = CGAffineTransformIdentity;
     
@@ -166,6 +162,9 @@
             transform = CGAffineTransformTranslate(transform, 0, newSize.height);
             transform = CGAffineTransformRotate(transform, -M_PI_2);
             break;
+	
+		//chenyi add 
+		default: break;
     }
     
     switch (self.imageOrientation) {
@@ -180,6 +179,9 @@
             transform = CGAffineTransformTranslate(transform, newSize.height, 0);
             transform = CGAffineTransformScale(transform, -1, 1);
             break;
+			
+		//chenyi add
+		default:break;
     }
     
     return transform;

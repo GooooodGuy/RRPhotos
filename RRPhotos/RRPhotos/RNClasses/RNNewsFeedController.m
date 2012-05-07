@@ -37,6 +37,7 @@
 	self.view.backgroundColor = [UIColor blackColor];
 	self.navBar.hidden = YES; //采用系统的navbar
 	
+	//刷新按钮
 	UIButton *refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
 	UIImage *refreshButtonImage = [[RCResManager getInstance]imageForKey:@"webbrowser_refresh"];
 	[refreshButton setImage:refreshButtonImage forState:UIControlStateNormal];
@@ -68,11 +69,14 @@
 																				  PHONE_SCREEN_SIZE.width, 
 																				  PHONE_SCREEN_SIZE.height)];
 	newsFeedTableView.backgroundColor = RGBCOLOR(222, 222, 222);
-	
-	self.newsFeedTableView = newsFeedTableView;
 	newsFeedTableView.dataSource = self; //tableView的数据
 	newsFeedTableView.delegate = self;
+	UIView *footerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320,200)];
+	footerView.backgroundColor = [UIColor clearColor];
+	newsFeedTableView.tableFooterView = footerView;
+	TT_RELEASE_SAFELY(footerView);
 	[self.view addSubview:newsFeedTableView];
+	self.newsFeedTableView = newsFeedTableView;
 	TT_RELEASE_SAFELY(newsFeedTableView);
 	
 	//下拉刷新
@@ -152,6 +156,8 @@
 	}
 	
 	[UIView animateWithDuration:0.3 animations:^() {
+		NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+		[self.newsFeedTableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
 		[self.newsFeedTableView setContentOffset : CGPointMake(0, - 150) animated:NO];
 	} completion:^(BOOL finished){
 		if (finished) {
@@ -260,7 +266,6 @@
 		NSLog(@"进入照片内容页");
 		//此处用AppDelegate presentModalViewController 否则支持横竖屏会有问题
 		AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-		viewController.hidesBottomBarWhenPushed = YES;
 
 		[appDelegate.mainViewController presentModalViewController:viewController animated:NO];
 		TT_RELEASE_SAFELY(viewController);
@@ -283,8 +288,8 @@
 		mReqAssistant.onCompletion = ^(NSDictionary* result){
 			NSNumber *albumId = [result objectForKey:@"album_id"];
 			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
-			[self.navigationController pushViewController:viewController animated:YES];
 			viewController.hidesBottomBarWhenPushed = YES;
+			[self.navigationController pushViewController:viewController animated:YES];
 			NSLog(@"进入相册内容页");
 			//查看相册
 			TT_RELEASE_SAFELY(viewController);

@@ -8,6 +8,8 @@
 
 #import "RNPickPhotoHelper.h"
 #import "AppDelegate.h"
+#define IMAGE_WIDTH 640
+#define IMAGE_HEIGHT 640
 @implementation RNPickPhotoHelper
 
 @synthesize imagePickerController = _imagePickerController;
@@ -34,8 +36,7 @@
 		if (!_imagePickerController) {
 			_imagePickerController = [[UIImagePickerController alloc]init];
 		}
-//		_imagePickerController.allowsEditing = YES;
-		//主要是下边的两能数，@"public.movie", @"public.image"  一个是录像，一个是拍照
+		_imagePickerController.allowsEditing = YES;
 	}
 	return  self;
 }
@@ -78,32 +79,28 @@
 	
 }
 #pragma -mark UIImagePickerControllerDelegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-	self.photoInfoDic = info;
-	
-	NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
-	if ([mediaType isEqualToString:@"public.image"])
-	{
-		UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-		if(image){
-			NSLog(@"found an image");
-			RNEditPhotoViewController *editViewController = [[RNEditPhotoViewController alloc]init];
-			self.editPhotoController = editViewController;
-			TT_RELEASE_SAFELY(editViewController);
-			
-		    [_editPhotoController loadImageToEdit:image];//初始化编辑界面
-			_editPhotoController.delegate = self; //设置代理
-			[picker pushViewController:self.editPhotoController animated:YES];
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *)editingInfo {
 
-		}
+	//		UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+	if(image){
+		
+		NSLog(@"found an image height = %f width = %f",image.size.height,image.size.width);
+		image = [image scaleToSize:CGSizeMake(IMAGE_WIDTH, IMAGE_HEIGHT)];
+		NSLog(@"scaletosize image height = %f width = %f",image.size.height,image.size.width);
+
+		RNEditPhotoViewController *editViewController = [[RNEditPhotoViewController alloc]init];
+		self.editPhotoController = editViewController;
+		TT_RELEASE_SAFELY(editViewController);
+		
+		[_editPhotoController loadImageToEdit:image];//初始化编辑界面
+		_editPhotoController.delegate = self; //设置代理
+		[picker pushViewController:self.editPhotoController animated:YES];
 		
 	}
 }
 
-
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
 	[picker dismissModalViewControllerAnimated:YES];
-
 }	
 
 #pragma -mark RNEditPhotoFinishDelegate
@@ -116,10 +113,8 @@
 	[self.photoInfoDic setValuesForKeysWithDictionary:photoInfoDic];
 	//回调传回数据
 	[self.delegate pickPhotoFinished:self.imageToReturn photoInfoDic:self.photoInfoDic];
-	
-    
-	[self.imagePickerController dismissModalViewControllerAnimated:YES];
 
+	[self.imagePickerController dismissModalViewControllerAnimated:YES];
 }
 
 

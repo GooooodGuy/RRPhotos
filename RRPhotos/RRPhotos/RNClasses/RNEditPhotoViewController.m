@@ -17,6 +17,19 @@
 #define kSlibBarPointMinX 235   //图片切换小点的左右极限坐标
 #define kSlibBarPointMaxX 289
 
+//滤镜相关
+#define LANDSCAPE_HEIGHT    400
+#define LANDSCAPE_WIDTH     320
+#define BUTTOM_HEIGHT       100
+#define BUTTOM_WIDTH        72
+#define ICON_SIZE           68
+#define ICON_MARGIN         0
+#define ICON_PADDING        2
+
+#define LABEL_VIEW_TAG      10000
+#define BORDER_VIEW_TAG     20000
+#define ICON_VIEW_TAG       30000
+
 #pragma mark 私有方法
 /**
  *	私有方法
@@ -28,7 +41,7 @@
 //网络请求错误
 - (void)requestDidError:(RCError *)error;
 //载入图片
--(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size  isToLoadHDImage:(BOOL) isToLoadHDImage ;
+-(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size  ;
 //展示相册列表
 - (void)showAlbumTable;
 //隐藏相册列表
@@ -43,9 +56,11 @@
 
 
 @implementation RNEditPhotoViewController
-
+@synthesize filters = _filters;
+@synthesize filterTableView = _filterTableView;
 @synthesize currentImageView = _currentImageView;
 @synthesize cutPhotoBgView = _cutPhotoBgView;
+@synthesize filterImage = _filterImage;
 @synthesize highQualityImage = _highQualityImage;
 @synthesize normalQualityImage = _normalQualityImage;
 @synthesize qualityLengthLabel = _qualityLengthLabel;
@@ -70,7 +85,8 @@
 #pragma mark -方法
 
 - (void)dealloc{
-
+	self.filters = nil;
+	self.filterTableView = nil;
 	self.currentImageView  = nil;
 	self.cutPhotoBgView = nil;
 	self.highQualityImage = nil;
@@ -169,7 +185,7 @@
 	
 	//载入普通图片
 //	UIImage* lowimg = [editImage scaleWithMaxSize:516];
-	UIImage* lowimg = [self scaleAndRotateImage:editImage size:516];
+	UIImage* lowimg = [self scaleAndRotateImage:editImage size:640];
 	NSData* data = UIImageJPEGRepresentation(lowimg, 1.0f);
 	
 	_normalQualityLength = [data length];
@@ -211,56 +227,7 @@
 
 	self.currentImageView.frame = viewFrame;
 	[self.view addSubview:self.currentImageView];
-	if (_uploadType == PhotoUploadTypeHead) {
-		UIImage *cutPhotoBgImage = [[RCResManager getInstance]imageForKey:@"cutPhotoFrame"];
-		UIImageView *cutPhotoBgView = [[UIImageView alloc]initWithImage:[cutPhotoBgImage 
-																		 stretchableImageWithLeftCapWidth:1 
-																			topCapHeight:1]];
-		
-		CGRect imgframe;
-		if(newImageWidth < newImageHeigth){
-			imgframe = CGRectMake(160 - newImageWidth/2, 230-newImageWidth/2 + 10, newImageWidth, newImageWidth);
-		} else {
-			imgframe = CGRectMake(160 - newImageHeigth/2, 230-newImageHeigth/2 + 10, newImageHeigth, newImageHeigth);
-		}
-		cutPhotoBgView.frame = imgframe;
-		[self.view addSubview:cutPhotoBgView];
-		self.cutPhotoBgView = cutPhotoBgView;
-		TT_RELEASE_SAFELY(cutPhotoBgView);
-		
-		//灰色边界
-		UIView* outofCutv1 = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, imgframe.origin.y + 20)];
-        outofCutv1.backgroundColor = [UIColor blackColor];
-        outofCutv1.alpha = 0.4;
-        [self.view addSubview:outofCutv1];
-        [outofCutv1 release];
-        
-        UIView* outofCutv2 = [[UIView alloc] initWithFrame:CGRectMake(0, imgframe.origin.y, imgframe.origin.x, 
-																	  imgframe.size.height)];
-        outofCutv2.backgroundColor = [UIColor blackColor];
-        outofCutv2.alpha = 0.4;
-        [self.view addSubview:outofCutv2];
-        [outofCutv2 release];
-        
-        UIView* outofCutv3 = [[UIView alloc] initWithFrame: CGRectMake(imgframe.origin.x+imgframe.size.width,
-                                                                       imgframe.origin.y, 
-                                                                       320-imgframe.origin.x-imgframe.size.width,
-                                                                       imgframe.size.height)];
-        outofCutv3.backgroundColor = [UIColor blackColor];
-        outofCutv3.alpha = 0.4;
-        [self.view addSubview:outofCutv3];
-        [outofCutv3 release];
-        
-        UIView* outofCutv4 = [[UIView alloc] initWithFrame:CGRectMake(0,
-                                                                      imgframe.origin.y+imgframe.size.height, 
-                                                                      320, 
-                                                                      460-imgframe.origin.y-imgframe.size.height)];
-        outofCutv4.backgroundColor = [UIColor blackColor];
-        outofCutv4.alpha = 0.4;
-        [self.view addSubview:outofCutv4];
-        [outofCutv4 release];
-	}
-
+	
 	if (self.currentImageView != nil) {
 		[self.currentImageView removeGestureRecognizer:_pinchGesture];
 		[self.currentImageView removeGestureRecognizer:_doubleTapGesture];
@@ -271,15 +238,20 @@
 	[self.view addSubview:self.topNavView]; 
 	[self.view addSubview:self.albumNameTableView];
 	[self.view addSubview:self.albumSelectBarView];
-	[self.view addSubview: self.toolBarView];
+	[self.view addSubview:self.toolBarView];
+	[self.view addSubview:self.filterTableView];
 	
 	self.currentImageView.frame = viewFrame;
-	if (isHDPhoto) {
-		self.currentImageView.image = self.highQualityImage;//加载高清图片
-	}else{
-		self.currentImageView.image = self.normalQualityImage;//加载普通图片
+	if (self.filterImage) {
+		self.currentImageView.image = self.filterImage;//加载滤镜图片
+	}else {
+		if (isHDPhoto) {
+			self.currentImageView.image = self.highQualityImage;//加载高清图片
+		}else{
+			self.currentImageView.image = self.normalQualityImage;//加载普通图片
+		}
 	}
-
+	
 	//加入当前照片的手势
 	self.currentImageView.userInteractionEnabled = YES;    //允许用户交互
 	[self.currentImageView addGestureRecognizer:_pinchGesture];//添加图片点击手势，做全屏浏览处理
@@ -303,10 +275,8 @@
 	
 	//传回照片数据
 	NSMutableDictionary *photoInfoDic = [NSMutableDictionary dictionaryWithCapacity:5];
-		
-
+	
 	if (self.albumID) {
-
 		[photoInfoDic setObject:self.albumID forKey:@"id"]; //传回选中的相册ID
 	}
 	
@@ -596,37 +566,6 @@
 	[UIView commitAnimations];
 }
 
-
-#pragma mark - view lifecycle
-
-- (void)loadView{
-	
-	[super loadView];
-	self.view.backgroundColor = [UIColor blackColor];
-	//缩放手势
-	_pinchGesture = [[UIPinchGestureRecognizer alloc]   
-                        initWithTarget:self action:@selector(scaleChange:)];  
-    [_pinchGesture setDelegate:self];  
-	
-	//双击手势
-    _doubleTapGesture = [[UITapGestureRecognizer alloc]
-                         initWithTarget:self action:@selector(doubletapCurrentImage)];
-    _doubleTapGesture.numberOfTapsRequired = 2;
-    [_doubleTapGesture setDelegate:self];
-	
-	//单击手势
-    _singleTapGesture = [[UITapGestureRecognizer alloc]
-                         initWithTarget:self action:@selector(tapCurrentImage)];
-    _singleTapGesture.numberOfTapsRequired = 1;
-    [_singleTapGesture setDelegate:self];
-
-	//选用高清图片
-	//调用一次,切换成普通图片，同时隐藏图片大小标签
-	isHDPhoto = NO;
-	[self setSlibBarApearance];
-//	[self onClickSwitchButton];
-}
-
 - (UIButton *)photoTurnLeftButton{
 	if (!_photoTurnLeftButton) {
 		//旋转照片按钮
@@ -754,7 +693,6 @@
 //
 // 底部工具栏
 //
-
 - (UIImageView *)toolBarView{
 	if (!_toolBarView) {
 		//工具栏
@@ -836,7 +774,8 @@
 		if (self.albumID == nil && _uploadType != PhotoUploadTypeHead) {//如果已指定相册或者上传头像 不需要选择相册
 			_albumSelectBarView.userInteractionEnabled = YES;//允许使用手势点击
 			UITapGestureRecognizer *albumNameTapGesture = [[UITapGestureRecognizer alloc]
-														   initWithTarget:self  action:@selector(tapAlbumSelectBar)];
+														   initWithTarget:self  
+														   action:@selector(tapAlbumSelectBar)];
 			[albumNameTapGesture setNumberOfTapsRequired:1];
 			[_albumSelectBarView addGestureRecognizer:(albumNameTapGesture)];//添加图片点击手势，做全屏浏览处理
 			[albumNameTapGesture release];
@@ -857,6 +796,9 @@
 	return _albumSelectBarView;
 }
 
+/**
+ *	相册名称下拉列表
+ */
 - (UITableView *)albumNameTableView{
 	if (!_albumNameTableView) {
 		//相册列表 
@@ -873,10 +815,159 @@
 	return _albumNameTableView;
 }
 
-- (void)viewDidLoad
+/**
+ *	滤镜数据
+ */
+//- (Filters *)filters{
+//	
+//	if (!_filters) {
+//		_filters = [[Filters alloc] init];
+//	}
+//	return _filters;
+//}
+/**
+ * 图片滤镜效果选择列表
+ */
+- (EasyTableView *)filterTableView {
+	if (!_filterTableView) {
+		// add filterList
+		
+		_filters = [[Filters alloc] init];
+
+		CGRect frameRect = CGRectMake(0,
+									  LANDSCAPE_HEIGHT - BUTTOM_HEIGHT,
+									  LANDSCAPE_WIDTH, 
+									  BUTTOM_HEIGHT);
+		_filterTableView = [[EasyTableView alloc] initWithFrame:frameRect 
+													numberOfColumns:[_filters count]
+															ofWidth:BUTTOM_WIDTH];
+		_filterTableView.delegate = self;
+		_filterTableView.tableView.allowsSelection = YES;
+		_filterTableView.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+		_filterTableView.tableView.backgroundColor = [UIColor clearColor];
+		
+	}
+	
+	return _filterTableView;
+}
+
+#pragma mark  EasyTableViewDelegate
+- (UIView *) easyTableView:(EasyTableView *)easyTableView viewForRect:(CGRect)rect  {
+    // view
+	CGRect viewRect		= CGRectMake(0, 0, rect.size.width, rect.size.height);
+    UIView * view = [[UIView alloc] initWithFrame:viewRect];
+    
+    // icon
+	CGRect imageRect = CGRectMake((rect.size.width - ICON_SIZE) / 2, ICON_PADDING, ICON_SIZE, ICON_SIZE);
+    UIImageView * imageView = [[UIImageView alloc] initWithFrame:imageRect];
+    imageView.tag = ICON_VIEW_TAG;
+    [view addSubview:imageView];
+    
+    // label
+    CGRect labelRect = CGRectMake(0, ICON_SIZE, viewRect.size.width, 10);
+    UILabel * labelView = [[UILabel alloc] initWithFrame:labelRect];
+    labelView.textAlignment = UITextAlignmentCenter;
+    labelView.textColor = [UIColor whiteColor];
+    labelView.font = [UIFont boldSystemFontOfSize:10];
+    labelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+    labelView.tag = LABEL_VIEW_TAG;
+    [view addSubview:labelView];
+	
+    // border
+    UIImageView *borderView		= [[UIImageView alloc] initWithFrame:imageRect];
+	borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	borderView.tag				= BORDER_VIEW_TAG;
+    [view addSubview:borderView];
+    
+    return view;
+}
+
+- (void)borderIsSelected:(BOOL)selected forView:(UIView *)view {
+	UIImageView * borderView	= (UIImageView *)[view viewWithTag:BORDER_VIEW_TAG];
+	NSString * borderImageName	= (selected) ? @"filterChooserItemSelected.png" : @"filterChooserItemUnselected.png";
+	borderView.image			= [UIImage imageNamed:borderImageName];
+}
+
+- (void)easyTableView:(EasyTableView *)easyTableView setDataForView:(UIView *)view forIndexPath:(NSIndexPath *)indexPath {
+    // label
+    UILabel * label = (UILabel *)[view viewWithTag:LABEL_VIEW_TAG];
+    label.text = [_filters nameForIndex:indexPath.row];
+    
+    // icon
+    UIImageView * imageView = (UIImageView *)[view viewWithTag:ICON_VIEW_TAG];
+    imageView.image = [UIImage imageNamed:[_filters iconForIndex:indexPath.row]];
+    
+    // selectedIndexPath can be nil so we need to test for that condition
+	BOOL isSelected = (easyTableView.selectedIndexPath) ? 
+		([easyTableView.selectedIndexPath compare:indexPath] == NSOrderedSame) : NO;
+	[self borderIsSelected:isSelected forView:view];
+}
+
+- (void) easyTableView:(EasyTableView *)easyTableView 
+		  selectedView:(UIView *)selectedView
+		   atIndexPath:(NSIndexPath *)indexPath
+		deselectedView:(UIView *)deselectedView  
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // set border
+    [self borderIsSelected:YES forView:selectedView];
+    if (deselectedView) {
+        [self borderIsSelected:NO forView:deselectedView];
+    }
+	
+    // apply filter
+    SEL selector = NSSelectorFromString([_filters methodForIndex:indexPath.row]);
+    if ([self.highQualityImage respondsToSelector:selector] ) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+		if (isHDPhoto) {
+			self.filterImage = [self.highQualityImage performSelector: selector];
+		}else {
+			self.filterImage = [self.normalQualityImage performSelector:selector];
+		}
+#pragma clang diagnostic pop
+    }
+}
+
+- (void)setFilterImage:(UIImage *)filterImage{
+	TT_RELEASE_SAFELY(_filterImage);
+	_filterImage = [filterImage retain];
+	[self displayCurrentView]; //刷新显示
+}
+
+#pragma mark - view lifecycle
+
+- (void)loadView{
+	[super loadView];
+	
+}
+
+- (void)viewDidLoad{
+	
+	[super viewDidLoad];
+	
+	self.view.backgroundColor = [UIColor blackColor];
+	//缩放手势
+	_pinchGesture = [[UIPinchGestureRecognizer alloc]   
+					 initWithTarget:self action:@selector(scaleChange:)];  
+    [_pinchGesture setDelegate:self];  
+	
+	//双击手势
+    _doubleTapGesture = [[UITapGestureRecognizer alloc]
+                         initWithTarget:self action:@selector(doubletapCurrentImage)];
+    _doubleTapGesture.numberOfTapsRequired = 2;
+    [_doubleTapGesture setDelegate:self];
+	
+	//单击手势
+    _singleTapGesture = [[UITapGestureRecognizer alloc]
+                         initWithTarget:self action:@selector(tapCurrentImage)];
+    _singleTapGesture.numberOfTapsRequired = 1;
+    [_singleTapGesture setDelegate:self];
+	
+	//选用高清图片
+	//调用一次,切换成普通图片，同时隐藏图片大小标签
+	isHDPhoto = NO;
+	[self setSlibBarApearance];
+	
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -912,6 +1003,8 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+	self.filters = nil;
+	self.filterTableView = nil;
 	self.currentImageView  = nil;
 	self.cutPhotoBgView = nil;
 	self.highQualityImage = nil;
@@ -935,12 +1028,11 @@
 	self.albumIDArray = nil;
 	self.delegate = nil;
 	self.requestAssistant = nil;
-
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return NO;
 }
 /*
 	调整照片至中心位置

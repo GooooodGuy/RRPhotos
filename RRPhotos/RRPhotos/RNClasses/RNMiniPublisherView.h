@@ -40,6 +40,7 @@ typedef enum {
 	mini代理
  */
 @protocol RNMiniPublisherDelegate <RNPublishRequestProto>
+
 @optional
 /*
 	下拉动画事件完成回调

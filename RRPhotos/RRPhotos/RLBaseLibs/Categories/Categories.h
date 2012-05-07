@@ -30,6 +30,8 @@
 #import "UIImage+Alpha.h"
 #import "UIImage+Resize.h"
 #import "UIImage+RoundedCorner.h"
+#import "UIImage+Filter.h" 
+#import "UIImage+Cngram.h"
 #import "NSArray+RNAdditions.h"
 
 #import "NSData+TTCategory.h"
