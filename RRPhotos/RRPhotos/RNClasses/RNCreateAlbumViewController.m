@@ -24,7 +24,18 @@
 
 #define kToolBarHeight 40 //pick工具栏
 
+@interface  RNCreateAlbumViewController()
+
+- (void)requestDidSucceed:(NSDictionary *)result;
+- (void)requestDidError:(RCError *)error;
+- (void)showPickTypeView;
+- (void)moveMainBackViewUp;
+- (void)hiddenPickTypeView;
+- (void)moveMainBackViewDown;
+@end
+
 @implementation RNCreateAlbumViewController
+
 @synthesize topNavView = _topNavView;
 @synthesize mainBackView = _mainBackView;
 @synthesize cancelButton = _cancelButton;
