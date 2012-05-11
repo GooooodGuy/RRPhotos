@@ -30,6 +30,10 @@ typedef enum{
  */
 - (void)editPhotoFinished:(UIImage *) imageEdited photoInfoDic: (NSDictionary * )photoInfoDic;
 
+/**
+ * 照片编辑取消
+ */
+- (void)editPhotoCancel;
 
 @end
 

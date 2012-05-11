@@ -5,14 +5,19 @@
 //  Created by yi chen on 12-3-29.
 //  Copyright (c) 2012年 RenRen.com. All rights reserved.
 //
+#import <QuartzCore/QuartzCore.h>
 #import "RNEditPhotoViewController.h"
 #import "AppDelegate.h"
 #import "RCBaseRequest.h"
 #import "RCMainUser.h"
 #import "RCResManager.h"
+#import "RCPublishPost.h"
 #define ALBUM_TABLE_CELL_HEIGHT 20 //相册选择列表的单元高度
 #define ALBUM_TABLE_HEIGHT 300 //相册选择列表的高度
-#define MAX_IMAGE_DISPLAY_WIDTH 320 //最大的照片显示宽度
+#define MAX_IMAGE_DISPLAY_WIDTH 320 //最大的照片显示区域宽度
+
+#define kImageAdjustMaxWidth 640   //
+#define kImageAdjustMaxHeight 640  //照片截取的最大宽度和高度
 
 #define kSlibBarPointMinX 235   //图片切换小点的左右极限坐标
 #define kSlibBarPointMaxX 289
@@ -52,6 +57,9 @@
 - (void)ajustImageViewCenter;
 //显示照片
 - (void)displayCurrentView;
+//获取截取区域的照片内容
+- (UIImage *)imageInAdjustArea;
+
 @end
 
 
@@ -180,12 +188,21 @@
 	NSLog(@"cy -------- 原始图片的高：%f 宽：%f",editImage.size.height, editImage.size.width);
 	//载入高清图片
 //	self.highQualityImage = [editImage scaleWithMaxSize:1024];
-	self.highQualityImage = [self scaleAndRotateImage:editImage size:1024];
+//	self.highQualityImage = [self scaleAndRotateImage:editImage size:1024];
+//	self.highQualityImage = [editImage scaleToSize:CGSizeMake(640, 640)];
+	self.highQualityImage = [editImage resizedImage:CGSizeMake(640, 640) interpolationQuality:kCGInterpolationMedium];
+
+//	CGFloat originHeight = editImage.size.height;
+//	CGFloat originWidth = editImage.size.width;
+	
+	
 	_highQualityLength = [UIImageJPEGRepresentation(_highQualityImage, 1.0f) length];
 	
 	//载入普通图片
 //	UIImage* lowimg = [editImage scaleWithMaxSize:516];
-	UIImage* lowimg = [self scaleAndRotateImage:editImage size:640];
+//	UIImage* lowimg = [self scaleAndRotateImage:editImage size:640];
+//	lowimg = [editImage scaleToSize:CGSizeMake(640, 640)];
+	UIImage	*lowimg = [editImage resizedImage:CGSizeMake(640, 640) interpolationQuality:kCGInterpolationMedium];
 	NSData* data = UIImageJPEGRepresentation(lowimg, 1.0f);
 	
 	_normalQualityLength = [data length];
@@ -227,7 +244,54 @@
 
 	self.currentImageView.frame = viewFrame;
 	[self.view addSubview:self.currentImageView];
+	UIImage *cutPhotoBgImage = [[RCResManager getInstance]imageForKey:@"cutPhotoFrame"];
+	UIImageView *cutPhotoBgView = [[UIImageView alloc]initWithImage:[cutPhotoBgImage 
+																	 stretchableImageWithLeftCapWidth:1 
+																	 topCapHeight:1]];
 	
+	CGRect imgframe;
+	if(newImageWidth < newImageHeigth){
+		imgframe = CGRectMake(160 - newImageWidth/2, 230-newImageWidth/2 , newImageWidth, newImageWidth);
+	} else {
+		imgframe = CGRectMake(160 - newImageHeigth/2, 230-newImageHeigth/2 , newImageHeigth, newImageHeigth);
+	}
+	cutPhotoBgView.frame = imgframe;
+	[self.view addSubview:cutPhotoBgView];
+	self.cutPhotoBgView = cutPhotoBgView;
+	TT_RELEASE_SAFELY(cutPhotoBgView);
+	
+	//灰色边界
+	UIView* outofCutv1 = [[UIView alloc] initWithFrame:CGRectMake(0, -20, 320, imgframe.origin.y + 20)];
+	outofCutv1.backgroundColor = [UIColor blackColor];
+	outofCutv1.alpha = 0.4;
+	[self.view addSubview:outofCutv1];
+	[outofCutv1 release];
+	
+	UIView* outofCutv2 = [[UIView alloc] initWithFrame:CGRectMake(0, imgframe.origin.y, imgframe.origin.x, 
+																  imgframe.size.height)];
+	outofCutv2.backgroundColor = [UIColor blackColor];
+	outofCutv2.alpha = 0.4;
+	[self.view addSubview:outofCutv2];
+	[outofCutv2 release];
+	
+	UIView* outofCutv3 = [[UIView alloc] initWithFrame: CGRectMake(imgframe.origin.x+imgframe.size.width,
+																   imgframe.origin.y, 
+																   320-imgframe.origin.x-imgframe.size.width,
+																   imgframe.size.height)];
+	outofCutv3.backgroundColor = [UIColor blackColor];
+	outofCutv3.alpha = 0.4;
+	[self.view addSubview:outofCutv3];
+	[outofCutv3 release];
+	
+	UIView* outofCutv4 = [[UIView alloc] initWithFrame:CGRectMake(0,
+																  imgframe.origin.y+imgframe.size.height, 
+																  320, 
+																  460-imgframe.origin.y-imgframe.size.height)];
+	outofCutv4.backgroundColor = [UIColor blackColor];
+	outofCutv4.alpha = 0.4;
+	[self.view addSubview:outofCutv4];
+	[outofCutv4 release];
+
 	if (self.currentImageView != nil) {
 		[self.currentImageView removeGestureRecognizer:_pinchGesture];
 		[self.currentImageView removeGestureRecognizer:_doubleTapGesture];
@@ -242,13 +306,12 @@
 	[self.view addSubview:self.filterTableView];
 	
 	self.currentImageView.frame = viewFrame;
-	if (self.filterImage) {
-		self.currentImageView.image = self.filterImage;//加载滤镜图片
-	}else {
-		if (isHDPhoto) {
-			self.currentImageView.image = self.highQualityImage;//加载高清图片
-		}else{
-			self.currentImageView.image = self.normalQualityImage;//加载普通图片
+	if (!self.filterImage ) {
+		self.filterImage = self.highQualityImage;
+	}
+	if (self.currentImageView.image != self.filterImage) {
+		if (self.filterImage) {
+			self.currentImageView.image = self.filterImage;//加载滤镜图片
 		}
 	}
 	
@@ -261,24 +324,21 @@
 #pragma mark - 点击事件
 - (void)onClickConcelButton{
 	//点击取消按钮
-	if (self.navigationController) { //如果页面是push出来的
-		[self.navigationController popViewControllerAnimated:YES];
-	}else { //如果是present出来的
-		[self dismissModalViewControllerAnimated:YES];
+//	if (self.navigationController) { //如果页面是push出来的
+//		[self.navigationController popViewControllerAnimated:YES];
+//	}else { //如果是present出来的
+//		[self dismissModalViewControllerAnimated:YES];
+//	}
+	
+	if ([self.delegate respondsToSelector:@selector(editPhotoCancel)]) {
+		[self.delegate editPhotoCancel];
 	}
 }
 
 /*
- * 确认按钮点击，回调传回数据，包括照片数据，选中的相册ID
+ *	获取截取区域内的照片内容
  */
-- (void)onClickConfirmButton{
-	
-	//传回照片数据
-	NSMutableDictionary *photoInfoDic = [NSMutableDictionary dictionaryWithCapacity:5];
-	
-	if (self.albumID) {
-		[photoInfoDic setObject:self.albumID forKey:@"id"]; //传回选中的相册ID
-	}
+- (UIImage *)imageInAdjustArea{
 	
 	CGFloat cx;
     CGFloat cy;
@@ -309,37 +369,66 @@
     NSLog(@"cy ---------- cropRect: %f %f %f %f", cx,cy,cw,cw);
     NSLog(@"--- currentImageView.image.size: %@", NSStringFromCGSize(self.currentImageView.image.size));
 	
-	if ( _uploadType == PhotoUploadTypeHead) {
-		UIImage *result;
-		CGImageRef imageRef;
+	//	if ( _uploadType == PhotoUploadTypeHead) {
+	UIImage *result;
+	CGImageRef imageRef;
+	
+//	if(isHDPhoto){
+//		imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
+//		result = [UIImage imageWithCGImage:imageRef];	
+//	} else {
+//		imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
+//		result = [UIImage imageWithCGImage:imageRef];
+//	}
+	imageRef = CGImageCreateWithImageInRect([self.highQualityImage CGImage], cropRect);
+	result = [UIImage imageWithCGImage:imageRef];
+	CGImageRelease(imageRef);
+	NSLog(@"--- new.photo.size: %@", NSStringFromCGSize(result.size));
+	
+	result = [result resizedImage:CGSizeMake(640, 640)
+		interpolationQuality:kCGInterpolationMedium];
+	NSLog(@"--- new.photo.size: %@", NSStringFromCGSize(result.size));
+	return result;
+}
 
-		if(isHDPhoto){
-			imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
-			result = [UIImage imageWithCGImage:imageRef];	
-		} else {
-			imageRef = CGImageCreateWithImageInRect([[self.currentImageView image] CGImage], cropRect);
-			result = [UIImage imageWithCGImage:imageRef];
-		}
-		CGImageRelease(imageRef);
-		NSLog(@"--- new.photo.size: %@", NSStringFromCGSize(result.size));
 
-		//传回头像数据
-		if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
-			[self.delegate editPhotoFinished:result photoInfoDic:photoInfoDic];
-		}
-		
-	}else{
-		if (isHDPhoto) { //传回原始高清图片
-			if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
-				[self.delegate editPhotoFinished:self.highQualityImage photoInfoDic:photoInfoDic];
-			}
-		}else {
-			if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
-				[self.delegate editPhotoFinished:self.normalQualityImage photoInfoDic:photoInfoDic];
-			}
-		}
-
+/*
+ * 确认按钮点击，回调传回数据，包括照片数据，选中的相册ID
+ */
+- (void)onClickConfirmButton{
+	
+	//传回照片数据
+	NSMutableDictionary *photoInfoDic = [NSMutableDictionary dictionaryWithCapacity:5];
+	
+	if (self.albumID) {
+		[photoInfoDic setObject:self.albumID forKey:@"id"]; //传回选中的相册ID
 	}
+
+	//传回头像数据
+	if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
+		[self.delegate editPhotoFinished:self.filterImage photoInfoDic:photoInfoDic];
+	}
+	
+	RCPublishPost *publishPost = [[RCPublishPost alloc]init ];
+	NSMutableDictionary *dics = [NSMutableDictionary dictionaryWithCapacity:5];
+	[dics setObject:@"test" forKey:@"caption" ];
+	[publishPost publishPostWith:self.filterImage paramDic:dics withMethod:@"photos/uploadbin"];
+	TT_RELEASE_SAFELY(publishPost);
+	
+		
+//	}else{
+//		if (self.filterImage) {
+//			if(self.delegate && [self.delegate respondsToSelector:@selector(editPhotoFinished:photoInfoDic:)]) {
+//				[self.delegate editPhotoFinished:self.filterImage photoInfoDic:photoInfoDic];
+//			}
+//		}
+//		
+//		RCPublishPost *publishPost = [[RCPublishPost alloc]init ];
+//		NSMutableDictionary *dics = [NSMutableDictionary dictionaryWithCapacity:5];
+//		[dics setObject:@"test" forKey:@"caption" ];
+//		[publishPost publishPostWith:self.filterImage paramDic:dics withMethod:@"photos/uploadbin"];
+//		TT_RELEASE_SAFELY(publishPost);
+//	}
 	
 	if (self.navigationController) { //如果页面是push出来的
 
@@ -915,23 +1004,39 @@
     }
 	
     // apply filter
-    SEL selector = NSSelectorFromString([_filters methodForIndex:indexPath.row]);
-    if ([self.highQualityImage respondsToSelector:selector] ) {
+	if (0 == indexPath.row) { //原照片
+		self.filterImage = self.highQualityImage;
+	}else{
+		SEL selector = NSSelectorFromString([_filters methodForIndex:indexPath.row]);
+		if ([self.highQualityImage respondsToSelector:selector] ) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-		if (isHDPhoto) {
-			self.filterImage = [self.highQualityImage performSelector: selector];
-		}else {
-			self.filterImage = [self.normalQualityImage performSelector:selector];
-		}
+			UIImage *cutImage = [self imageInAdjustArea];
+			
+			if (isHDPhoto) {
+				self.filterImage = [cutImage performSelector: selector];
+			}else {
+				self.filterImage = [cutImage performSelector:selector];
+			}
 #pragma clang diagnostic pop
-    }
+		}
+
+	}
 }
 
 - (void)setFilterImage:(UIImage *)filterImage{
 	TT_RELEASE_SAFELY(_filterImage);
 	_filterImage = [filterImage retain];
-	[self displayCurrentView]; //刷新显示
+	
+	[UIView beginAnimations:nil context:nil];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.5];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.currentImageView cache:YES];
+	self.currentImageView.image = _filterImage;
+    [UIView setAnimationDelegate:self];
+    // 动画完毕后调用某个方法
+//	[UIView setAnimationDidStopSelector:@selector(displayCurrentView)];
+    [UIView commitAnimations];
 }
 
 #pragma mark - view lifecycle
@@ -975,7 +1080,7 @@
 	[self.navigationController setNavigationBarHidden:YES animated:animated];
 	
 	[[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-	[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+	[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
 
 	[self displayCurrentView];//显示图片
 	
@@ -1050,6 +1155,11 @@
 }
 #pragma mark - 缩放图片手势
 - (void) scaleChange:(UIPinchGestureRecognizer*)gestureRecognizer{
+	return; //不支持缩放
+	if (self.filterImage != self.highQualityImage) { //如果不是原图，不允许缩放
+		return;
+	}
+	
 	if([gestureRecognizer state] == UIGestureRecognizerStateEnded) {  
         _lastDisplayScale = 1.0;  
         if(_currentImageView.width < _lastDisplayFrame.size.width){
@@ -1286,7 +1396,7 @@
 	//显示的最小矩形框高度和宽度
 	CGFloat minSize = MIN(_lastDisplayFrame.size.height, _lastDisplayFrame.size.width);
 	
-	CGRect cutFrame = CGRectMake(160 -  minSize / 2, 230 - minSize / 2 + 10, minSize, minSize);
+	CGRect cutFrame = CGRectMake(160 -  minSize / 2, 230 - minSize / 2 , minSize, minSize);
 	CGFloat cutLeft = cutFrame.origin.x ;
 	CGFloat cutRight = cutFrame.origin.x + cutFrame.size.width;
 	CGFloat cutTop = cutFrame.origin.y;
@@ -1320,116 +1430,6 @@
 		[self.currentImageView setCenter:[self adjustPhotoLocation]];//限制调整范围
 
 	}];
-} 
-
-#pragma mark - 照片编辑
--(id)scaleAndRotateImage:(UIImage*) image size:(NSInteger)size   
-{   
-    int kMaxResolution = size; // Or whatever   
-	
-    CGImageRef imgRef = image.CGImage;   
-	
-    CGFloat width = CGImageGetWidth(imgRef);   
-    CGFloat height = CGImageGetHeight(imgRef);   
-	
-    CGAffineTransform transform = CGAffineTransformIdentity;   
-    CGRect bounds = CGRectMake(0, 0, width, height);   
-    if (width > kMaxResolution || height > kMaxResolution) {   
-        CGFloat ratio = width/height;   
-        if (ratio > 1) {   
-            bounds.size.width = kMaxResolution;   
-            bounds.size.height = bounds.size.width / ratio;   
-        }   
-        else {   
-            bounds.size.height = kMaxResolution;   
-            bounds.size.width = bounds.size.height * ratio;   
-        }   
-    }   
-	
-    CGFloat scaleRatio = bounds.size.width / width;   
-    CGSize imageSize = CGSizeMake(CGImageGetWidth(imgRef), CGImageGetHeight(imgRef));   
-    CGFloat boundHeight;   
-    UIImageOrientation orient = image.imageOrientation;   
-    switch(orient) {   
-			
-        case UIImageOrientationUp: //EXIF = 1   
-            transform = CGAffineTransformIdentity;   
-            break;   
-			
-        case UIImageOrientationUpMirrored: //EXIF = 2   
-            transform = CGAffineTransformMakeTranslation(imageSize.width, 0.0);   
-            transform = CGAffineTransformScale(transform, -1.0, 1.0);   
-            break;   
-			
-        case UIImageOrientationDown: //EXIF = 3   
-            transform = CGAffineTransformMakeTranslation(imageSize.width, imageSize.height);   
-            transform = CGAffineTransformRotate(transform, M_PI);   
-            break;   
-			
-        case UIImageOrientationDownMirrored: //EXIF = 4   
-            transform = CGAffineTransformMakeTranslation(0.0, imageSize.height);   
-            transform = CGAffineTransformScale(transform, 1.0, -1.0);   
-            break;   
-			
-        case UIImageOrientationLeftMirrored: //EXIF = 5   
-            boundHeight = bounds.size.height;   
-            bounds.size.height = bounds.size.width;   
-            bounds.size.width = boundHeight;   
-            transform = CGAffineTransformMakeTranslation(imageSize.height, imageSize.width);   
-            transform = CGAffineTransformScale(transform, -1.0, 1.0);   
-            transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);   
-            break;   
-			
-        case UIImageOrientationLeft: //EXIF = 6   
-            boundHeight = bounds.size.height;   
-            bounds.size.height = bounds.size.width;   
-            bounds.size.width = boundHeight;   
-            transform = CGAffineTransformMakeTranslation(0.0, imageSize.width);   
-            transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);   
-            break;   
-			
-        case UIImageOrientationRightMirrored: //EXIF = 7   
-            boundHeight = bounds.size.height;   
-            bounds.size.height = bounds.size.width;   
-            bounds.size.width = boundHeight;   
-            transform = CGAffineTransformMakeScale(-1.0, 1.0);   
-            transform = CGAffineTransformRotate(transform, M_PI / 2.0);   
-            break;   
-			
-        case UIImageOrientationRight: //EXIF = 8   
-            boundHeight = bounds.size.height;   
-            bounds.size.height = bounds.size.width;   
-            bounds.size.width = boundHeight;   
-            transform = CGAffineTransformMakeTranslation(imageSize.height, 0.0);   
-            transform = CGAffineTransformRotate(transform, M_PI / 2.0);   
-            break;   
-			
-        default:   
-            [NSException raise:NSInternalInconsistencyException format:@"Invalid image orientation"];   
-			
-    }   
-	
-    UIGraphicsBeginImageContext(bounds.size);   
-	
-    CGContextRef context = UIGraphicsGetCurrentContext();   
-	
-    if (orient == UIImageOrientationRight || orient == UIImageOrientationLeft) {   
-        CGContextScaleCTM(context, -scaleRatio, scaleRatio);   
-        CGContextTranslateCTM(context, -height, 0);   
-    }   
-    else {   
-        CGContextScaleCTM(context, scaleRatio, -scaleRatio);   
-        CGContextTranslateCTM(context, 0, -height);   
-    }   
-	
-    CGContextConcatCTM(context, transform);   
-	
-	CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);   
-
-    UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();   
-    UIGraphicsEndImageContext();   
-	
-    return imageCopy;   
 } 
 
 @end

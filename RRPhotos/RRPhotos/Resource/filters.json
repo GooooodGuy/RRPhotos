@@ -1,6 +1,6 @@
 [
     {
-        "filterName": "Normal",
+        "filterName": "正常",
         "filterAction": "e00",
         "filterType": 0,
 		"previewImage": "filterExampleNormal.png"

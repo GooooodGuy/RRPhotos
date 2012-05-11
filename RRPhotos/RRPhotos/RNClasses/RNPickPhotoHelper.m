@@ -117,5 +117,7 @@
 	[self.imagePickerController dismissModalViewControllerAnimated:YES];
 }
 
-
+- (void)editPhotoCancel{
+	[self.imagePickerController dismissModalViewControllerAnimated:YES];
+}
 @end
