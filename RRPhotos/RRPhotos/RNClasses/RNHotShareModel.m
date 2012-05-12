@@ -31,6 +31,8 @@
 			[self.query setObject:typeString forKey:@"type"];
 			[self.query setObject:[NSNumber numberWithInt:kHotSharePhotoCountMax] forKey:@"page_size"];
 			self.method = @"share/getHots";
+			self.total = 1000;
+			self.pageSize = kHotSharePhotoCountMax; //每次请求的热门分享条数
 		}
 	}
 	return self;
@@ -62,7 +64,7 @@
 		TT_RELEASE_SAFELY(_hotShareItems);
 		_hotShareItems = [[NSMutableArray alloc]initWithArray:items];
 	}
-	
+	[_resultAry addObjectsFromArray:_hotShareItems];
 	
 	[_delegates perform:@selector(modelDidFinishLoad:) withObject:self];
 }

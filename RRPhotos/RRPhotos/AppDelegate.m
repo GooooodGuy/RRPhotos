@@ -52,7 +52,10 @@
 	
 	//登陆界面
 	RNLoginViewController *loginController = [[RNLoginViewController alloc]init];
+	NSLog(@"loginController retain count = %d",[loginController retainCount]);
 	UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:loginController];
+	NSLog(@"2loginController retain count = %d",[loginController retainCount]);
+
 	TT_RELEASE_SAFELY(loginController);
 	self.rootNavController = navController;
 	self.rootNavController.view.backgroundColor = [UIColor grayColor];

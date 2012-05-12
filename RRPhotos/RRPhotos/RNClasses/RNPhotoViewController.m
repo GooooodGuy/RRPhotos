@@ -119,7 +119,7 @@
         _startSource = PhotoStartSourceAlbum;
         self.model = pmodel;
         [self.model.delegates addObject:self];
-
+		NSLog(@"photoViewController self retainCount = %d",[self retainCount]);
     }
     return self;
 }
@@ -317,7 +317,9 @@
 }
 - (void)dealloc{
     RN_DEBUG_LOG;
-    [_arrReusePhotoImageViews release];
+	if (_arrReusePhotoImageViews) {
+		[_arrReusePhotoImageViews release];
+	}
     [_networkEngine release];
     [self.model.delegates removeObject:self];
     self.model = nil;
@@ -474,7 +476,13 @@
         [self scrollAlbumController];
 
 //		[self.navigationController popViewControllerAnimated:YES];
-		[self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
+//		[self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
+		AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
+												   sharedApplication].delegate;
+		[appDelegate.mainViewController dismissModalViewControllerAnimated:YES];
+		
+//		[self dismissModalViewControllerAnimated:YES];
+
     }else if(sender == _navBarMoreBtn){
         RNUIActionSheet *actionSheet = [[RNUIActionSheet alloc] initWithTitle:NSLocalizedString(@"更多操作", @"更多操作")];
         if (_startSource == PhotoStartSourceShare) {
@@ -973,10 +981,16 @@ static NSInteger compareString(id str1, id str2, void *context)
             [self.view addSubview:_miniPublisherView];
             [_miniPublisherView release];
         }
-        
-        CGSize size = [item.caption sizeWithFont:[UIFont systemFontOfSize:16] 
+		CGSize size;
+        if (item.caption) {
+			size = [item.caption sizeWithFont:[UIFont systemFontOfSize:16] 
                                    constrainedToSize:CGSizeMake(_rWidth - 10, 2000) 
                                        lineBreakMode:UILineBreakModeCharacterWrap];
+		}else {
+			
+			size = CGSizeZero;
+		}
+        
         int maxSizeHeight = (int)_rHeight == 320 ? 60 :100;
         size = CGSizeMake(_rWidth - 10, size.height  > maxSizeHeight ? maxSizeHeight :size.height);
         CGFloat lbsViewHeight = item.lbsItem ? 22 : 0;

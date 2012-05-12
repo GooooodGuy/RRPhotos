@@ -369,22 +369,32 @@
                      } 
                      completion:^(BOOL finished) {
                         if (finished) {
-//                             RNPhotoItem *item = [self.photoListModel photoItemForIndex:index];
+
                              _invokeIndex = index;
                              RNPhotoViewController *photoViewController = [[RNPhotoViewController alloc] 
                                                                          initWithPhotoesData:[self photoListModel]
                                                                                         withAlbum:_albumInfo
-                                                                                    withPhotoIndex:index];
+                                                                                    withPhotoIndex:index] ;
+							NSLog(@"photoViewController retain count = %d",[photoViewController retainCount]);
+
                             UINavigationController *navigationController = [[UINavigationController alloc] 
                                                                            initWithRootViewController:photoViewController];
+						
+							NSLog(@"1navigationController retain count = %d",[navigationController retainCount]);
+							NSLog(@"photoViewController retain count = %d",[photoViewController retainCount]);
+
+
                             navigationController.navigationBarHidden = YES;
 
 							AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
                                                                             sharedApplication].delegate;
                             [appDelegate.mainViewController presentModalViewController:navigationController animated:NO];
+							NSLog(@"2navigationController retain count = %d",[navigationController retainCount]);
 
-                            [photoViewController release];
-                            [navigationController release];
+							TT_RELEASE_SAFELY(photoViewController);
+							TT_RELEASE_SAFELY(navigationController);
+
+
                         }
                      }];
    [UIView commitAnimations];

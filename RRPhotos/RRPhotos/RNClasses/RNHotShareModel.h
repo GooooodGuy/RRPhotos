@@ -8,7 +8,7 @@
 
 #import "RNModel.h"
 
-#define kHotSharePhotoCountMax 100 //热门分享取得的照片数目
+#define kHotSharePhotoCountMax 20 //热门分享取得的照片数目
 
 
 /*	-----------------------------------  */

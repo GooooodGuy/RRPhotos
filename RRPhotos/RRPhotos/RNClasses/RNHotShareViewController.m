@@ -13,6 +13,14 @@
 #define kImageHeight 76.25
 #define kImageWidth 76.25 //图片的宽高
 #define kImageSpace 5.0  //图片间隙
+
+@interface RNHotShareViewController() 
+
+//显示照片数据
+- (void)displayHotSharePhoto;
+
+@end
+
 @implementation RNHotShareViewController
 @synthesize hotSharePhotoArray = _hotSharePhotoArray;
 @synthesize contentScrollView = _contentScrollView;
@@ -46,33 +54,46 @@
 
 
 /*
-	开始
+	开始加载
  */
 - (void)modelDidStartLoad:(RNModel *)model {
 
 }
 
+/*
+	网络加载完成
+ */
 - (void)modelDidFinishLoad:(RNModel *)model{
 	
-	if (!_hotSharePhotoArray) {
-		_hotSharePhotoArray = [[NSMutableArray alloc]initWithCapacity:kHotSharePhotoCountMax];
+	NSArray *hotShareItems = ((RNHotShareModel *)model).hotShareItems;
+	if (hotShareItems) {
+		if (_hotSharePhotoArray) {
+			TT_RELEASE_SAFELY(_hotSharePhotoArray);
+		}
+		_hotSharePhotoArray = [[NSMutableArray alloc]initWithArray:hotShareItems];
 	}
 	
+	[self displayHotSharePhoto];
+}	
+
+/*
+	加载照片
+ */
+- (void)displayHotSharePhoto{
+	
 	self.contentScrollView.contentSize = CGSizeMake(PHONE_SCREEN_SIZE.width, 
-													(kHotSharePhotoCountMax / 4) * (kImageSpace + kImageHeight));
+													([_hotSharePhotoArray count] / 4 + 1) * (kImageSpace + kImageHeight));
 	[self.contentScrollView removeAllSubviews];
-	NSArray *hotShareItems = ((RNHotShareModel *)model).hotShareItems;
+	
 	NSInteger photoIndex = 0;
-	for(id item in hotShareItems){
+	for(id item in _hotSharePhotoArray){
 		CGFloat currentY = 0;
 		CGFloat currentX = 0;
-
+		
 		currentY = (kImageHeight + kImageSpace ) * (int) (photoIndex / 4);
 		currentX = (photoIndex % 4) * (kImageSpace + kImageWidth);
 		
 		CGRect r = CGRectMake(currentX, currentY, kImageWidth, kImageHeight);
-//		NSString *String = [NSString stringWithFormat:@"%@",r];
-//		NSLog(@"照片的位置 currentX = %f currentY = %f r = %@",currentX,currentY,String);
 		UIImageView *photoImageView = [[UIImageView alloc]initWithFrame:r];
 		if([item isKindOfClass:NSDictionary.class] ){
 			NSURL *url = [NSURL URLWithString:[(NSDictionary *)item objectForKey:@"photo"]];
@@ -83,6 +104,7 @@
 		photoIndex ++;
 	}
 }
+
 #pragma mark - view lifecycle
 - (void)loadView{
 	
@@ -112,8 +134,8 @@
 																		  0,
 																		  PHONE_SCREEN_SIZE.width, 
 																		  PHONE_SCREEN_SIZE.height)];
-		_contentScrollView.backgroundColor = [UIColor redColor];
-		
+//		_contentScrollView.backgroundColor = [UIColor redColor];
+		_contentScrollView.backgroundColor = RGBCOLOR(222, 222, 222);
 	}
 	
 	return  _contentScrollView;
