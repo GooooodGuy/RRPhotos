@@ -32,12 +32,19 @@
 	RRRefreshTableHeaderView *_rrRefreshTableHeaderView;
 	//正在更新列表数据标志
 	BOOL _bIsLoading;
+	
+	//用户id
+	NSNumber *_userId;
 }
+@property(nonatomic,assign)UIViewController *parentController;
 @property(nonatomic,retain)UITableView *newsFeedTableView;
 @property(nonatomic,retain)RRRefreshTableHeaderView *rrRefreshTableHeaderView;
+@property(nonatomic,copy)NSNumber *userId;
 
-@property(nonatomic,assign)UIViewController *parentController;
-
+/*
+	@userId:用户的id
+ */
+- (id)initWithUserId:(NSNumber *)userId;
 /*
 	刷新数据
  */

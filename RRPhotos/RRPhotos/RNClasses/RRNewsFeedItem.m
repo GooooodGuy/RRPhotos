@@ -31,6 +31,7 @@
 @synthesize originUrl = _originUrl;
 @synthesize decription = _description;
 @synthesize commentCount = _commentCount;
+@synthesize commentListArray = _commentListArray;
 @synthesize attachments = _attachments;
 @synthesize pageImageUrl = _pageImageUrl;
 - (void)dealloc{
@@ -52,6 +53,7 @@
 	self.originUrl = nil;
 	self.decription = nil;
 	self.commentCount = nil;
+	self.commentListArray = nil;
 	self.attachments = nil;
 	self.pageImageUrl = nil;
 	
@@ -96,7 +98,23 @@
 
 		self.updateTime = [NSDate dateWithTimeIntervalSince1970:[[dictionary objectForKey:@"time"] doubleValue]/1000];
 		self.commentCount = [dictionary objectForKey:@"comment_count"] ;
-		
+		if ([dictionary objectForKey:@"comment_list"]) {
+			//评论列表
+			NSArray *commentListArray = [dictionary objectForKey:@"comment_list"];
+			NSMutableArray *commentListArrayFinish = [[NSMutableArray alloc]initWithCapacity:[self.commentCount intValue]];
+
+			for (NSDictionary* jComment in commentListArray) {
+				RRNewsFeedCommentItem* attachment = [[RRNewsFeedCommentItem alloc]initWithDictionary:jComment];
+				[commentListArrayFinish addObject:attachment ];
+				[attachment release];
+			}
+			self.commentListArray = commentListArrayFinish;
+			NSLog(@"retain count = %d",[commentListArrayFinish retainCount]);
+			[commentListArrayFinish release];
+		}
+		NSLog(@"dic ================ %@",dictionary);
+		NSLog(@"评论数目为：%d   获取的数目为：%d ",[self.commentCount intValue], [self.commentListArray count] );
+
 		self.originTitle = [dictionary objectForKey:@"origin_title"];
         self.originPageId = [dictionary objectForKey:@"origin_page_id"];
         self.originUrl = [dictionary objectForKey:@"origin_url"];
@@ -207,6 +225,50 @@
 //	return _sourceId;
 //}
 
+@end
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	评论列表数据格式
+ */
+@implementation RRNewsFeedCommentItem
+@synthesize content = _content;
+@synthesize headUrl = _headUrl;
+@synthesize commentId = _commentId;
+@synthesize userId = _userId;
+@synthesize userName = _userName;
+
+- (id)initWithDictionary:(NSDictionary *)dictionary{
+	if (self = [super init]) {
+		self.content = @"评论";
+		if ([dictionary objectForKey:@"content"]) {
+			self.content = [dictionary objectForKey:@"content"];
+		}
+		self.headUrl = @"";
+		if ([dictionary objectForKey:@"head_url"]) {
+			self.headUrl = [dictionary objectForKey:@"head_url"];
+		}
+		self.commentId = [NSNumber numberWithInt:0];
+		if ([dictionary objectForKey:@"id"]) {
+			self.commentId = [dictionary objectForKey:@"id"];
+		}
+		self.userId = [NSNumber numberWithInt:0];
+		if ([dictionary objectForKey:@"user_id"]) {
+			self.userId = ([dictionary objectForKey:@"user_id"]);
+		}
+		self.userName = @"未知用户";
+		if ([dictionary objectForKey:@"user_name"]) {
+			self.userName = [dictionary objectForKey:@"user_name"];
+		}
+	}
+	return self;
+}
+
++ (id)newsFeedCommentItem:(NSDictionary *)dic{
+	RRNewsFeedCommentItem *item = [[RRNewsFeedCommentItem alloc]initWithDictionary:dic];
+	return [item autorelease];
+}
 @end
 
 #pragma -mark ///////////RRAttachment////////////////////////////////////
