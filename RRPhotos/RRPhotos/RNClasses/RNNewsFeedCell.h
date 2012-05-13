@@ -12,7 +12,6 @@
 #import "RRNewsFeedItem.h"
 #import "UIImageView+RRWebImage.h"
 
-
 @protocol RNNewsFeedCellDelegate <NSObject>
 
 @optional

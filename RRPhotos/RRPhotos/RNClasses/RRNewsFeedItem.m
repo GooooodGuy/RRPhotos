@@ -238,6 +238,18 @@
 @synthesize commentId = _commentId;
 @synthesize userId = _userId;
 @synthesize userName = _userName;
+@synthesize time = _time;
+
+- (void)dealloc{
+	
+	self.content = nil;
+	self.headUrl = nil;
+	self.commentId = nil;
+	self.userId = nil;
+	self.userName = nil;
+	self.time = nil;
+	[super dealloc];
+}
 
 - (id)initWithDictionary:(NSDictionary *)dictionary{
 	if (self = [super init]) {
@@ -260,6 +272,10 @@
 		self.userName = @"未知用户";
 		if ([dictionary objectForKey:@"user_name"]) {
 			self.userName = [dictionary objectForKey:@"user_name"];
+		}
+		self.time = [NSDate date];
+		if ([dictionary objectForKey:@"time"]) {
+			self.time = [NSDate dateWithTimeIntervalSince1970:[[dictionary objectForKey:@"time"] doubleValue]/1000];
 		}
 	}
 	return self;

@@ -160,7 +160,7 @@
 			}
 			NSLog(@"大照片模式下单个照片的高度=%f,宽度=%f",photoHeight,photoWidth);
 
-			currentImageView.frame = CGRectMake(10,
+			currentImageView.frame = CGRectMake(0,
 												10, 
 												300, 
 												300);

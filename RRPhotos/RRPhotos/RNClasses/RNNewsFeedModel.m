@@ -99,6 +99,9 @@
 	self.newsFeedCount = 0;
 }
 
+/*
+	网络加载成功回调，此处覆盖了父类的方法
+ */
 - (void)didFinishLoad:(id)result {
 	if (!result) {
 		return;

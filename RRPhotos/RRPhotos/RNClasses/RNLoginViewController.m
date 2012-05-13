@@ -18,7 +18,7 @@
 #import "RNMainViewController.h"
 
 #define EMAIL_FIELD_TOP_EDGE 40
-#define PASSWORD_FIELD_TOP_EDGE 60
+#define PASSWORD_FIELD_TOP_EDGE 80
 @implementation RNLoginViewController
 
 @synthesize emailField;
@@ -84,30 +84,6 @@
             mainUser.checkIsNewUser = NO;
             break;
     }
-//	
-//	UIViewController *view = [[UIViewController alloc]init ];//登陆后的界面
-//	view.navigationItem.leftBarButtonItem = nil;
-//	view.navigationItem.rightBarButtonItem = nil;
-//	[self.navigationController setNavigationBarHidden:YES]; //暂时这样处理
-//	[self.navigationController pushViewController:view animated:NO];
-	//进入主界面
-
-//	[self dismissModalViewControllerAnimated:YES];
-	
-	
-//	if (_loginDelegat) {
-//		if ([_loginDelegat performSelector:@selector(finishLogin)]) {
-//			[_loginDelegat finishLogin ];//通知登陆完毕
-//		}
-//	}
-	
-//	RNMainViewController *mainController = [[RNMainViewController alloc]init];
-//	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
-//											   sharedApplication].delegate;
-//	UIViewController *view = [[UIViewController alloc]init ];
-//	view.view.backgroundColor = [UIColor greenColor];
-//	[appDelegate.rootNavController pushViewController:mainController animated:YES];
-//	[mainController release];
 	
 	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 											   sharedApplication].delegate;
@@ -162,8 +138,8 @@
     
 	UIView* emailInputView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, 40)];
 	UIView* passwordInputView = [[UIView alloc] initWithFrame:CGRectMake(0, 40, 280, 40)];
-    UIView* loginView=[[UIView alloc]initWithFrame:CGRectMake(20, EMAIL_FIELD_TOP_EDGE, 280, 80)];
 
+    UIView* loginView=[[UIView alloc]initWithFrame:CGRectMake(20, EMAIL_FIELD_TOP_EDGE, 280, 80)];
     //将登陆框边框设置为圆脚  by songzengbin at  2.24
 	loginView.layer.cornerRadius = 8;
     loginView.layer.masksToBounds = YES;
@@ -173,23 +149,22 @@
 	
     //添加登陆框中间的那条线
     RNDrawLineView *line=[[ RNDrawLineView alloc]initWithFrame:CGRectMake(0, 40, 280, 80)];
-    line.backgroundColor=[UIColor clearColor];//将背景设为透明
+    line.backgroundColor=[UIColor whiteColor];//将背景设为透明
+	
     emailInputView.backgroundColor = [UIColor whiteColor];;
 	emailInputView.alpha = 1;
-    
+    emailInputView.userInteractionEnabled = YES;
     //注册button
-//    registButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    registButton.frame = CGRectMake(30, EMAIL_FIELD_TOP_EDGE + 100, 80, 30);
-//    [registButton setTitle:@"注册" forState:UIControlStateNormal];
-//    [registButton addTarget:self action:@selector(registButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-	
-	passwordInputView.backgroundColor = [UIColor whiteColor];;
+	passwordInputView.backgroundColor = [UIColor clearColor];
+
 	passwordInputView.alpha = 1;
+	passwordInputView.userInteractionEnabled = YES;
+	
+	[loginView addSubview:line];
 	[loginView addSubview:emailInputView];
 	[loginView addSubview:passwordInputView];
-    [loginView addSubview:line];
     [self.view  addSubview:loginView];
-//    [self.view addSubview:registButton];
+
 	[emailInputView release];
 	[passwordInputView release];
     [loginView release];
@@ -204,7 +179,7 @@
 		self.emailField = [RNLoginViewController textInputFieldForCellWithValue:@"" secure:NO];
 	emailField.placeholder = @"邮箱/手机号/用户名";
 	emailField.delegate = self;
-	emailField.keyboardType = UIKeyboardTypeEmailAddress;
+	emailField.keyboardType = UIKeyboardTypeASCIICapable;
 	emailField.clearButtonMode = UITextFieldViewModeWhileEditing;
 	[emailInputView addSubview:[self containerCellWithTitle:@"帐号" view:emailField]];
 	
@@ -231,9 +206,7 @@
     
 }
 
-
 - (void)handleCancelLogin:(id)sender {
-	//	[self.model cancel];
 	
 	[self.activityIndicatorView removeFromSuperview];
 	emailField.enabled = TRUE;
@@ -280,15 +253,14 @@
 	
 	UITextField *textField = [[[UITextField alloc] 
 							   initWithFrame:CGRectMake(50,0, 210, 24)] autorelease];
-	textField.text = value;
 	textField.placeholder = @"";
 	textField.secureTextEntry = secure;
+	textField.text = value;
+
 	textField.keyboardType = UIKeyboardTypeASCIICapable;
 	textField.returnKeyType = UIReturnKeyGo;
 	textField.autocorrectionType = UITextAutocorrectionTypeNo;
 	textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-	//	textField.textColor = RGBCOLOR(0,0,0);
-	//*/
 	
 	return textField;
 	
@@ -337,17 +309,6 @@
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:u forKey:@"loginUserName"];
         [defaults setObject:pwd forKey:@"loginPassword"];
-        
-//        NSMutableDictionary* dics = [NSMutableDictionary dictionary];
-//        [dics setObject:[passwordField.text md5] forKey:@"password"];
-//        [dics setObject:emailField.text forKey:@"user"];
-		//        RNModel *model = [[RNModel alloc] initWithQuery:dics andMethod:@"client/login"];
-		//        self.model = model;
-		//        RL_RELEASE_SAFELY(model);
-	
-		
-//		[self sendQueryWithDic:dics andMethod:@"client/login"];//chenyi modify
-		
 		
 		NSLog(@"###启动：开始自动登陆");
 		RCClientLoginRequest *loginRequest = [[RCClientLoginRequest alloc] init];
@@ -389,7 +350,6 @@
 		
 	}
 	
-	
 	UIBarButtonItem *cancelLoginItem = [[UIBarButtonItem alloc] 
 										initWithTitle:@"取消"
 										style:UIBarButtonItemStylePlain
@@ -404,8 +364,12 @@
 	
 	UITouch *touch = [touches anyObject];
 	CGPoint touchPoint = [touch locationInView:self.view];
-	if(touchPoint.y < PASSWORD_FIELD_TOP_EDGE && touchPoint.y > EMAIL_FIELD_TOP_EDGE) [emailField becomeFirstResponder];
-	else if(touchPoint.y >PASSWORD_FIELD_TOP_EDGE && touchPoint.y < PASSWORD_FIELD_TOP_EDGE+40) [passwordField becomeFirstResponder];
+	if(touchPoint.y < PASSWORD_FIELD_TOP_EDGE && touchPoint.y > EMAIL_FIELD_TOP_EDGE){
+		[emailField becomeFirstResponder];
+	}
+	else if(touchPoint.y >PASSWORD_FIELD_TOP_EDGE && touchPoint.y < PASSWORD_FIELD_TOP_EDGE+40){
+		[passwordField becomeFirstResponder];
+	}
 	
 }
 

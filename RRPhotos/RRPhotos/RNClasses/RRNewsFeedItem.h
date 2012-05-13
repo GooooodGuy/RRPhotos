@@ -192,12 +192,15 @@ typedef enum {
 	NSNumber *_userId;
 	//用户名
 	NSString *_userName;
+	//评论事件
+	NSDate *_time;
 }
 @property(nonatomic,copy)NSString *content;
 @property(nonatomic,copy)NSString *headUrl;
 @property(nonatomic,copy)NSNumber *commentId;
 @property(nonatomic,copy)NSNumber *userId;
 @property(nonatomic,copy)NSString *userName;
+@property(nonatomic,retain)NSDate *time;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 

@@ -18,12 +18,18 @@
 	UIImageView *_headImageView;
 	//评论内容
 	UILabel *_contentLabel;
+	//评论时间
+	UILabel *_updateTimeLabel;
+	//用户名
+	UILabel *_userNameLabel;
 	
 	//cell数据
 	RRNewsFeedCommentItem *_newsFeedCommentItem;
 }
 @property(nonatomic,retain)UIImageView *headImageView;
 @property(nonatomic,retain)UILabel *contentLabel;
+@property(nonatomic,retain)UILabel *updateTimeLabel;
+@property(nonatomic,retain)UILabel *userNameLabel;
 @property(nonatomic,retain)RRNewsFeedCommentItem *newsFeedCommentItem;
 
 /*

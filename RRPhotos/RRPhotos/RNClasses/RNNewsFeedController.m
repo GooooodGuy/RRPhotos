@@ -9,6 +9,7 @@
 #import "RNNewsFeedController.h"
 #import "RNAlbumWaterViewController.h"
 #import "RNPhotoViewController.h"
+#define kTableViewBgColor RGBCOLOR(222, 222, 222)
 #define kHotShareViewTag 10001
 #define kNewsFeedViewTag 10002
 @interface RNNewsFeedController ()
@@ -68,7 +69,7 @@
 																					  0, 
 																					  PHONE_SCREEN_SIZE.width, 
 																					  PHONE_SCREEN_SIZE.height)];
-		newsFeedTableView.backgroundColor = RGBCOLOR(222, 222, 222);
+		newsFeedTableView.backgroundColor = kTableViewBgColor;
 		newsFeedTableView.dataSource = self; //tableView的数据
 		newsFeedTableView.delegate = self;
 		UIView *footerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320,200)];
@@ -97,7 +98,7 @@
 		view.delegate = self;
 		[self.newsFeedTableView addSubview:view];
 		_rrRefreshTableHeaderView = view;
-		view.backgroundColor = RGBCOLOR(222, 222, 222);
+		view.backgroundColor = kTableViewBgColor;
 		
 		[_rrRefreshTableHeaderView refreshLastUpdatedDate];
 		_bIsLoading = NO; //是否正在加载标记
@@ -208,12 +209,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
-//	if ([item.attachments count] < 3) {
-//		return  (kCellTopPadding + kCellHeadImageHeight + \
-//				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ); //如果是单张图片高度变宽
-//	}
-//	return kCellHeight;
+
 	return [self tableView: self.newsFeedTableView cellForRowAtIndexPath:indexPath].height;
 }
 
@@ -227,33 +223,33 @@
 		cell = [[[RNNewsFeedCell alloc]initWithStyle:UITableViewCellStyleDefault 
 									 reuseIdentifier:cellIdentifier]autorelease];
 		cell.delegate = self;
-	}else {
-//		while ([cell.contentView.subviews lastObject] != nil) {  
-//            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];  
-//        } 
-	}	
+	}
 	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
 	[cell setCellWithItem:item]; 
+	if (0 == (indexPath.row % 2)) {
+		cell.contentView.backgroundColor = RGBCOLOR(200, 200, 200);
+	}else {
+		cell.contentView.backgroundColor = kTableViewBgColor;
+	}
 //	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 	return cell;	
 }
 
-
-
 #pragma mark - UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{	//列表拖动
+{	
+	// 列表拖动
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:scrollView];
-	float time = [[NSDate date]timeIntervalSince1970];
-	NSLog(@"拖动开始%f",time);
+//	float time = [[NSDate date]timeIntervalSince1970];
+//	NSLog(@"拖动开始%f",time);
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{	//拖动结束
+{	// 拖动结束
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:scrollView];
-	float time = [[NSDate date]timeIntervalSince1970];
-	NSLog(@"拖动结束%f",time);
+//	float time = [[NSDate date]timeIntervalSince1970];
+//	NSLog(@"拖动结束%f",time);
 
 }
 
@@ -264,7 +260,7 @@
 		return;
 	}
 	
-	[self.model load:YES];//加载数据
+	[self.model load:YES];// 加载数据
 	_bIsLoading = YES;
 }
 

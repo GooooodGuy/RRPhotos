@@ -10,23 +10,26 @@
 #import "RNCommentListCell.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define  kCellLeftPadding 10        // 内容左填充
+#define  kCellLeftPadding 2        // 内容左填充
 #define  kCellTopPadding  20        //  内容顶部填充
 #define  kCellBottomPadding 5       //  内容底部填充
 #define  kCellRightPadding 5        //  内容右填充
 
 #define  kCellHeadImageHeight 40    // 头像高度
-#define  kCellHeadImageWidth 40     // 头像宽度 
+#define  kCellHeadImageWidth 40		// 头像宽度 
 
-#define  kCellHeadContentSpace  20     // 头像和滚动视图的空隙
+#define  kCellHeadContentSpace  10     // 头像和滚动视图的空隙
 #define  kCellContentViewPhotoCount  3 //滚动视图内的照片数量
-#define  kCellContentViewHeight (kCellWidth / kCellContentViewPhotoCount)//多图片滚动视图高度
-#define  kCellContentViewWidth  320.0
+//多图片滚动视图高度
+#define  kCellContentViewHeight (kCellWidth / kCellContentViewPhotoCount)
+#define  kCellContentViewWidth  300
 
-#define  kCellCommentTableViewHeight 100//评论列表的高度
+//评论列表的高度
+#define  kCellCommentTableViewHeight 100
 
 #define  kCellHeight  (kCellTopPadding + kCellHeadImageHeight + \
 kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
+
 #define  kCellWidth  320
 
 
@@ -78,26 +81,12 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 	
 	[super layoutSubviews];
 
-	CGFloat height = 0;
-	if ([self.newsFeedItem.attachments count] < 3) {
-		 //如果是单张图片高度变宽
-		height  =   (kCellTopPadding + kCellHeadImageHeight + \
-				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ) ;
-
-	}else {
-		height = kCellHeight + kCellCommentTableViewHeight;
-	}
-	if (0 != [self.newsFeedItem.commentListArray count]) {
-		height += kCellCommentTableViewHeight; //加上评论列表的高度
-	}else {
-		height += 20;
-	}
-	self.height = height;
-	
+		
 	self.detailTextLabel.backgroundColor = [UIColor clearColor];
 	self.textLabel.backgroundColor = [UIColor clearColor];
 	self.selectionStyle = UITableViewCellSelectionStyleNone; 
 	self.backgroundColor = [UIColor clearColor];
+
     self.accessoryType = UITableViewCellAccessoryNone;
 	
 	NSString *s = self.prefixLabel.text;
@@ -107,6 +96,18 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 	self.titleLabel.left = self.prefixLabel.right;
 	self.titleLabel.width = kCellWidth - self.prefixLabel.right ;
 	self.commentTableView.top = self.attachScrollView.bottom + 5;
+	
+	//计算总的cell高度
+	CGFloat height = 0;
+	
+	if (0 != [self.newsFeedItem.commentListArray count]) {
+		height += kCellCommentTableViewHeight; //加上评论列表的高度
+		height = self.commentTableView.bottom;
+
+	}else {
+		height = self.attachScrollView.bottom;
+	}
+	self.height = height;
 }
 
 /*
@@ -299,7 +300,7 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 - (RRAttachScrollView *)attachScrollView{
 		
 	if (!_attachScrollView) {
-		_attachScrollView = [[RRAttachScrollView alloc]initWithFrame:CGRectMake(0, 
+		_attachScrollView = [[RRAttachScrollView alloc]initWithFrame:CGRectMake(10, 
 																			   kCellHeadImageHeight + kCellTopPadding + kCellHeadContentSpace,
 																			   kCellContentViewWidth, 
 																				kCellContentViewHeight)];
@@ -316,8 +317,8 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 																		 PHONE_SCREEN_SIZE.width, 
 																		 80) 
 														 style:UITableViewStylePlain];
-		_commentsTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-		_commentsTableView.backgroundColor = RGBCOLOR(233, 233, 233);
+		_commentsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+		_commentsTableView.backgroundColor = [UIColor clearColor];
 		_commentsTableView.delegate = self;
 		_commentsTableView.dataSource = self;
 	}
