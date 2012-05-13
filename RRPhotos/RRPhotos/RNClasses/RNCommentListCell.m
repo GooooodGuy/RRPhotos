@@ -8,10 +8,8 @@
 
 #import "RNCommentListCell.h"
 #import <QuartzCore/QuartzCore.h>
-<<<<<<< HEAD
+
 static const CGFloat kCellHeight = 40;
-=======
->>>>>>> 535d4c83159824edef3536528ce7cfac3d38a6d0
 
 static const CGFloat kCellPaddingLeft = 10.0;
 static const CGFloat kCellPaddingTop = 5;
@@ -21,10 +19,6 @@ static const CGFloat kCellSpace = 10; //头像与评论内容的空隙
 
 static const CGFloat kCellContentLabelWidth = 320 - kCellSpace - kCellPaddingLeft - kCellHeadImageWidth ;
 static const CGFloat kCellContentLabelHeight = 30;
-<<<<<<< HEAD
-
-=======
->>>>>>> 535d4c83159824edef3536528ce7cfac3d38a6d0
 @implementation RNCommentListCell
 @synthesize headImageView = _headImageView;
 @synthesize contentLabel = _contentLabel;
