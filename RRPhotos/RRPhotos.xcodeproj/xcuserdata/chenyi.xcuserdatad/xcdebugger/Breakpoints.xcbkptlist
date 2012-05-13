@@ -20,13 +20,13 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNAlbumWaterViewController.m"
-         timestampString = "358504504.59094"
+         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
+         timestampString = "358510778.166493"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "262"
-         endingLineNumber = "262"
-         landmarkName = "-viewDidAppear:"
+         startingLineNumber = "315"
+         endingLineNumber = "315"
+         landmarkName = "-viewDidUnload"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -34,51 +34,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
-         timestampString = "358504515.814514"
+         timestampString = "358511074.656721"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "333"
-         endingLineNumber = "333"
-         landmarkName = "-dealloc"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
-         timestampString = "358506157.063539"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "838"
-         endingLineNumber = "838"
-         landmarkName = "-scrollViewWillBeginDragging:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
-         timestampString = "358506159.815516"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "828"
-         endingLineNumber = "828"
-         landmarkName = "-scrollViewDidScroll:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "RRPhotos/RNClasses/RNPhotoViewController.m"
-         timestampString = "358506163.554793"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "863"
-         endingLineNumber = "863"
-         landmarkName = "-scrollViewDidEndDecelerating:"
+         startingLineNumber = "312"
+         endingLineNumber = "312"
+         landmarkName = "-viewDidUnload"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

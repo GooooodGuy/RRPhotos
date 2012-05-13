@@ -18,16 +18,12 @@
 @implementation RNNewsFeedController
 @synthesize newsFeedTableView = _newFeedTableView;
 @synthesize rrRefreshTableHeaderView = _rrRefreshTableHeaderView;
-@synthesize hotShareViewController = _hotShareViewController;
-@synthesize mainContainerController = _mainContainerController;
-@synthesize currentViewController = _currentViewController;
-
+@synthesize parentController = _parentController;
 - (void)dealloc{
 	self.newsFeedTableView = nil;
 	self.rrRefreshTableHeaderView = nil;
-	self.hotShareViewController = nil;
-	self.mainContainerController = nil;
-	self.currentViewController = nil;
+
+	self.parentController = nil;
 	[super dealloc];
 }
 
@@ -46,68 +42,7 @@
 	self.view.backgroundColor = [UIColor blackColor];
 	self.navBar.hidden = YES; //采用系统的navbar
 	
-	//刷新按钮
-	UIButton *refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
-	UIImage *refreshButtonImage = [[RCResManager getInstance]imageForKey:@"webbrowser_refresh"];
-	[refreshButton setImage:refreshButtonImage forState:UIControlStateNormal];
-	[refreshButton setImage:refreshButtonImage forState:UIControlStateSelected];
-	[refreshButton addTarget:self action:@selector(onClickRefreshButton) forControlEvents:UIControlEventTouchUpInside];
-	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:refreshButton];
-
-	self.navigationItem.rightBarButtonItem = item;
-	
-	//中间栏
-	UISegmentedControl *segmentControl = [[UISegmentedControl alloc]initWithItems:
-										  [NSArray arrayWithObjects:@"好友动态",@"热门分享",nil]];
-	CGFloat width = 150;
-	segmentControl.frame = CGRectMake((PHONE_SCREEN_SIZE.width - width ) / 2.0, 10, width, 30);
-	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentControl.backgroundColor = [UIColor colorWithPatternImage:
-									  [[RCResManager getInstance]imageForKey:@"button_bar"]];
-	segmentControl.tintColor = self.navigationController.navigationBar.tintColor;
-	NSMutableDictionary * attributes = [NSMutableDictionary dictionaryWithCapacity:5]; //设置字体风格
-	[attributes setObject:[UIFont fontWithName:MED_HEITI_FONT size: 12] forKey:UITextAttributeFont];
-	[segmentControl setTitleTextAttributes:attributes forState:UIControlStateNormal];
-	[segmentControl setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
-	[segmentControl addTarget:self action:@selector(changeCurrentViewController:) forControlEvents:UIControlEventValueChanged];
-	self.navigationItem.titleView  = segmentControl;
-	TT_RELEASE_SAFELY(segmentControl);
-
-	
-
-	[self.view addSubview:self.hotShareViewController.view]; //热门分享
-	[self.view addSubview:self.mainContainerController.view];//好友动态
-}
-/*
-	主界面容器，包括新鲜事列表
- */
-- (UIViewController *)mainContainerController{
-	
-	if (!_mainContainerController) {
-		_mainContainerController = [[UIViewController alloc]init];
-		_mainContainerController.view.frame = CGRectMake(0, 
-														 0, 
-														 PHONE_SCREEN_SIZE.width, 
-														 PHONE_SCREEN_SIZE.height);
-		_mainContainerController.view.tag = kNewsFeedViewTag;
-		
-		[_mainContainerController.view addSubview:self.newsFeedTableView];
-	}
-	
-	return _mainContainerController;
-}
-
-- (RNHotShareViewController *)hotShareViewController{
-	
-	if (!_hotShareViewController) {
-		_hotShareViewController = [[RNHotShareViewController alloc]init];
-		_hotShareViewController.view.frame = CGRectMake(0, 
-														0, 
-														PHONE_SCREEN_SIZE.width, 
-														PHONE_SCREEN_SIZE.height);
-		_hotShareViewController.view.tag = kHotShareViewTag;
-	}
-	return _hotShareViewController;
+	[self.view addSubview:self.newsFeedTableView];
 }
 
 /*
@@ -173,9 +108,7 @@
     // Release any retained subviews of the main view.
 	self.newsFeedTableView = nil;
 	self.rrRefreshTableHeaderView = nil;
-	self.hotShareViewController = nil;
-	self.mainContainerController = nil;
-	self.currentViewController = nil;
+	
 }
 
 
@@ -198,6 +131,8 @@
 	NSString *typeString = ITEM_TYPES_NEWSFEED_FOR_PHOTO;//只请求与照片有关的数据
 	
 	RNNewsFeedModel *model = [[RNNewsFeedModel alloc]initWithTypeString:typeString];
+//	model = [[RNNewsFeedModel alloc]initWithTypeString:typeString  //测试取别人的新鲜事
+//												userId:[NSNumber numberWithLong:254980670]];
 	self.model = (RNModel *) model;
 	[self.model load:YES];//加载数据
 }
@@ -216,39 +151,27 @@
 	[self.rrRefreshTableHeaderView rrRefreshScrollViewDataSourceDidFinishedLoading:self.newsFeedTableView];
 }
 
-/*
-	改变浏览频道，是热门分享还是好友动态
- */
-- (void)changeCurrentViewController:(UISegmentedControl *)sender{
-	if (0 == sender.selectedSegmentIndex) {
-		self.currentViewController = self.mainContainerController;
-	}else {
-		self.currentViewController = self.hotShareViewController;
-	}
-	
-	[self.view bringSubviewToFront:self.currentViewController.view];
-}
 #pragma mark - 刷新
-- (void)onClickRefreshButton{
+
+/*
+	刷新数据
+ */
+- (void)refreshData{
 	if (_bIsLoading) {
 		return;
 	}
-	if (self.currentViewController == self.hotShareViewController) {
-		[self.hotShareViewController.model load:YES];
-	}else{
-		[UIView animateWithDuration:0.3 animations:^() {
-			NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-			[self.newsFeedTableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-			[self.newsFeedTableView setContentOffset : CGPointMake(0, - 150) animated:NO];
-		} completion:^(BOOL finished){
-			if (finished) {
-				[self.rrRefreshTableHeaderView setState:RROPullRefreshPulling];
-				[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:self.newsFeedTableView];
-				[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:self.newsFeedTableView];
-			}
-		}];
-	}
 	
+	[UIView animateWithDuration:0.3 animations:^() {
+		NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+		[self.newsFeedTableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+		[self.newsFeedTableView setContentOffset : CGPointMake(0, - 150) animated:NO];
+	} completion:^(BOOL finished){
+		if (finished) {
+			[self.rrRefreshTableHeaderView setState:RROPullRefreshPulling];
+			[self.rrRefreshTableHeaderView rrRefreshScrollViewDidScroll:self.newsFeedTableView];
+			[self.rrRefreshTableHeaderView rrRefreshScrollViewDidEndDragging:self.newsFeedTableView];
+		}
+	}];
 }
 #pragma mark - UITableViewDataSource
 //@required
@@ -372,7 +295,8 @@
 			NSNumber *albumId = [result objectForKey:@"album_id"];
 			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
 			viewController.hidesBottomBarWhenPushed = YES;
-			[self.navigationController pushViewController:viewController animated:YES];
+			NSLog(@"cy ----------%@",self.parentController.navigationController);
+			[self.parentController.navigationController pushViewController:viewController animated:YES];
 			NSLog(@"进入相册内容页");
 			//查看相册
 			TT_RELEASE_SAFELY(viewController);

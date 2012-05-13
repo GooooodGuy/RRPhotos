@@ -29,4 +29,10 @@
 	typeString:新鲜事RRNewsfeedType，多个类型以逗号隔开
  */
 - (id)initWithTypeString:(NSString *)typeString;
+
+/*
+	typeString:新鲜事RRNewsfeedType，多个类型以逗号隔开
+	userId: 取新鲜事的用户id
+ */
+- (id)initWithTypeString:(NSString *)typeString userId:(NSNumber *)userId;
 @end

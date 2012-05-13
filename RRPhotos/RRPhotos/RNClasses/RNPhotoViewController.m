@@ -283,16 +283,16 @@
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if(_dataLoadStatus == DataLoadStatusAlbumFirstFinished){
-        // 从用户自己的相册进入，为支持删除动作，获取该相册所有照片数据
-        if ([_mainUser.userId longLongValue] == [_albumInfo.uid longLongValue]) {
-            // 加载所有照片信息
-            if ([self.model.items count] < self.model.totalItem) {
-                [self.model.query setObject:[NSNumber numberWithInt:1] forKey:@"all"];
-                [self.model load:NO];
-            }
-        }
-    }
+//    if(_dataLoadStatus == DataLoadStatusAlbumFirstFinished){
+//        // 从用户自己的相册进入，为支持删除动作，获取该相册所有照片数据
+//        if ([_mainUser.userId longLongValue] == [_albumInfo.uid longLongValue]) {
+//            // 加载所有照片信息
+//            if ([self.model.items count] < self.model.totalItem) {
+//                [self.model.query setObject:[NSNumber numberWithInt:1] forKey:@"all"];
+//                [self.model load:NO];
+//            }
+//        }
+//    }
 }
 - (void)viewDidUnload
 {
@@ -328,6 +328,24 @@
     [_albumInfo release];
     self.tInputPassword = nil;
     self.tAlert = nil;
+	
+	[_locationButton release];
+    [_locationImageView release];
+    [_viewShareCountLable release];
+    [_photoDescLable release];
+    [_bottomView release];
+    [_quickArrImageView release];
+    [_quickButton release];
+    [_quickTableView release];
+    [_quickBgView release];
+    [_navBarMoreBtn release];
+    [_narBarDownBtn release];
+    [_narBarFirstBtn release];
+    [_narBarTitleLabel release];
+    [_narBarBackBtn release];
+    [_narBarView release];
+    [_photosScrollView release];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super dealloc];
@@ -473,16 +491,8 @@
 }
 - (void)buttonAction:(id)sender{
     if (sender == _narBarBackBtn) {
-        [self scrollAlbumController];
-
-//		[self.navigationController popViewControllerAnimated:YES];
-//		[self dismissModalViewControllerAnimated:_startSource == PhotoStartSourceShare];
-		AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
-												   sharedApplication].delegate;
-		[appDelegate.mainViewController dismissModalViewControllerAnimated:YES];
-		
-//		[self dismissModalViewControllerAnimated:YES];
-
+        [self scrollAlbumController];		
+		[self dismissModalViewControllerAnimated:YES];
     }else if(sender == _navBarMoreBtn){
         RNUIActionSheet *actionSheet = [[RNUIActionSheet alloc] initWithTitle:NSLocalizedString(@"更多操作", @"更多操作")];
         if (_startSource == PhotoStartSourceShare) {
@@ -954,7 +964,7 @@ static NSInteger compareString(id str1, id str2, void *context)
     [self.view bringSubviewToFront:activityIndicatorView];
 }
 - (void)adjustBottomView{
-    
+
     RNPhotoItem *item = self.currentPhotoItem;
     if (item) {
         if (_miniPublisherView == nil) {

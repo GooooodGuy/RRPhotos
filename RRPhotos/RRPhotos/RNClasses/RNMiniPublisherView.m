@@ -246,7 +246,7 @@
 - (UIButton *)sendButton{
 	//发送按钮，初始状态可能是评论数目
 	if (!_sendButton) {
-		_sendButton = [UIButton buttonWithType: UIButtonTypeCustom];
+		_sendButton = [[UIButton alloc]init];
 		[_sendButton setImage:[[RCResManager getInstance]imageForKey: kSendButtonCommentBgImage ]
 					 forState:UIControlStateNormal];
 		[_sendButton addTarget:self action:@selector(onClickSendButton) 

@@ -122,7 +122,7 @@
 - (void)viewDidUnload{
 	
 	[super viewDidUnload];
-	self.hotSharePhotoArray = nil;
+
 	self.contentScrollView = nil;
 
 }

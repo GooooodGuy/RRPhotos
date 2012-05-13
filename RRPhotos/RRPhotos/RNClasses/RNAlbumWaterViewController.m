@@ -375,26 +375,17 @@
                                                                          initWithPhotoesData:[self photoListModel]
                                                                                         withAlbum:_albumInfo
                                                                                     withPhotoIndex:index] ;
-							NSLog(@"photoViewController retain count = %d",[photoViewController retainCount]);
 
                             UINavigationController *navigationController = [[UINavigationController alloc] 
                                                                            initWithRootViewController:photoViewController];
 						
-							NSLog(@"1navigationController retain count = %d",[navigationController retainCount]);
-							NSLog(@"photoViewController retain count = %d",[photoViewController retainCount]);
-
-
-                            navigationController.navigationBarHidden = YES;
-
+							navigationController.navigationBarHidden = YES;
 							AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
                                                                             sharedApplication].delegate;
                             [appDelegate.mainViewController presentModalViewController:navigationController animated:NO];
-							NSLog(@"2navigationController retain count = %d",[navigationController retainCount]);
 
 							TT_RELEASE_SAFELY(photoViewController);
 							TT_RELEASE_SAFELY(navigationController);
-
-
                         }
                      }];
    [UIView commitAnimations];
@@ -433,7 +424,9 @@
 		return;
 	}
     // 不是末页，加载
-    if((scrollView.contentOffset.y + scrollView.frame.size.height >= scrollView.contentSize.height +kBufferHeight) && [_nextPageFooterView state] == EGOOPullNextPagePulling){
+    if((scrollView.contentOffset.y + scrollView.frame.size.height >= scrollView.contentSize.height +kBufferHeight)
+	   && [_nextPageFooterView state] == EGOOPullNextPagePulling)
+	{
         [self load:YES];
 		[_nextPageFooterView setState:EGOOPullNextPageLoading];
 		[UIView beginAnimations:nil context:NULL];
@@ -452,7 +445,9 @@
 	}
 	//不是末页 向上拉
 	if (scrollView.isDragging && [_nextPageFooterView state]!= EGOOPullNextPageLoading) {
-		float offset = scrollView.contentSize.height <= scrollView.frame.size.height ? scrollView.contentOffset.y : scrollView.contentOffset.y - (scrollView.contentSize.height-scrollView.frame.size.height);
+		float offset = scrollView.contentSize.height <= scrollView.frame.size.height
+			? scrollView.contentOffset.y 
+			: scrollView.contentOffset.y - (scrollView.contentSize.height-scrollView.frame.size.height);
 		[_nextPageFooterView setState:offset >= kBufferHeight ? EGOOPullNextPagePulling : EGOOPullNextPageNormal];
 	}
 }

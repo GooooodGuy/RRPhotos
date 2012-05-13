@@ -22,25 +22,24 @@
 	RNNewsFeedCellDelegate,
 	RRRefreshTableHeaderDelegate>
 {
+	//父controller
+	UIViewController *_parentController;
+	
+	@private
 	//新鲜事列表
 	UITableView *_newFeedTableView;
 	//下拉刷新
 	RRRefreshTableHeaderView *_rrRefreshTableHeaderView;
 	//正在更新列表数据标志
 	BOOL _bIsLoading;
-	
-	//主界面容器，包括新鲜事列表
-	UIViewController *_mainContainerController;
-	//热门分享
-	RNHotShareViewController *_hotShareViewController;
-	//用于指示当前是好友动态还是热门分享
-	UIViewController *_currentViewController;
 }
-
 @property(nonatomic,retain)UITableView *newsFeedTableView;
 @property(nonatomic,retain)RRRefreshTableHeaderView *rrRefreshTableHeaderView;
 
-@property(nonatomic,retain)UIViewController *mainContainerController;
-@property(nonatomic,retain)RNHotShareViewController *hotShareViewController;
-@property(nonatomic,retain)UIViewController *currentViewController;
+@property(nonatomic,assign)UIViewController *parentController;
+
+/*
+	刷新数据
+ */
+- (void)refreshData;
 @end

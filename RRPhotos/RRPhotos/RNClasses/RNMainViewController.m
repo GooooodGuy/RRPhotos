@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 #import "RNMainViewController.h"
 #import "RNNewsFeedController.h"
+#import "RNRootNewsFeedController.h"
 #import "ImageProcessingViewController.h"
 #import "RNPickPhotoHelper.h"
 #import "RNAlbumListViewController.h"
@@ -65,7 +66,7 @@
 		switch (i) { //设置背景
 			case 0:{
 				
-				mainView = [[RNNewsFeedController alloc]init];
+				mainView = [[RNRootNewsFeedController alloc]init];
 				mainView.title = [item objectAtIndex: i];
 
 				nav = [[UINavigationController alloc]initWithRootViewController:mainView];

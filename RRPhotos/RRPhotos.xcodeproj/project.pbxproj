@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E5173CBF155D440900B42F9D /* RNHotShareModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5173CBE155D440900B42F9D /* RNHotShareModel.m */; };
 		E5173CC2155D4EA100B42F9D /* RNHotShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5173CC1155D4EA100B42F9D /* RNHotShareViewController.m */; };
+		E5405408155F743800F53A63 /* RNRootNewsFeedController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5405407155F743800F53A63 /* RNRootNewsFeedController.m */; };
 		E551B2F8154D7AA700B54EB5 /* NSDate+NSDateExt.m in Sources */ = {isa = PBXBuildFile; fileRef = E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */; };
 		E56B24C11558EC8800ADEB77 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = E56B240F1558EC8700ADEB77 /* blueArrow.png */; };
 		E56B24C21558EC8800ADEB77 /* album_add_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E56B24111558EC8700ADEB77 /* album_add_icon.png */; };
@@ -440,10 +441,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E5173CBD155D440900B42F9D /* RNHotShareModel.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RNHotShareModel.h; sourceTree = "<group>"; };
+		E5173CBD155D440900B42F9D /* RNHotShareModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNHotShareModel.h; sourceTree = "<group>"; };
 		E5173CBE155D440900B42F9D /* RNHotShareModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareModel.m; sourceTree = "<group>"; };
 		E5173CC0155D4EA000B42F9D /* RNHotShareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNHotShareViewController.h; sourceTree = "<group>"; };
 		E5173CC1155D4EA100B42F9D /* RNHotShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareViewController.m; sourceTree = "<group>"; };
+		E5405406155F743800F53A63 /* RNRootNewsFeedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRootNewsFeedController.h; sourceTree = "<group>"; };
+		E5405407155F743800F53A63 /* RNRootNewsFeedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRootNewsFeedController.m; sourceTree = "<group>"; };
 		E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NSDateExt.m"; sourceTree = "<group>"; };
 		E551B2FA154D7ACA00B54EB5 /* NSDate+NSDateExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NSDateExt.h"; sourceTree = "<group>"; };
 		E56B240F1558EC8700ADEB77 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrow.png; sourceTree = "<group>"; };
@@ -1847,6 +1850,8 @@
 				E56F95201531658A008E0D78 /* RNNewsFeedController.m */,
 				E5CE55811538555400D9F335 /* RNNewsFeedModel.h */,
 				E5CE55821538555600D9F335 /* RNNewsFeedModel.m */,
+				E5405406155F743800F53A63 /* RNRootNewsFeedController.h */,
+				E5405407155F743800F53A63 /* RNRootNewsFeedController.m */,
 			);
 			name = NewsFeed;
 			sourceTree = "<group>";
@@ -2511,6 +2516,7 @@
 				E5DD22D31556B66200A983A7 /* Filters.m in Sources */,
 				E5173CBF155D440900B42F9D /* RNHotShareModel.m in Sources */,
 				E5173CC2155D4EA100B42F9D /* RNHotShareViewController.m in Sources */,
+				E5405408155F743800F53A63 /* RNRootNewsFeedController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

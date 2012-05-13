@@ -51,6 +51,7 @@
 	return self;
 }
 
+
 /*
 	typeString:新鲜事RRNewsfeedType，多个类型以逗号隔开
  */
@@ -60,6 +61,19 @@
 			[self.query setObject:typeString forKey:@"type"];
 			[self.query setObject:[NSNumber numberWithInt:kMaxNewsFeedCount] forKey:@"page_size"];
 			self.method = @"feed/get";
+		}
+	}
+	return self;
+}
+
+/*
+	typeString:新鲜事RRNewsfeedType，多个类型以逗号隔开
+	userId: 取新鲜事的用户id
+ */
+- (id)initWithTypeString:(NSString *)typeString userId:(NSNumber *)userId{
+	if (self = [self initWithTypeString:typeString]) {
+		if (userId) {
+			[self.query setObject:userId forKey:@"uid"];
 		}
 	}
 	return self;
