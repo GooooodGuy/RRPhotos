@@ -7,7 +7,29 @@
 //
 
 #import "RNNewsFeedCell.h"
+#import "RNCommentListCell.h"
 #import <QuartzCore/QuartzCore.h>
+
+#define  kCellLeftPadding 10        // 内容左填充
+#define  kCellTopPadding  20        //  内容顶部填充
+#define  kCellBottomPadding 5       //  内容底部填充
+#define  kCellRightPadding 5        //  内容右填充
+
+#define  kCellHeadImageHeight 40    // 头像高度
+#define  kCellHeadImageWidth 40     // 头像宽度 
+
+#define  kCellHeadContentSpace  20     // 头像和滚动视图的空隙
+#define  kCellContentViewPhotoCount  3 //滚动视图内的照片数量
+#define  kCellContentViewHeight (kCellWidth / kCellContentViewPhotoCount)//多图片滚动视图高度
+#define  kCellContentViewWidth  320.0
+
+#define  kCellCommentTableViewHeight 100//评论列表的高度
+
+#define  kCellHeight  (kCellTopPadding + kCellHeadImageHeight + \
+kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
+#define  kCellWidth  320
+
+
 @interface RNNewsFeedCell(/*私有方法*/)
 
 @end
@@ -23,6 +45,7 @@
 @synthesize fromAddress = _fromAddress;
 @synthesize attachmentsTableView = _attachmentsTableView;
 @synthesize attachScrollView = _attachScrollView;
+@synthesize commentTableView = _commentsTableView;
 @synthesize delegate = _delegate;
 - (void)dealloc{
 	self.newsFeedItem = nil;
@@ -34,6 +57,7 @@
 	self.fromAddress = nil;
 	self.attachmentsTableView = nil;
 	self.attachScrollView = nil;
+	self.commentTableView = nil;
 	self.delegate = nil;
 	
 	[super dealloc];
@@ -54,6 +78,22 @@
 	
 	[super layoutSubviews];
 
+	CGFloat height = 0;
+	if ([self.newsFeedItem.attachments count] < 3) {
+		 //如果是单张图片高度变宽
+		height  =   (kCellTopPadding + kCellHeadImageHeight + \
+				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ) ;
+
+	}else {
+		height = kCellHeight + kCellCommentTableViewHeight;
+	}
+	if (0 != [self.newsFeedItem.commentListArray count]) {
+		height += kCellCommentTableViewHeight; //加上评论列表的高度
+	}else {
+		height += 20;
+	}
+	self.height = height;
+	
 	self.detailTextLabel.backgroundColor = [UIColor clearColor];
 	self.textLabel.backgroundColor = [UIColor clearColor];
 	self.selectionStyle = UITableViewCellSelectionStyleNone; 
@@ -66,6 +106,7 @@
 	self.prefixLabel.width = singleLineStringSize.width;
 	self.titleLabel.left = self.prefixLabel.right;
 	self.titleLabel.width = kCellWidth - self.prefixLabel.right ;
+	self.commentTableView.top = self.attachScrollView.bottom + 5;
 }
 
 /*
@@ -85,9 +126,7 @@
 	[self.contentView addSubview:self.prefixLabel];
 	[self.contentView addSubview:self.titleLabel];
 	[self.contentView addSubview:self.updateTimeLabel];
-	//	[self.contentView addSubview:self.attachmentsTableView];
 	[self.contentView addSubview:self.attachScrollView];
-
 	//头像
 	if (self.newsFeedItem.headUrl) {
 		[self.headImageView setImageWithURL:[NSURL URLWithString:self.newsFeedItem.headUrl]
@@ -110,24 +149,6 @@
 		self.updateTimeLabel.text = [self.newsFeedItem.updateTime stringForSectionTitle3];
 	}
 	
-	//新鲜事主体，照片附件,加载图片
-//	if (self.newsFeedItem.attachments) {	
-//		
-//		if ([self.newsFeedItem.attachments count] == 1) {
-//			CGRect r = 	self.attachmentsTableView.frame;
-//			self.attachmentsTableView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
-//			
-//		}else {
-//			CGRect r = 	self.attachmentsTableView.frame;
-//			self.attachmentsTableView.frame = CGRectMake(r.origin.x,
-//														 r.origin.y, 
-//														  kCellContentViewWidth, 
-//														  kCellContentViewHeight);
-//		}
-//		[self.attachmentsTableView reloadData];
-//		NSLog(@"附件的照片的数目1 = %d", [self.newsFeedItem.attachments count]);
-//	}
-	
 	if (self.newsFeedItem.attachments) {
 		//重置滚动试图里面的照片
 		if ([self.newsFeedItem.attachments count] < 3) {
@@ -138,6 +159,14 @@
 		[self.attachScrollView setWithAttachments:self.newsFeedItem.attachments];
 	}
 	
+	if ([self.newsFeedItem.commentListArray count] != 0) {
+		NSLog(@"评论数为%d",[self.newsFeedItem.commentListArray count] );
+		//评论列表
+		[self.contentView addSubview:self.commentTableView];
+		[self.commentTableView reloadData];
+	}
+	
+	[self layoutIfNeeded];
 }
 
 /*
@@ -153,6 +182,9 @@
 		[layer setCornerRadius:4.0];
 		layer.masksToBounds = YES;
 		
+		//点击头像，进入某个用户的主页
+		_headImageView.userInteractionEnabled = YES;
+		[_headImageView addTargetForTouch:self action:@selector(onTapHeadImageView:)];
 	}
 	return _headImageView;
 }
@@ -170,6 +202,12 @@
 		_userNameLabel.backgroundColor = [UIColor clearColor];
 		_userNameLabel.textColor = RGBCOLOR(0, 229 ,238);
 		_userNameLabel.font = [UIFont systemFontOfSize:15];
+		
+		//添加点击事件，和头像点击事件一样
+		_userNameLabel.userInteractionEnabled = YES;
+		UITapGestureRecognizer *singleTap = [[[UITapGestureRecognizer alloc]   
+											  initWithTarget:self action:@selector(onTapHeadImageView:)]autorelease];
+		[_userNameLabel addGestureRecognizer:singleTap]; 
 	}
 	 
 	return _userNameLabel;
@@ -242,6 +280,19 @@
 		[self.delegate onTapTitleLabel:userId albumId:mediaId];
 	}
 }
+
+/*
+	点击头像/点击用户名称
+ */
+- (void)onTapHeadImageView:(id) sender{
+	NSNumber *userId = self.newsFeedItem.userId;
+	if (!userId) {
+		return;
+	}
+	if ([self.delegate respondsToSelector:@selector(onTapHeadImageView:)]) {
+		[self.delegate onTapHeadImageView:userId];
+	}
+}
 /*
 	附件照片滚动视图
  */
@@ -257,121 +308,66 @@
 	return _attachScrollView;
 }
 
+- (UITableView *)commentTableView{
+	if (!_commentsTableView) {
+		
+		_commentsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 
+																		 0, 
+																		 PHONE_SCREEN_SIZE.width, 
+																		 80) 
+														 style:UITableViewStylePlain];
+		_commentsTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+		_commentsTableView.backgroundColor = RGBCOLOR(233, 233, 233);
+		_commentsTableView.delegate = self;
+		_commentsTableView.dataSource = self;
+	}
+	return _commentsTableView;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
 }
-/*
-- (UITableView *)attachmentsTableView{
-	
-	if (!_attachmentsTableView) {
-		
-		_attachmentsTableView = [[UITableView alloc]initWithFrame:CGRectMake(kCellHeadImageHeight + kCellTopPadding + kCellHeadContentSpace, 
-																			 0,
-																			 kCellContentViewHeight, 
-																			 kCellContentViewWidth)
-															style:UITableViewStylePlain];
-		_attachmentsTableView.backgroundColor = [UIColor clearColor];
-		_attachmentsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-		_attachmentsTableView.dataSource = self;
-		_attachmentsTableView.delegate = self;
 
-		//旋转90度
-		CGRect  r = _attachmentsTableView.frame;
-		CGFloat new_x = r.origin.y;
-		CGFloat new_y = r.origin.x;
-		NSLog(@"变换之前---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
-
-		_attachmentsTableView.transform = CGAffineTransformRotate(self.transform, - M_PI / 2);
-		r = _attachmentsTableView.frame;
-		NSLog(@"90旋转变化之后---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
-
-		_attachmentsTableView.frame = CGRectMake(new_x, new_y, r.size.width, r.size.height);
-		r = _attachmentsTableView.frame;
-		
-		NSLog(@"最终调整变化之后---------------x = %f y = %f width = %f height = %f",r.origin.x,r.origin.y,r.size.width,r.size.height);
-
-		// scrollbar 不显示
-		_attachmentsTableView.showsVerticalScrollIndicator = NO;
-		_attachmentsTableView.showsHorizontalScrollIndicator = NO;
-	}
-	return _attachmentsTableView;
-}
-
-#pragma mark - UITableViewDataSource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-	//照片数目
-	NSInteger count = [self.newsFeedItem.attachments count];
-	NSLog(@"附件的cell数目 %d",count);
-	return count;
-}
-
+#pragma mark - UITableViewDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+	
 	return 1;
 }// Default is 1 if not implemented
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-	NSLog(@"section = %d row = %d",indexPath.section, indexPath.row);
-	static NSString *AttachmentCellIdentifier = @"AttachmentsViewCell";
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:AttachmentCellIdentifier];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+	
+	NSLog(@"indexPath %@",indexPath);
+	return [self tableView:self.commentTableView cellForRowAtIndexPath:indexPath].height;
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+	NSInteger numberOfRows = [self.newsFeedItem.commentListArray count] ;
+	//最多显示三行评论
+	numberOfRows =  numberOfRows > 2 ? 2 : numberOfRows ;
+	NSLog(@"评论数目为%d",numberOfRows);
+
+	return numberOfRows;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+	NSLog(@"indexpath = %@",indexPath);
+	static NSString *cellIdentifier = @"commentListIdentifier";
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (!cell) {
-		cell = [[[RNAttachmentCell alloc]initWithStyle:UITableViewCellStyleDefault 
-									 reuseIdentifier:AttachmentCellIdentifier]autorelease];
+		cell = [[[RNCommentListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier]autorelease];
 	}
 	
-	NSLog(@"附件的照片的数目2 = %d", [self.newsFeedItem.attachments count]);
-
-	if (indexPath.row < [self.newsFeedItem.attachments count]) { //重新加载新鲜事的照片内容
-		id attachment = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
-		if (attachment && [attachment isKindOfClass:RRAttachmentItem.class]) {
-			NSURL *url = [NSURL URLWithString:[(RRAttachmentItem*)attachment main_url]];
-			[((RNAttachmentCell *)cell).contentImageView setImageWithURL:url];
-			
-			//仅有一张照片的时候高度做调整
-			if ([self.newsFeedItem.attachments count] == 1) {
-				CGRect r = 	((RNAttachmentCell *)cell).contentImageView.frame;
-				((RNAttachmentCell *)cell).contentImageView.frame = CGRectMake(r.origin.x,r.origin.y, 320, 320);
-			}else {
-				((RNAttachmentCell *)cell).contentImageView.frame = CGRectMake(0, 
-															 0,
-															 kCellContentViewWidth / 3,  
-															 kCellContentViewWidth / 3);
-			}
-
-		}
-	}
-		
-	
-	cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+	[((RNCommentListCell *)cell) setCellWithItem:[self.newsFeedItem.commentListArray objectAtIndex:indexPath.row]];
 
 	return cell;
 }
 
-#pragma mark - UITableViewDelegate
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-	//最多每次只显示三张
-	return kCellContentViewWidth / 3;
-}
-
-//
-//	选中某个照片，当前只支持进入相册内容
-//
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
-//	NSNumber *sourceId = self.newsFeedItem.sourceId;
-//
-//	RNAlbumWaterViewController *albumWaterViewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
-	RRAttachmentItem *attachMent = [self.newsFeedItem.attachments objectAtIndex:indexPath.row];
-	NSNumber *mediaId = attachMent.mediaId;
-	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
-		NSNumber *userId = self.newsFeedItem.userId;
-
-		[self.delegate onClickAttachView:userId photoId:mediaId];
-	}
-}
-*/
 #pragma mark - RRAttachScrollViewDelegate
 /**
  * 点击附件照片
@@ -380,81 +376,15 @@
 	
 	NSNumber *mediaId = item.mediaId;
 	NSNumber *userId = item.ownerId;
-	if (self.delegate && [self.delegate respondsToSelector:@selector(onClickAttachView:photoId:)]) {
-		[self.delegate onClickAttachView:userId photoId:mediaId];
+	if (self.delegate && [self.delegate respondsToSelector:@selector(onTapAttachView:photoId:)]) {
+		[self.delegate onTapAttachView:userId photoId:mediaId];
 	}
 }
+
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*	-------------------------------------	*/
-/*			新鲜事主列表的照片附件cell			*/
-/*	-------------------------------------	*/
-@implementation RNAttachmentCell
-@synthesize bgImageView = _bgImageView;
-@synthesize contentImageView = _contentImageView;
-
-- (void)dealloc{
-
-	self.contentImageView = nil;
-	[super dealloc];
-}
-
-- (void)layoutSubviews{
-	
-	[super layoutSubviews];
-	
-	self.contentView.backgroundColor = [UIColor clearColor];
-	self.detailTextLabel.backgroundColor = [UIColor clearColor];
-	self.textLabel.backgroundColor = [UIColor clearColor];
-	self.selectionStyle = UITableViewCellSelectionStyleNone; 
-	self.backgroundColor = [UIColor clearColor];
-    self.accessoryType = UITableViewCellAccessoryNone;
-	
-	UIView *selectedView = [[UIView alloc] initWithFrame:self.contentView.frame];
-	selectedView.backgroundColor = [UIColor clearColor];
-	self.selectedBackgroundView = selectedView;
-	[selectedView release];
-	
-	[self.contentView removeAllSubviews];
-
-	[self.contentView addSubview:self.contentImageView];
-	CALayer* layer = [self.contentImageView layer];
-	[layer setCornerRadius:6.0];
-	layer.masksToBounds = YES;
-
-}
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-				
-	}
-	return self;
-}
-
-/*
-	cell的主内容图片（带缓存自加载能力）
- */
-- (UIImageView *)contentImageView{
-	if (!_contentImageView) {
-		_contentImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 
-																		 0,
-																		 kCellContentViewWidth / 3,  
-																		 kCellContentViewWidth / 3)];
-		_contentImageView.backgroundColor = [UIColor clearColor];
-		_contentImageView.contentMode = UIViewContentModeScaleAspectFill;
-		CGRect r = _contentImageView.frame;
-		NSLog(@"contentImageView---------------x = %f y = %f width = %f height = %f",
-			  r.origin.x,r.origin.y,r.size.width,r.size.height);
-		
-		_contentImageView.transform = CGAffineTransformRotate(self.transform,  M_PI / 2);
-	}
-	return _contentImageView;
-}
-@end
-
 
 
 

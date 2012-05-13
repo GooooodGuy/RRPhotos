@@ -19,11 +19,12 @@
 @synthesize newsFeedTableView = _newFeedTableView;
 @synthesize rrRefreshTableHeaderView = _rrRefreshTableHeaderView;
 @synthesize parentController = _parentController;
+@synthesize userId = _userId;
 - (void)dealloc{
 	self.newsFeedTableView = nil;
 	self.rrRefreshTableHeaderView = nil;
-
 	self.parentController = nil;
+	self.userId = nil;
 	[super dealloc];
 }
 
@@ -35,6 +36,18 @@
 				
 	    }
     return self;
+}
+/*
+	@userId:用户的id
+ */
+- (id)initWithUserId:(NSNumber *)userId{
+	if (userId) {
+		self.userId = userId;
+	}
+	if (self = [super init]) {
+		
+	}
+	return self;
 }
 
 - (void)loadView{
@@ -85,7 +98,6 @@
 		[self.newsFeedTableView addSubview:view];
 		_rrRefreshTableHeaderView = view;
 		view.backgroundColor = RGBCOLOR(222, 222, 222);
-		TT_RELEASE_SAFELY(view);
 		
 		[_rrRefreshTableHeaderView refreshLastUpdatedDate];
 		_bIsLoading = NO; //是否正在加载标记
@@ -98,7 +110,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-	
 
 }
 
@@ -122,6 +133,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - 网络
 /*
 	重载父类的创建model
  */
@@ -129,10 +141,19 @@
 	
 	//新鲜事类型
 	NSString *typeString = ITEM_TYPES_NEWSFEED_FOR_PHOTO;//只请求与照片有关的数据
-	
-	RNNewsFeedModel *model = [[RNNewsFeedModel alloc]initWithTypeString:typeString];
-//	model = [[RNNewsFeedModel alloc]initWithTypeString:typeString  //测试取别人的新鲜事
-//												userId:[NSNumber numberWithLong:254980670]];
+	RNNewsFeedModel *model = nil;
+
+	if (self.userId) {
+		NSLog(@"userid = %@",self.userId);
+		//某个指定id的新鲜事
+		model = [[RNNewsFeedModel alloc]initWithTypeString:typeString 
+											userId:self.userId];
+
+	}else {
+		//自己的新鲜事
+		model = [[RNNewsFeedModel alloc]initWithTypeString:typeString];
+	}
+
 	self.model = (RNModel *) model;
 	[self.model load:YES];//加载数据
 }
@@ -187,12 +208,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
-	if ([item.attachments count] < 3) {
-		return  (kCellTopPadding + kCellHeadImageHeight + \
-				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ); //如果是单张图片高度变宽
-	}
-	return kCellHeight;
+//	RRNewsFeedItem *item = [[(RNNewsFeedModel *)self.model newsFeeds]objectAtIndex:indexPath.row];
+//	if ([item.attachments count] < 3) {
+//		return  (kCellTopPadding + kCellHeadImageHeight + \
+//				 kCellHeadContentSpace + PHONE_SCREEN_SIZE.width ); //如果是单张图片高度变宽
+//	}
+//	return kCellHeight;
+	return [self tableView: self.newsFeedTableView cellForRowAtIndexPath:indexPath].height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -260,7 +282,7 @@
 /*
 	点击新鲜事附件照片,查看照片
  */
-- (void)onClickAttachView: (NSNumber *)userId photoId:(NSNumber *)photoId {
+- (void)onTapAttachView: (NSNumber *)userId photoId:(NSNumber *)photoId {
 	if (userId && photoId) {
 		NSString *userIdStr = [userId stringValue];
 		NSString *photoIdStr = [photoId stringValue];
@@ -293,20 +315,47 @@
 		//    __block typeof(self) self = self;
 		mReqAssistant.onCompletion = ^(NSDictionary* result){
 			NSNumber *albumId = [result objectForKey:@"album_id"];
-			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId albumId:albumId];
+			RNAlbumWaterViewController *viewController = [[RNAlbumWaterViewController alloc]initWithUid:userId
+																								albumId:albumId];
 			viewController.hidesBottomBarWhenPushed = YES;
 			NSLog(@"cy ----------%@",self.parentController.navigationController);
-			[self.parentController.navigationController pushViewController:viewController animated:YES];
-			NSLog(@"进入相册内容页");
+			if (self.navigationController) {
+				[self.navigationController pushViewController:viewController animated:YES];
+			}else {
+				[self.parentController.navigationController pushViewController:viewController animated:YES];
+			}
+			NSLog(@"cy-------------进入相册内容页");
 			//查看相册
 			TT_RELEASE_SAFELY(viewController);
 		};
 		mReqAssistant.onError = ^(RCError* error) {
 			NSLog(@"error....%@",error.titleForError);
-
+			UIAlertView *errorAlert = [[UIAlertView alloc]initWithTitle:@"网络加载错误" 
+																message:nil 
+															   delegate:nil 
+													  cancelButtonTitle:@"确定" 
+													  otherButtonTitles:nil];
+			[errorAlert show];
+			TT_RELEASE_SAFELY(errorAlert);
 		};
 		[mReqAssistant sendQuery:dics withMethod:@"photos/get"];
 	}
 
 }
+
+/*
+	点击头像,进入某个用户的个人主页
+ */
+- (void)onTapHeadImageView:(NSNumber *)userId{
+	if (!userId) {
+		return;
+	}
+	
+	RNNewsFeedController *newsFeedController = [[RNNewsFeedController alloc]initWithUserId:userId];
+	newsFeedController.hidesBottomBarWhenPushed = YES;
+	newsFeedController.parentController = self;
+	[self.parentController.navigationController pushViewController:newsFeedController animated:YES];
+	TT_RELEASE_SAFELY(newsFeedController);
+}
+
 @end

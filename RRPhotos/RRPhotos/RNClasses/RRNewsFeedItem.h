@@ -108,6 +108,8 @@ typedef enum {
 	
 	//评论数目
 	NSNumber *_commentCount;
+	//评论列表
+	NSArray *_commentListArray;
 	
 	//新鲜事中包含的媒体内容,例如照片,视频等.
 	NSArray *_attachments;
@@ -135,6 +137,7 @@ typedef enum {
 @property(nonatomic,copy)NSString *originUrl;
 @property(nonatomic,copy)NSString *decription;
 @property(nonatomic,copy)NSNumber *commentCount;
+@property(nonatomic,retain)NSArray *commentListArray;
 @property(nonatomic,retain)NSArray *attachments;
 @property(nonatomic,copy)NSString *pageImageUrl;
 
@@ -172,6 +175,33 @@ typedef enum {
 
 @property (nonatomic, copy)NSNumber *aid;
 
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+	评论列表
+ */
+@interface RRNewsFeedCommentItem : NSObject{
+	//评论内容
+	NSString *_content;
+	//头像url
+	NSString *_headUrl;
+	//id(应该是评论的id吧)
+	NSNumber *_commentId;
+	//用户id
+	NSNumber *_userId;
+	//用户名
+	NSString *_userName;
+}
+@property(nonatomic,copy)NSString *content;
+@property(nonatomic,copy)NSString *headUrl;
+@property(nonatomic,copy)NSNumber *commentId;
+@property(nonatomic,copy)NSNumber *userId;
+@property(nonatomic,copy)NSString *userName;
+
+- (id)initWithDictionary:(NSDictionary *)dictionary;
+
++ (id)newsFeedCommentItem:(NSDictionary *)dic;
 @end
 
 
