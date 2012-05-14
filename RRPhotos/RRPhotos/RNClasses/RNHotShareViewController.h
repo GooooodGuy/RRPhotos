@@ -8,19 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "RNModelViewController.h"
-
+#import "RNHotShareContentViewController.h"
+#import "RNHotShareItem.h"
 /*	-----------------------------------  */
-/*			热门分享						 */
+/*			热门分享首页					 */
 /*	-----------------------------------  */
 @interface RNHotShareViewController : RNModelViewController
 {
-	//所有的照片数据
-	NSMutableArray *_hotSharePhotoArray;
-	
+	//分享的数据项
+	NSMutableArray *_hotShareItems;
 	//照片内容滚动视图
 	UIScrollView *_contentScrollView;
+	//父Controller
+	UIViewController *_parentController;
 }
-
-@property(nonatomic,retain)NSMutableArray *hotSharePhotoArray;
+@property(nonatomic,retain)NSMutableArray *hotShareItems;
 @property(nonatomic,retain)UIScrollView *contentScrollView;
+@property(nonatomic,assign)UIViewController *parentController;
+
 @end

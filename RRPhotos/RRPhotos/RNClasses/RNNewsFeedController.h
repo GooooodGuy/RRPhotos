@@ -35,16 +35,23 @@
 	
 	//用户id
 	NSNumber *_userId;
+	NSString *_userName;
 }
 @property(nonatomic,assign)UIViewController *parentController;
 @property(nonatomic,retain)UITableView *newsFeedTableView;
 @property(nonatomic,retain)RRRefreshTableHeaderView *rrRefreshTableHeaderView;
 @property(nonatomic,copy)NSNumber *userId;
-
+@property(nonatomic,copy)NSString *userName;
 /*
 	@userId:用户的id
  */
 - (id)initWithUserId:(NSNumber *)userId;
+
+/*
+	@userId:用户的id
+	@userName:用户名
+ */
+- (id)initWithUserId:(NSNumber *)userId userName:(NSString *)userName;
 /*
 	刷新数据
  */

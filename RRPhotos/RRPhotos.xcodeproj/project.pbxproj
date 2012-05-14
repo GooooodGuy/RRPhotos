@@ -12,6 +12,7 @@
 		E5405408155F743800F53A63 /* RNRootNewsFeedController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5405407155F743800F53A63 /* RNRootNewsFeedController.m */; };
 		E540540C155F904500F53A63 /* RNCommentListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E540540B155F904500F53A63 /* RNCommentListCell.m */; };
 		E551B2F8154D7AA700B54EB5 /* NSDate+NSDateExt.m in Sources */ = {isa = PBXBuildFile; fileRef = E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */; };
+		E55F38F315613930003FC027 /* RNHotShareContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E55F38F215613930003FC027 /* RNHotShareContentViewController.m */; };
 		E56B24C11558EC8800ADEB77 /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = E56B240F1558EC8700ADEB77 /* blueArrow.png */; };
 		E56B24C21558EC8800ADEB77 /* album_add_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = E56B24111558EC8700ADEB77 /* album_add_icon.png */; };
 		E56B24C31558EC8800ADEB77 /* album_add_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E56B24121558EC8700ADEB77 /* album_add_icon@2x.png */; };
@@ -194,6 +195,7 @@
 		E56F950015307B07008E0D78 /* RNMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F94FF15307B07008E0D78 /* RNMainViewController.m */; };
 		E56F9517153148BB008E0D78 /* RNLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F9516153148BB008E0D78 /* RNLoginViewController.m */; };
 		E56F95211531658B008E0D78 /* RNNewsFeedController.m in Sources */ = {isa = PBXBuildFile; fileRef = E56F95201531658A008E0D78 /* RNNewsFeedController.m */; };
+		E599BC8C1560A6E50007A2BB /* RNHotShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E599BC8B1560A6E50007A2BB /* RNHotShareItem.m */; };
 		E5A403CE154F7B5D00CF128F /* RNAlbumItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A403C1154F7B5D00CF128F /* RNAlbumItem.m */; };
 		E5A403CF154F7B5D00CF128F /* RNAlbumListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A403C3154F7B5D00CF128F /* RNAlbumListViewController.m */; };
 		E5A403D0154F7B5D00CF128F /* RNAlbumWaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A403C5154F7B5D00CF128F /* RNAlbumWaterViewController.m */; };
@@ -452,6 +454,8 @@
 		E540540B155F904500F53A63 /* RNCommentListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCommentListCell.m; sourceTree = "<group>"; };
 		E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NSDateExt.m"; sourceTree = "<group>"; };
 		E551B2FA154D7ACA00B54EB5 /* NSDate+NSDateExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NSDateExt.h"; sourceTree = "<group>"; };
+		E55F38F115613930003FC027 /* RNHotShareContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNHotShareContentViewController.h; sourceTree = "<group>"; };
+		E55F38F215613930003FC027 /* RNHotShareContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareContentViewController.m; sourceTree = "<group>"; };
 		E56B240F1558EC8700ADEB77 /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueArrow.png; sourceTree = "<group>"; };
 		E56B24111558EC8700ADEB77 /* album_add_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = album_add_icon.png; sourceTree = "<group>"; };
 		E56B24121558EC8700ADEB77 /* album_add_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "album_add_icon@2x.png"; sourceTree = "<group>"; };
@@ -640,6 +644,8 @@
 		E56F9516153148BB008E0D78 /* RNLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNLoginViewController.m; sourceTree = "<group>"; };
 		E56F951F1531658A008E0D78 /* RNNewsFeedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNNewsFeedController.h; sourceTree = "<group>"; };
 		E56F95201531658A008E0D78 /* RNNewsFeedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedController.m; sourceTree = "<group>"; };
+		E599BC8A1560A6E50007A2BB /* RNHotShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNHotShareItem.h; sourceTree = "<group>"; };
+		E599BC8B1560A6E50007A2BB /* RNHotShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareItem.m; sourceTree = "<group>"; };
 		E5A403C0154F7B5D00CF128F /* RNAlbumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNAlbumItem.h; sourceTree = "<group>"; };
 		E5A403C1154F7B5D00CF128F /* RNAlbumItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNAlbumItem.m; sourceTree = "<group>"; };
 		E5A403C2154F7B5D00CF128F /* RNAlbumListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNAlbumListViewController.h; sourceTree = "<group>"; };
@@ -1088,6 +1094,10 @@
 				E5173CC1155D4EA100B42F9D /* RNHotShareViewController.m */,
 				E5173CBD155D440900B42F9D /* RNHotShareModel.h */,
 				E5173CBE155D440900B42F9D /* RNHotShareModel.m */,
+				E599BC8A1560A6E50007A2BB /* RNHotShareItem.h */,
+				E599BC8B1560A6E50007A2BB /* RNHotShareItem.m */,
+				E55F38F115613930003FC027 /* RNHotShareContentViewController.h */,
+				E55F38F215613930003FC027 /* RNHotShareContentViewController.m */,
 			);
 			name = HotShare;
 			sourceTree = "<group>";
@@ -2523,6 +2533,8 @@
 				E5173CC2155D4EA100B42F9D /* RNHotShareViewController.m in Sources */,
 				E5405408155F743800F53A63 /* RNRootNewsFeedController.m in Sources */,
 				E540540C155F904500F53A63 /* RNCommentListCell.m in Sources */,
+				E599BC8C1560A6E50007A2BB /* RNHotShareItem.m in Sources */,
+				E55F38F315613930003FC027 /* RNHotShareContentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -101,12 +101,13 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 	CGFloat height = 0;
 	
 	if (0 != [self.newsFeedItem.commentListArray count]) {
-		height += kCellCommentTableViewHeight; //加上评论列表的高度
+		//存在评论列表
 		height = self.commentTableView.bottom;
 
 	}else {
 		height = self.attachScrollView.bottom;
 	}
+	height += 20;
 	self.height = height;
 }
 
@@ -287,11 +288,12 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
  */
 - (void)onTapHeadImageView:(id) sender{
 	NSNumber *userId = self.newsFeedItem.userId;
+	NSString *userName = self.newsFeedItem.userName;
 	if (!userId) {
 		return;
 	}
-	if ([self.delegate respondsToSelector:@selector(onTapHeadImageView:)]) {
-		[self.delegate onTapHeadImageView:userId];
+	if ([self.delegate respondsToSelector:@selector(onTapHeadImageView:userName:)]) {
+		[self.delegate onTapHeadImageView:userId userName:userName];
 	}
 }
 /*
@@ -348,7 +350,7 @@ kCellHeadContentSpace + kCellContentViewHeight ) //cell的高度
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 	NSInteger numberOfRows = [self.newsFeedItem.commentListArray count] ;
-	//最多显示三行评论
+	//最多显示两行评论
 	numberOfRows =  numberOfRows > 2 ? 2 : numberOfRows ;
 	NSLog(@"评论数目为%d",numberOfRows);
 

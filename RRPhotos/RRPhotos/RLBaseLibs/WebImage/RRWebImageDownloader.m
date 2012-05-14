@@ -40,13 +40,14 @@
     if(self.connection){
         NSLog(@"RRWebImageDownLoader success");
         self.imageData = [NSMutableData data];
-        NSLog(@"self.imageData = %@",self.imageData);
+#warning 打印照片数据注释掉
+//        NSLog(@"self.imageData = %@",self.imageData);
         
     }
     else {
         if([self.delegate respondsToSelector:@selector(imageDownloader:didFailWithError:)]){
             [self.delegate performSelector:@selector(imageDownloader:didFailWithError:) withObject:self withObject:nil];
-            NSLog(@"RRWebImageDownLoader fail");
+//            NSLog(@"RRWebImageDownLoader fail");
         }
     }
 }
@@ -83,7 +84,7 @@
 - (void)connection:(NSURLConnection *)aConnection didReceiveData:(NSData *)data
 {
     [self.imageData appendData:data];
-    NSLog(@"connection self.imageData = %@",self.imageData);
+//    NSLog(@"connection self.imageData = %@",self.imageData);
 }
 
 #pragma mark NSURLConnectionDataDelegate

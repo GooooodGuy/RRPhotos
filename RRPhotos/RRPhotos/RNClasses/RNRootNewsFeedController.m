@@ -119,6 +119,9 @@
 														0, 
 														PHONE_SCREEN_SIZE.width, 
 														PHONE_SCREEN_SIZE.height);
+		
+		//用于push出另外一个界面
+		_hotShareController.parentController = self;
 	}
 	return _hotShareController;
 }
@@ -141,8 +144,10 @@
 - (void)changeCurrentViewController:(UISegmentedControl *)sender{
 	if (0 == sender.selectedSegmentIndex) {
 		_currentViewController = self.newsFeedController;
+//		self.title = @"好友动态";
 	}else {
 		_currentViewController = self.hotShareController;
+//		self.title = @"热门分享";
 	}
 	
 	[self.view bringSubviewToFront:_currentViewController.view];

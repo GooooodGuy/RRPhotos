@@ -70,6 +70,11 @@
 		case RRItemTypePhotoShared:
 		case RRItemTypePhotoUploadOne:
 		case RRItemTypePhotoUploadMore: { //目前支持照片的新鲜事
+			if (myFeedType == RRItemTypeAlbumSharedForPage || myFeedType == RRItemTypePhotoSharedForPage ||
+				myFeedType == RRItemTypeAlbumShared || myFeedType ==  RRItemTypePhotoShared) {
+				NSLog(@"分享内容：%@",dictionary);
+			}
+			
 			RRNewsfeedPhotoItem* newsfeed = [[[RRNewsfeedPhotoItem alloc] initWithDictionary:dictionary] autorelease];
 			return newsfeed;
 		}break;
@@ -273,6 +278,7 @@
 		if ([dictionary objectForKey:@"user_name"]) {
 			self.userName = [dictionary objectForKey:@"user_name"];
 		}
+
 		self.time = [NSDate date];
 		if ([dictionary objectForKey:@"time"]) {
 			self.time = [NSDate dateWithTimeIntervalSince1970:[[dictionary objectForKey:@"time"] doubleValue]/1000];
@@ -303,6 +309,7 @@
 
 + (id)attachmentWithDictionary:(NSDictionary*) dictionary {
 	RRAttachmentItem* attachment = [[[RRAttachmentItem alloc] initWithDictionary:dictionary] autorelease];
+
 	return attachment;
 }
 

@@ -21,11 +21,13 @@
 @synthesize rrRefreshTableHeaderView = _rrRefreshTableHeaderView;
 @synthesize parentController = _parentController;
 @synthesize userId = _userId;
+@synthesize userName = _userName;
 - (void)dealloc{
 	self.newsFeedTableView = nil;
 	self.rrRefreshTableHeaderView = nil;
 	self.parentController = nil;
 	self.userId = nil;
+	self.userName = nil;
 	[super dealloc];
 }
 
@@ -50,11 +52,22 @@
 	}
 	return self;
 }
+	
+- (id)initWithUserId:(NSNumber *)userId userName:(NSString *)userName{
+	
+	if (self = [self initWithUserId:userId]) {
+		if (userName) {
+			self.userName = userName;
+		}
+	}
+	return self;
+}
 
 - (void)loadView{
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
 	self.navBar.hidden = YES; //采用系统的navbar
+	self.title = self.userName;
 	
 	[self.view addSubview:self.newsFeedTableView];
 }
@@ -342,12 +355,12 @@
 /*
 	点击头像,进入某个用户的个人主页
  */
-- (void)onTapHeadImageView:(NSNumber *)userId{
+- (void)onTapHeadImageView:(NSNumber *)userId userName:(NSString *)userName{
 	if (!userId) {
 		return;
 	}
 	
-	RNNewsFeedController *newsFeedController = [[RNNewsFeedController alloc]initWithUserId:userId];
+	RNNewsFeedController *newsFeedController = [[RNNewsFeedController alloc]initWithUserId:userId userName:userName];
 	newsFeedController.hidesBottomBarWhenPushed = YES;
 	newsFeedController.parentController = self;
 	[self.parentController.navigationController pushViewController:newsFeedController animated:YES];

@@ -17,16 +17,20 @@
 @interface RNHotShareViewController() 
 
 //显示照片数据
-- (void)displayHotSharePhoto;
+- (void)displayHotSharePhotos;
 
 @end
 
 @implementation RNHotShareViewController
-@synthesize hotSharePhotoArray = _hotSharePhotoArray;
+
+@synthesize hotShareItems = _hotShareItems;
 @synthesize contentScrollView = _contentScrollView;
+@synthesize parentController = _parentController;
 - (void)dealloc{
-	self.hotSharePhotoArray = nil;
+
+	self.hotShareItems = nil;
 	self.contentScrollView = nil;
+	self.parentController = nil;
 	[super dealloc];
 }
 
@@ -44,7 +48,7 @@
  重载父类的创建model
  */
 - (void)createModel {
-	NSString *typeString = @"8";//只请求与照片有关的数据
+	NSString *typeString = @"8";//只请求只与相册有关的数据，参考wiki文档
 	
 	//新鲜事类型
 	RNHotShareModel *model = [[RNHotShareModel alloc]initWithTypeString:typeString];
@@ -57,7 +61,7 @@
 	开始加载
  */
 - (void)modelDidStartLoad:(RNModel *)model {
-
+	
 }
 
 /*
@@ -67,38 +71,49 @@
 	
 	NSArray *hotShareItems = ((RNHotShareModel *)model).hotShareItems;
 	if (hotShareItems) {
-		if (_hotSharePhotoArray) {
-			TT_RELEASE_SAFELY(_hotSharePhotoArray);
+		///////
+		NSMutableArray *array = [[NSMutableArray alloc]initWithCapacity:[hotShareItems count]];
+		self.hotShareItems = array ;
+		[array release];
+		for (id object in hotShareItems) {
+			if ([object isKindOfClass: NSDictionary.class ]) {
+				RNHotShareItem *item = [RNHotShareItem hotShareItemWithDictionary:object];
+				[self.hotShareItems addObject:item];
+			}
 		}
-		_hotSharePhotoArray = [[NSMutableArray alloc]initWithArray:hotShareItems];
 	}
 	
-	[self displayHotSharePhoto];
+	[self displayHotSharePhotos];
 }	
 
 /*
 	加载照片
  */
-- (void)displayHotSharePhoto{
-	
+- (void)displayHotSharePhotos{
+	//计算总的滚动视图的高度
 	self.contentScrollView.contentSize = CGSizeMake(PHONE_SCREEN_SIZE.width, 
-													([_hotSharePhotoArray count] / 4 + 1) * (kImageSpace + kImageHeight));
+													([self.hotShareItems count] / 4 + 1) * (kImageSpace + kImageHeight));
 	[self.contentScrollView removeAllSubviews];
 	
 	NSInteger photoIndex = 0;
-	for(id item in _hotSharePhotoArray){
+	for(RNHotShareItem * item in self.hotShareItems){
 		CGFloat currentY = 0;
 		CGFloat currentX = 0;
 		
 		currentY = (kImageHeight + kImageSpace ) * (int) (photoIndex / 4);
 		currentX = (photoIndex % 4) * (kImageSpace + kImageWidth);
-		
+		//计算每个预览图的坐标
 		CGRect r = CGRectMake(currentX, currentY, kImageWidth, kImageHeight);
 		UIImageView *photoImageView = [[UIImageView alloc]initWithFrame:r];
-		if([item isKindOfClass:NSDictionary.class] ){
-			NSURL *url = [NSURL URLWithString:[(NSDictionary *)item objectForKey:@"photo"]];
-			[photoImageView setImageWithURL:url];
-		}
+		//视图的索引
+		photoImageView.tag = photoIndex; 
+		//添加点击事件
+		photoImageView.userInteractionEnabled = YES;
+		[photoImageView addTargetForTouch:self action:@selector(onTapPhotoImageView:)];
+		
+		NSURL *url = [NSURL URLWithString:item.photoUrl];
+		[photoImageView setImageWithURL:url];
+
 		[self.contentScrollView addSubview:photoImageView];
 		[photoImageView release];
 		photoIndex ++;
@@ -127,6 +142,9 @@
 
 }
 
+/*
+	显示所有热门分享照片的滚动视图
+ */
 - (UIScrollView *)contentScrollView {
 	
 	if (!_contentScrollView) {
@@ -141,4 +159,15 @@
 	return  _contentScrollView;
 }
 
+/*
+	点击热门分享里面的一张图片,将会进入热门照片内容页
+ */
+- (void)onTapPhotoImageView :(id)sender{
+	//取得点击事件的分享数据项
+	RNHotShareItem *item = [self.hotShareItems objectAtIndex:((UITapGestureRecognizer *)sender).view.tag];
+	RNHotShareContentViewController *contentViewContoller = [[RNHotShareContentViewController alloc]initWithHotShareItem:item];
+	contentViewContoller.hidesBottomBarWhenPushed = YES;
+	[self.parentController.navigationController pushViewController:contentViewContoller animated:YES];
+	TT_RELEASE_SAFELY(contentViewContoller);
+}
 @end

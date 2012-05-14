@@ -33,6 +33,7 @@
  */
 - (void)onTapHeadImageView:(NSNumber *)userId;
 
+- (void)onTapHeadImageView:(NSNumber *)userId userName:(NSString *)userName;
 @end
 
 /*	-------------------------------------	*/
