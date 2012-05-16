@@ -43,8 +43,6 @@
 	if (self = [super init]) {
 		
 	}
-	NSLog(@"retain count = %d",[self retainCount]);
-
 	return self;
 }
 

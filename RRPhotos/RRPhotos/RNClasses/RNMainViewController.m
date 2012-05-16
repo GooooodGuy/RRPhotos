@@ -125,6 +125,7 @@
 					TT_RELEASE_SAFELY(mainView);
 					
 					nav.tabBarItem.image = [UIImage imageNamed: @"navigation_extend_icon.png"];
+					
 					nav.view.frame = CGRectZero;
 					[controllers addObject: nav];
 					TT_RELEASE_SAFELY(nav);

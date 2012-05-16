@@ -45,6 +45,13 @@ typedef enum{
 	Filters *_filters;
 	//滤镜效果选中列表
 	EasyTableView * _filterTableView;
+	//呼出滤镜列表的按钮
+	UIButton *_filterButton;
+	//效果icons
+	NSMutableDictionary *_filterIconsDic;
+	//主图片滤镜处理后的图
+	NSMutableDictionary *_filterImagesDic;
+	
 	//上传类型，是普通照片上传还是头像上传
 	PhotoUploadType _uploadType;
 	//存储当前显示在编辑界面的照片
@@ -125,6 +132,8 @@ typedef enum{
 @property(nonatomic,retain)Filters *filters;
 
 @property(nonatomic,retain)EasyTableView *filterTableView;
+
+@property(nonatomic,retain)UIButton *filterButton;
 
 @property(nonatomic,retain)UIImageView *currentImageView;
 

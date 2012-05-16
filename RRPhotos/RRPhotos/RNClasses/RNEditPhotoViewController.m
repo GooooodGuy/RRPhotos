@@ -23,13 +23,13 @@
 #define kSlibBarPointMaxX 289
 
 //滤镜相关
-#define LANDSCAPE_HEIGHT    400
+#define LANDSCAPE_HEIGHT    460
 #define LANDSCAPE_WIDTH     320
-#define BUTTOM_HEIGHT       100
+#define BUTTOM_HEIGHT       70
 #define BUTTOM_WIDTH        72
-#define ICON_SIZE           68
+#define ICON_SIZE           50
 #define ICON_MARGIN         0
-#define ICON_PADDING        2
+#define ICON_PADDING        5
 
 #define LABEL_VIEW_TAG      10000
 #define BORDER_VIEW_TAG     20000
@@ -66,6 +66,7 @@
 @implementation RNEditPhotoViewController
 @synthesize filters = _filters;
 @synthesize filterTableView = _filterTableView;
+@synthesize filterButton = _filterButton;
 @synthesize currentImageView = _currentImageView;
 @synthesize cutPhotoBgView = _cutPhotoBgView;
 @synthesize filterImage = _filterImage;
@@ -95,6 +96,7 @@
 - (void)dealloc{
 	self.filters = nil;
 	self.filterTableView = nil;
+	self.filterButton = nil;
 	self.currentImageView  = nil;
 	self.cutPhotoBgView = nil;
 	self.highQualityImage = nil;
@@ -207,6 +209,9 @@
 	
 	_normalQualityLength = [data length];
 	self.normalQualityImage = [UIImage imageWithData:data];
+	
+	//准备缩略图
+	[self prepareIcomForFilte:self.normalQualityImage];
 }
 
 
@@ -303,6 +308,8 @@
 	[self.view addSubview:self.albumNameTableView];
 	[self.view addSubview:self.albumSelectBarView];
 	[self.view addSubview:self.toolBarView];
+	self.toolBarView.hidden = YES; //测试用
+	
 	[self.view addSubview:self.filterTableView];
 	
 	self.currentImageView.frame = viewFrame;
@@ -609,6 +616,8 @@
 
 #pragma  mark - 图片单击 进入全屏浏览模式
 - (void)tapCurrentImage{
+	return; //测试不允许隐藏
+	
 	if (isExpand) { //如果已经展开了不允许隐藏
 		return;
 	}
@@ -858,8 +867,9 @@
 		_albumSelectBarView = [[UIImageView alloc]initWithImage:[[RCResManager getInstance]
 																 imageForKey:@"album_selected_bar"]];
 		_albumSelectBarView.frame = CGRectMake(0, CONTENT_NAVIGATIONBAR_HEIGHT, 320, 
-												   _albumSelectBarView.image.size.height);
-//		_albumSelectBarView.alpha = 0.8;
+												   _albumSelectBarView.image.size.height - 5  );
+		_albumSelectBarView.layer.masksToBounds = YES;
+		_albumSelectBarView.alpha = 0.8;
 		if (self.albumID == nil && _uploadType != PhotoUploadTypeHead) {//如果已指定相册或者上传头像 不需要选择相册
 			_albumSelectBarView.userInteractionEnabled = YES;//允许使用手势点击
 			UITapGestureRecognizer *albumNameTapGesture = [[UITapGestureRecognizer alloc]
@@ -907,38 +917,134 @@
 /**
  *	滤镜数据
  */
-//- (Filters *)filters{
-//	
-//	if (!_filters) {
-//		_filters = [[Filters alloc] init];
-//	}
-//	return _filters;
-//}
+- (Filters *)filters{
+	
+	if (!_filters) {
+		_filters = [[Filters alloc] init];
+	}
+	return _filters;
+}
 /**
  * 图片滤镜效果选择列表
  */
 - (EasyTableView *)filterTableView {
 	if (!_filterTableView) {
 		// add filterList
+		// filterChooserBackground.png
 		
-		_filters = [[Filters alloc] init];
-
 		CGRect frameRect = CGRectMake(0,
 									  LANDSCAPE_HEIGHT - BUTTOM_HEIGHT,
 									  LANDSCAPE_WIDTH, 
 									  BUTTOM_HEIGHT);
+		UIImageView *bgImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"filterChooserBackground.png"]];
+		bgImageView.frame = frameRect;
+		bgImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[self.view addSubview:bgImageView];
+		[bgImageView release];
+		
 		_filterTableView = [[EasyTableView alloc] initWithFrame:frameRect 
-													numberOfColumns:[_filters count]
+													numberOfColumns:[self.filters count]
 															ofWidth:BUTTOM_WIDTH];
 		_filterTableView.delegate = self;
 		_filterTableView.tableView.allowsSelection = YES;
 		_filterTableView.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_filterTableView.tableView.backgroundColor = [UIColor clearColor];
+
 		
 	}
 	
 	return _filterTableView;
 }
+
+
+/*
+	滤镜列表呼出按钮
+ */
+- (UIButton *)filterButton{
+	if (_filterButton) {
+//		_filterButton = [UIButton alloc]ini
+	}
+	return _filterButton;
+}
+
+/*
+	对单个的图片做滤镜处理
+	@paramDic：
+	为NSDictionary如下：
+			index ---- 滤镜方法的索引号(NSNumber)
+			image ---- 原始的图片(UIImage)
+ */
+- (void)filterSelector:(NSDictionary *)paramDic{
+	@autoreleasepool {
+		NSTimeInterval time = [[NSDate date]timeIntervalSince1970];
+		NSLog(@"thread start -------------- time = %f",time);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+		if ([paramDic objectForKey:@"index"] && [paramDic objectForKey:@"image"]) {
+			NSNumber *index = [paramDic objectForKey:@"index"];
+			SEL selector = NSSelectorFromString([self.filters methodForIndex:index.intValue]);
+			UIImage *imageLow = [paramDic objectForKey:@"image"];
+			
+			UIImage *imageFilterIcon = [imageLow performSelector:selector];
+			if (_filterIconsDic) { //滤镜后的缩略图
+				[_filterIconsDic setObject:imageFilterIcon forKey:index];
+			}	
+			if (_filterImagesDic) { //滤镜后的主图
+				[_filterImagesDic setObject:imageFilterIcon forKey:index];
+			}
+		}
+
+#pragma clang diagnostic pop
+	}
+}
+
+/*
+	从主图片生成缩略图
+ */
+- (void)prepareIcomForFilte:(UIImage *)image{
+	
+	NSTimeInterval time = [[NSDate date]timeIntervalSince1970];
+	NSLog(@"prepareIcomForFilte time = %f",time);
+
+	if (!image) {
+		return;
+	}
+	UIImage *imageLowOrigin = [[image copy] resizedImage:CGSizeMake(kImageAdjustMaxWidth, kImageAdjustMaxHeight) 
+					   interpolationQuality:kCGInterpolationLow];
+	
+	NSMutableDictionary *filterIconsDic = [[NSMutableDictionary alloc]initWithCapacity:[self.filters count]];
+	if (_filterIconsDic) {
+		TT_RELEASE_SAFELY(_filterIconsDic);
+	}
+	_filterIconsDic = filterIconsDic;	
+
+	NSMutableDictionary *filterImages = [[NSMutableDictionary alloc]initWithCapacity:[self.filters count]];
+	if (_filterImagesDic) {
+		TT_RELEASE_SAFELY(_filterImagesDic);
+	}
+	_filterImagesDic = filterImages;
+	
+	UIImage *imageLow = [imageLowOrigin copy];  // [[[UIImage alloc]initWithCGImage:imageLowOrigin.CGImage] autorelease];
+	for (int i = 0 ; i < [self.filters count]; i ++) {
+		//利用滤镜方法逐个生成缩略图
+		//多线程
+		NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
+		NSNumber *index = [NSNumber numberWithInt:i];
+		[paramDic setObject:index forKey:@"index"];
+		[paramDic setObject:imageLow forKey:@"image"];
+		
+		[NSThread detachNewThreadSelector:@selector(filterSelector:) toTarget:self withObject:paramDic];
+	}
+	[imageLow release];
+
+//	if ([NSThread isMainThread]) {
+//		[NSThread sleepForTimeInterval:2];
+//	}
+
+	time = [[NSDate date]timeIntervalSince1970];
+	NSLog(@"prepareIcomForFilte ending time = %f",time);
+}
+
 
 #pragma mark  EasyTableViewDelegate
 - (UIView *) easyTableView:(EasyTableView *)easyTableView viewForRect:(CGRect)rect  {
@@ -950,10 +1056,14 @@
 	CGRect imageRect = CGRectMake((rect.size.width - ICON_SIZE) / 2, ICON_PADDING, ICON_SIZE, ICON_SIZE);
     UIImageView * imageView = [[UIImageView alloc] initWithFrame:imageRect];
     imageView.tag = ICON_VIEW_TAG;
+//	imageView.backgroundColor = [UIColor redColor];
+	imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	imageView.layer.cornerRadius = 5.0;
+	imageView.layer.masksToBounds = YES;
     [view addSubview:imageView];
     
     // label
-    CGRect labelRect = CGRectMake(0, ICON_SIZE, viewRect.size.width, 10);
+    CGRect labelRect = CGRectMake(0, viewRect.size.height - 10, viewRect.size.width, 10);
     UILabel * labelView = [[UILabel alloc] initWithFrame:labelRect];
     labelView.textAlignment = UITextAlignmentCenter;
     labelView.textColor = [UIColor whiteColor];
@@ -963,9 +1073,12 @@
     [view addSubview:labelView];
 	
     // border
-    UIImageView *borderView		= [[UIImageView alloc] initWithFrame:imageRect];
-	borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	CGRect r = imageRect;
+	r = CGRectMake( r.origin.x - 8, r.origin.y - 8 , r.size.width + 16, r.size.height + 16); //变宽一点
+    UIImageView *borderView		= [[UIImageView alloc] initWithFrame:r];
 	borderView.tag				= BORDER_VIEW_TAG;
+	borderView.contentMode = UIViewContentModeScaleAspectFill;
+//	borderView.backgroundColor =[UIColor blueColor];
     [view addSubview:borderView];
     
     return view;
@@ -973,18 +1086,36 @@
 
 - (void)borderIsSelected:(BOOL)selected forView:(UIView *)view {
 	UIImageView * borderView	= (UIImageView *)[view viewWithTag:BORDER_VIEW_TAG];
-	NSString * borderImageName	= (selected) ? @"filterChooserItemSelected.png" : @"filterChooserItemUnselected.png";
-	borderView.image			= [UIImage imageNamed:borderImageName];
+	if (selected) {
+		NSString * borderImageName	=  @"filterChooserItemSelected.png" ;
+		borderView.image			= [UIImage imageNamed:borderImageName];
+	}else {
+		borderView.image			= nil;
+	}
+	
 }
 
 - (void)easyTableView:(EasyTableView *)easyTableView setDataForView:(UIView *)view forIndexPath:(NSIndexPath *)indexPath {
     // label
     UILabel * label = (UILabel *)[view viewWithTag:LABEL_VIEW_TAG];
-    label.text = [_filters nameForIndex:indexPath.row];
+    label.text = [self.filters nameForIndex:indexPath.row];
     
     // icon
     UIImageView * imageView = (UIImageView *)[view viewWithTag:ICON_VIEW_TAG];
-    imageView.image = [UIImage imageNamed:[_filters iconForIndex:indexPath.row]];
+	if (_filterIconsDic/* && [_filterIcons count ] == [self.filters count]*/) {
+		
+		if (indexPath.row < [_filterIconsDic count]) {
+			UIImage *imageIcon = [_filterIconsDic objectForKey:[NSNumber numberWithInt:indexPath.row]];
+			NSLog(@"imageIcon %d",[imageIcon retainCount]);
+			NSLog(@"Icon height = %f width = %f",imageIcon.size.height,imageIcon.size.width);
+			imageView.image = imageIcon;
+		}else {
+			imageView.image = [UIImage imageNamed:[self.filters iconForIndex:indexPath.row]];
+		}
+		
+	}else {
+		imageView.image = [UIImage imageNamed:[self.filters iconForIndex:indexPath.row]];
+	}
     
     // selectedIndexPath can be nil so we need to test for that condition
 	BOOL isSelected = (easyTableView.selectedIndexPath) ? 
@@ -1006,24 +1137,15 @@
     // apply filter
 	if (0 == indexPath.row) { //原照片
 		self.filterImage = self.highQualityImage;
-	}else{
-		SEL selector = NSSelectorFromString([_filters methodForIndex:indexPath.row]);
-		if ([self.highQualityImage respondsToSelector:selector] ) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			UIImage *cutImage = [self imageInAdjustArea];
-			
-			if (isHDPhoto) {
-				self.filterImage = [cutImage performSelector: selector];
-			}else {
-				self.filterImage = [cutImage performSelector:selector];
-			}
-#pragma clang diagnostic pop
+	}else{		
+		if (_filterImagesDic && [_filterImagesDic objectForKey:[NSNumber numberWithInt:indexPath.row]]) {
+			self.filterImage  = [_filterImagesDic objectForKey:[NSNumber numberWithInt:indexPath.row]];
 		}
-
 	}
 }
-
+/*
+	设置滤镜图片，期间有翻页动画
+ */
 - (void)setFilterImage:(UIImage *)filterImage{
 	TT_RELEASE_SAFELY(_filterImage);
 	_filterImage = [filterImage retain];
@@ -1108,8 +1230,8 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-	self.filters = nil;
 	self.filterTableView = nil;
+	self.filterButton = nil;
 	self.currentImageView  = nil;
 	self.cutPhotoBgView = nil;
 	self.highQualityImage = nil;
@@ -1125,14 +1247,10 @@
 	self.photoTurnRightButton = nil;
 	self.toolBarView = nil;
 	self.albumNameTableView = nil;
-	self.albumID = nil;
-    self.albumName = nil;
 	self.albumSelectBarView = nil;
 	self.albumNameLabel = nil;
 	self.arrowView = nil;
-	self.albumIDArray = nil;
-	self.delegate = nil;
-	self.requestAssistant = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -1364,6 +1482,9 @@
 }
 
 #pragma  mark - 照片拖动
+/*
+	触摸开始
+ */
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event  
 {  
     UITouch *touch = [touches anyObject];  
@@ -1372,6 +1493,9 @@
         _gestureStartPoint=[touch locationInView: self.currentImageView];  
     }          
 }  
+/*
+	触摸移动
+ */
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event  
 {  
     UITouch *touch = [touches anyObject];    
@@ -1384,8 +1508,8 @@
         imageCenter.x += curr_point.x - _gestureStartPoint.x;  
         imageCenter.y += curr_point.y - _gestureStartPoint.y;  
         
-        self.currentImageView.center = imageCenter;
-        
+//        self.currentImageView.center = imageCenter;
+        //不支持移动
     }
 }  
 

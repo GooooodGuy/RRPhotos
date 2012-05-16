@@ -146,7 +146,7 @@
 		
 		TT_RELEASE_SAFELY(_selectedIndexPath);
 		_selectedIndexPath = [indexPath retain];
-		NSLog(@"indexPath retain count = %d",[indexPath retainCount] );
+//		NSLog(@"indexPath retain count = %d",[indexPath retainCount] );
 		UITableViewCell *deselectedCell	= (UITableViewCell *)[self.tableView cellForRowAtIndexPath:oldIndexPath];
 		UITableViewCell *selectedCell	= (UITableViewCell *)[self.tableView cellForRowAtIndexPath:_selectedIndexPath];
 		

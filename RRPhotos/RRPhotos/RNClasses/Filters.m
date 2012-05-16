@@ -38,7 +38,7 @@
 }
 
 - (NSString *) nameForIndex:(NSInteger)index {
-	NSLog(@"filter = %@",self);
+//	NSLog(@"filter = %@",self);
     return [[self.object objectAtIndex:index] valueForKey:@"filterName"];
 }
 
