@@ -21,6 +21,7 @@
 	UIScrollView *_contentScrollView;
 	//父Controller
 	UIViewController *_parentController;
+	
 }
 @property(nonatomic,retain)NSMutableArray *hotShareItems;
 @property(nonatomic,retain)UIScrollView *contentScrollView;

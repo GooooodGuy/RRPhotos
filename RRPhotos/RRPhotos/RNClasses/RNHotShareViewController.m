@@ -14,6 +14,7 @@
 #define kImageWidth 76.25 //图片的宽高
 #define kImageSpace 5.0  //图片间隙
 
+#define kHudViewTag 10002 //进度圈圈的tag
 @interface RNHotShareViewController() 
 
 //显示照片数据
@@ -61,13 +62,47 @@
 	开始加载
  */
 - (void)modelDidStartLoad:(RNModel *)model {
-	
+	[self showMBProgressHUD];
 }
+
+/*
+	显示加载进度圈圈
+ */
+
+- (void)showMBProgressHUD{
+	if ([self.view viewWithTag:kHudViewTag]) {
+		UIView *hudView = [self.view viewWithTag:kHudViewTag];
+		[self.view bringSubviewToFront:hudView];
+		hudView.hidden = NO;
+		return;
+	}
+	MBProgressHUD *hudView =  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+	hudView.tag = kHudViewTag;
+	hudView.labelText = @"正加载";	
+	hudView.square = YES;
+	hudView.opaque = 0.6;
+	
+	[self.view bringSubviewToFront:hudView];
+	[hudView becomeFirstResponder];
+}
+
+/*
+	隐藏加载圈圈
+ */
+- (void)hiddenMBProgressHUD{
+	//移除进度圈圈
+	UIView *hudView = [self.view viewWithTag:kHudViewTag];
+	hudView.hidden = YES;
+	[hudView resignFirstResponder];
+}
+
 
 /*
 	网络加载完成
  */
 - (void)modelDidFinishLoad:(RNModel *)model{
+	
+	[self hiddenMBProgressHUD];
 	
 	NSArray *hotShareItems = ((RNHotShareModel *)model).hotShareItems;
 	if (hotShareItems) {
@@ -122,11 +157,25 @@
 
 #pragma mark - view lifecycle
 - (void)loadView{
-	
+	NSLog(@"self retain count = %d",[self retainCount]);
+
 	[super loadView];
 	self.navBar.hidden = YES; //采用系统的navbar
-	
+	self.title = @"热门";
 	[self.view addSubview:self.contentScrollView];
+
+	//刷新按钮
+	UIButton *refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+	UIImage *refreshButtonImage = [[RCResManager getInstance]imageForKey:@"webbrowser_refresh"];
+	[refreshButton setImage:refreshButtonImage forState:UIControlStateNormal];
+	[refreshButton setImage:refreshButtonImage forState:UIControlStateSelected];
+	[refreshButton addTarget:self action:@selector(onClickRefreshButton) forControlEvents:UIControlEventTouchUpInside];
+	
+	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:refreshButton];
+	[refreshButton release];
+	self.navigationItem.rightBarButtonItem = item;
+
+
 }
 
 - (void)viewDidLoad{
@@ -167,7 +216,14 @@
 	RNHotShareItem *item = [self.hotShareItems objectAtIndex:((UITapGestureRecognizer *)sender).view.tag];
 	RNHotShareContentViewController *contentViewContoller = [[RNHotShareContentViewController alloc]initWithHotShareItem:item];
 	contentViewContoller.hidesBottomBarWhenPushed = YES;
-	[self.parentController.navigationController pushViewController:contentViewContoller animated:YES];
+	[self.navigationController pushViewController:contentViewContoller animated:YES];
 	TT_RELEASE_SAFELY(contentViewContoller);
 }
+
+#pragma mark - 刷新
+- (void)onClickRefreshButton{
+	
+	[self.model load:YES];	
+}
+
 @end

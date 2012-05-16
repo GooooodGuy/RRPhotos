@@ -5,9 +5,9 @@
 //  Created by yi chen on 12-5-13.
 //  Copyright (c) 2012年 renren. All rights reserved.
 //
-
+#import <objc/runtime.h>
 #import "RNRootNewsFeedController.h"
-
+#import "AppDelegate.h"
 @interface RNRootNewsFeedController ()
 
 @end
@@ -33,6 +33,7 @@
 - (void)loadView{
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
+	self.view.userInteractionEnabled = YES;
 	
 	//刷新按钮
 	UIButton *refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
@@ -41,7 +42,8 @@
 	[refreshButton setImage:refreshButtonImage forState:UIControlStateSelected];
 	[refreshButton addTarget:self action:@selector(onClickRefreshButton) forControlEvents:UIControlEventTouchUpInside];
 	UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:refreshButton];
-	
+	[refreshButton release];
+
 	self.navigationItem.rightBarButtonItem = item;
 	
 	//中间栏
@@ -62,15 +64,29 @@
 	TT_RELEASE_SAFELY(segmentControl);
 	
 	
+	CALayer *layer = self.view.layer;
+	layer.borderWidth = 2;
+	layer.borderColor = [[UIColor greenColor]CGColor];
 	
 	[self.view addSubview:self.hotShareController.view]; //热门分享
 	[self.view addSubview:self.newsFeedController.view];//好友动态
+	
+//	//导航条
+//	UIImageView *navBarView = [[[UIImageView alloc]initWithImage:[[RCResManager getInstance]imageForKey:@"button_bar"]]autorelease];
+//	navBarView.userInteractionEnabled = YES;
+//	navBarView.frame = CGRectMake(0, 0, PHONE_SCREEN_SIZE.width, PHONE_NAVIGATIONBAR_HEIGHT);
+//	[navBarView addSubview: refreshButton];
+//	[refreshButton release];
+//	[self.view addSubview:navBarView];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	// Do any additional setup after loading the view.	
+	for (UIView * subview in self.view.subviews) {
+		NSLog(@"subView name is %@ tag =  %d",NSStringFromClass(subview.class),subview.tag);
+	}
 }
 
 - (void)viewDidUnload
@@ -82,7 +98,19 @@
 - (void)viewWillAppear:(BOOL)animated{
 
 	[super viewWillAppear:animated];
-	[self.navigationController setNavigationBarHidden:NO animated:YES];
+//	[self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+	[super viewDidAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+	[super viewDidDisappear:animated];
+	
+	//否则拖动下, 将要从他人的进入个人的新鲜事列表
+    
+//	[self.newsFeedController scrollViewDidScroll:self.newsFeedController.newsFeedTableView];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -102,6 +130,7 @@
 													PHONE_SCREEN_SIZE.height);
 		
 		//用于push出另外一个界面
+	
 		_newsFeedController.parentController = self;
 	}
 	
@@ -121,7 +150,7 @@
 														PHONE_SCREEN_SIZE.height);
 		
 		//用于push出另外一个界面
-		_hotShareController.parentController = self;
+	    _hotShareController.parentController = self;
 	}
 	return _hotShareController;
 }
@@ -143,14 +172,23 @@
  */
 - (void)changeCurrentViewController:(UISegmentedControl *)sender{
 	if (0 == sender.selectedSegmentIndex) {
+		_currentViewController.view.hidden = YES;
 		_currentViewController = self.newsFeedController;
+		_currentViewController.view.hidden = NO;
 //		self.title = @"好友动态";
 	}else {
+		_currentViewController.view.hidden = YES;
 		_currentViewController = self.hotShareController;
+		_currentViewController.view.hidden = NO;
+
 //		self.title = @"热门分享";
 	}
 	
 	[self.view bringSubviewToFront:_currentViewController.view];
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+	NSLog(@"touchsBegan : ");
+	
+}
 @end

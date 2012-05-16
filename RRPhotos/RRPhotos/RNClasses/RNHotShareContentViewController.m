@@ -15,12 +15,14 @@
 @implementation RNHotShareContentViewController
 @synthesize hotShareItem = _hotShareItem;
 @synthesize albumIconView = _albumIconView;
+@synthesize contentTableView = _contentTableView;
 @synthesize commentTableView = _commentTableView;
 @synthesize miniPublisherView = _miniPublisherView;
 
 - (void)dealloc{
 	self.hotShareItem = nil;
 	self.albumIconView = nil;
+	self.contentTableView = nil;
 	self.commentTableView = nil;
 	self.miniPublisherView = nil;
 	[super dealloc];
@@ -41,6 +43,8 @@
 	if (self = [super init]) {
 		
 	}
+	NSLog(@"retain count = %d",[self retainCount]);
+
 	return self;
 }
 
@@ -63,11 +67,14 @@
 	}
 	
 	RCGeneralRequestAssistant *mReqAssistant = [RCGeneralRequestAssistant requestAssistant];
+	
 	mReqAssistant.onCompletion = ^(NSDictionary* result){
 		NSLog(@"photo ... %@",result);
 		if (result) {
 			
 		}
+		
+	NSLog(@"retain count = %d",[self retainCount]);
 	};
 	mReqAssistant.onError = ^(RCError* error) {
 		NSLog(@"req error :%@",error);
@@ -80,8 +87,11 @@
 }
 
 - (void)loadView{
+	NSLog(@"self retain count = %d",[self retainCount]);
+
 	[super loadView];
-	
+	NSLog(@"self retain count = %d",[self retainCount]);
+
 	[self requestPhotoData];
 	[self.view addSubview:self.albumIconView];
 
@@ -97,10 +107,15 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 	self.albumIconView = nil;
+	self.contentTableView = nil;
 	self.commentTableView = nil;
 	self.miniPublisherView = nil;
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+	[super viewWillDisappear:animated];
+	NSLog(@"self retain count = %d",[self retainCount]);
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -122,8 +137,31 @@
 			[_albumIconView setImageWithURL:url];
 
 		}
+		
+		CALayer* layer = [_albumIconView layer];
+		[layer setCornerRadius:5.0];
+		layer.masksToBounds = YES;
 	}
+	NSLog(@"self retain count = %d",[self retainCount]);
+
 	return _albumIconView;
+}
+
+/*
+ 
+ */
+- (UITableView *)contentTableView{
+	if (!_contentTableView) {
+		_contentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 
+																		 0, 
+																		 PHONE_SCREEN_SIZE.width,
+																		 PHONE_SCREEN_SIZE.height - kMiniPublisherHeight ) 
+														style:UITableViewStylePlain];
+		_contentTableView.delegate = self;
+		_contentTableView.dataSource = self;
+		
+	}
+	return _contentTableView;
 }
 
 - (RNMiniPublisherView *)miniPublisherView{
@@ -134,6 +172,12 @@
 																				  kMiniPublisherHeight) 
 														andCommentType:ECommentAlbumType];
 	}
+	NSLog(@"self retain count = %d",[self retainCount]);
+
 	return _miniPublisherView;
 }
+
+
+
+
 @end

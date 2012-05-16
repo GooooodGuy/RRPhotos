@@ -58,20 +58,27 @@
 
 	TT_RELEASE_SAFELY(loginController);
 	self.rootNavController = navController;
-	self.rootNavController.view.backgroundColor = [UIColor grayColor];
-	
-	//主界面
-	RNMainViewController *mainViewController = [[RNMainViewController alloc]init];
-	self.mainViewController = mainViewController;
-	TT_RELEASE_SAFELY(mainViewController);
-	
+	self.rootNavController.view.backgroundColor = [UIColor clearColor];
+	NSLog(@"nav retain count = %d",[navController retainCount]);
 	self.window.rootViewController = navController;
-	TT_RELEASE_SAFELY(navController);
+	[navController release];
+	NSLog(@"nav retain count = %d",[navController retainCount]);
+	
     self.window.backgroundColor = [UIColor clearColor];
     [self.window makeKeyAndVisible];
+	
     return YES;
 }
 
+- (UIViewController *)mainViewController{
+	if (!_mainViewController) {
+		//主界面
+		RNMainViewController *mainViewController = [[RNMainViewController alloc]init];
+		_mainViewController = mainViewController;
+
+	}
+	return _mainViewController;
+}
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 	/*

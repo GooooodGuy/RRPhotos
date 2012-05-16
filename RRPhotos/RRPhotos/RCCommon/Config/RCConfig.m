@@ -93,7 +93,7 @@ static RCConfig *_globalConfig = nil;
 //		self.apiUrl = @"http://mc1.test.renren.com/api";//开发服务器
 
         //self.apiUrl = @"http://mc3.test.renren.com/api";//开发服务器
-        //self.apiUrl = @"http://api.m.renren.com/api";//正式服务器
+self.apiUrl = @"http://api.m.renren.com/api";//正式服务器
         
         // API Key（服务分配）
         self.apiKey = @"980aca4002b744f1bf37df8ee28e2c92";

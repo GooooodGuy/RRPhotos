@@ -13,6 +13,7 @@
 #import "RNNewsFeedCell.h"
 #import "RRRefreshTableHeaderView.h"
 #import "RNHotShareViewController.h"
+#import "RNNewsFeedSectionView.h"
 /*	-----------------------------------  */
 /*		图片新鲜事主界面				     */
 /*	-----------------------------------  */
@@ -20,6 +21,7 @@
 	<UITableViewDataSource,
 	UITableViewDelegate,
 	RNNewsFeedCellDelegate,
+	RNNewsFeedSectionViewDelegate,
 	RRRefreshTableHeaderDelegate>
 {
 	//父controller
@@ -36,12 +38,15 @@
 	//用户id
 	NSNumber *_userId;
 	NSString *_userName;
+	//指示是否是自己的主页
+	BOOL _bIsSelfPage;
 }
 @property(nonatomic,assign)UIViewController *parentController;
 @property(nonatomic,retain)UITableView *newsFeedTableView;
 @property(nonatomic,retain)RRRefreshTableHeaderView *rrRefreshTableHeaderView;
 @property(nonatomic,copy)NSNumber *userId;
 @property(nonatomic,copy)NSString *userName;
+@property(nonatomic,assign)BOOL bIsSelfPage;
 /*
 	@userId:用户的id
  */

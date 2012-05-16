@@ -46,8 +46,19 @@
  * 英文状态下键盘的高度
  */
 #define PUBLISH_ENGISH_KEYBOARD_TOP 216.0
+/*
+ * 照片新鲜事的列表背景色
+ */
+#define kNewsFeedTableViewBgColor RGBCOLOR(240, 240, 240)
+/*
+ * 照片新鲜事的列表Section背景色
+ */
+#define kNewsFeedSectionBgColor  RGBCOLOR(235, 235, 235)
 
-
+/*
+ *	照片新鲜事的列表Section高度
+ */
+#define kNewsFeedSectionViewHeight  44
 
 #define RN_DEBUG_LOG NSLog(@"-------%s---%d",__FUNCTION__,__LINE__)
 

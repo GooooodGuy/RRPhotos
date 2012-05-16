@@ -49,65 +49,14 @@
 }
 
 
-//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self) { 
-//		self.activityIndicatorView = [self getActivityIndicatorView];//获取正在登陆动画
-//	}
-//    
-//    return self;
-//}
-
-/**
- *请求成功回调
- */
-- (void)requestDidSucceed:(NSDictionary *)result {
-    [_activityIndicatorView removeFromSuperview];
-    // 保存登录信息
-    RCMainUser* mainUser = [RCMainUser getInstance];
-    mainUser.sessionKey = [result objectForKey:@"session_key"];
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) { 
+		self.activityIndicatorView = [self getActivityIndicatorView];//获取正在登陆动画
+	}
     
-//    mainUser.mticket = [result objectForKey:@"ticket"];
-    mainUser.ticket = [result objectForKey:@"ticket"];
-    
-    mainUser.userId = [result objectForKey:@"uid"];
-    mainUser.userSecretKey = [result objectForKey:@"secret_key"];
-    //	mainUser.loginStatus = RRLoginStatusLogined;
-    mainUser.userName = [result objectForKey:@"user_name"];
-    NSNumber * checkValue = [result objectForKey:@"fill_stage"];
-    switch ([checkValue intValue]) {
-        case 1:
-            mainUser.checkIsNewUser = YES;
-            break;
-        default:
-            mainUser.checkIsNewUser = NO;
-            break;
-    }
-	
-	AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
-											   sharedApplication].delegate;
-	
-	UIViewController *mainController = appDelegate.mainViewController;
-
-	[appDelegate.rootNavController pushViewController:mainController animated:YES];
-	[mainController release];
-}
-
-
-/**
- *请求错误回调
- */
-- (void)requestDidError:(RCError *)error {
-    [_activityIndicatorView removeFromSuperview];
-    emailField.enabled = TRUE;
-    passwordField.enabled = TRUE;
-    [passwordField becomeFirstResponder];
-    // 错误处理 
-    UIAlertView *pAlert = [[UIAlertView alloc] initWithTitle:@"出错了" message:[error titleForError] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil ];
-    
-    [pAlert show];
-    [pAlert release];
+    return self;
 }
 
 - (UIView*)getActivityIndicatorView {
@@ -311,14 +260,17 @@
         [defaults setObject:pwd forKey:@"loginPassword"];
 		
 		NSLog(@"###启动：开始自动登陆");
+		
 		RCClientLoginRequest *loginRequest = [[RCClientLoginRequest alloc] init];
 		loginRequest.onLoginSuccess = ^(){
 			NSLog(@"###启动：自动登陆成功");
 //			[self startUpdateServerKVData];
 			AppDelegate *appDelegate = (AppDelegate *)[UIApplication 
 													   sharedApplication].delegate;
+			
 			UIViewController *mainController = appDelegate.mainViewController;
-			[appDelegate.rootNavController pushViewController:mainController animated:YES];
+			NSLog(@"main retain count %d",[mainController retainCount]);
+			[self.navigationController pushViewController:mainController animated:YES];
 			[mainController release];
 		};
 		

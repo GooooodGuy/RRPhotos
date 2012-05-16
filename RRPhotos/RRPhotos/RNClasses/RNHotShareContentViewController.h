@@ -13,12 +13,14 @@
 /*	-----------------------------------  */
 /*	      热门分享内容页（含评论列表，回复框）  */
 /*	-----------------------------------  */
-@interface RNHotShareContentViewController : UIViewController
+@interface RNHotShareContentViewController : UIViewController<UITableViewDataSource,UITableViewDelegate >
 {
 	//热门分享的数据项
 	RNHotShareItem *_hotShareItem;
 	//分享的相册缩略图
 	UIImageView *_albumIconView;
+	//总的内容列表
+	UITableView *_contentTableView;
 	//评论列表
 	UITableView *_commentTableView;
 	//迷你回复框
@@ -26,6 +28,7 @@
 }
 @property(nonatomic,retain)RNHotShareItem *hotShareItem;
 @property(nonatomic,retain)UIImageView *albumIconView;
+@property(nonatomic,retain)UITableView *contentTableView;
 @property(nonatomic,retain)UITableView *commentTableView;
 @property(nonatomic,retain)RNMiniPublisherView *miniPublisherView;
 /*

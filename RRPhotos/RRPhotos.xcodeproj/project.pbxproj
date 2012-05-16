@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E5173CBF155D440900B42F9D /* RNHotShareModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5173CBE155D440900B42F9D /* RNHotShareModel.m */; };
 		E5173CC2155D4EA100B42F9D /* RNHotShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5173CC1155D4EA100B42F9D /* RNHotShareViewController.m */; };
+		E51BE83415638A3300512DE2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E51BE83315638A3300512DE2 /* Default@2x.png */; };
 		E5405408155F743800F53A63 /* RNRootNewsFeedController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5405407155F743800F53A63 /* RNRootNewsFeedController.m */; };
 		E540540C155F904500F53A63 /* RNCommentListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E540540B155F904500F53A63 /* RNCommentListCell.m */; };
 		E551B2F8154D7AA700B54EB5 /* NSDate+NSDateExt.m in Sources */ = {isa = PBXBuildFile; fileRef = E551B2F7154D7AA700B54EB5 /* NSDate+NSDateExt.m */; };
@@ -296,8 +297,6 @@
 		E5A4059B154FAFBC00CF128F /* UIImage+RNAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A40595154FAFB600CF128F /* UIImage+RNAdditions.m */; };
 		E5A4059C154FAFBC00CF128F /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A40597154FAFBA00CF128F /* UIImage+RoundedCorner.m */; };
 		E5A4059F154FB20B00CF128F /* RCClientLoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E5A4059E154FB20700CF128F /* RCClientLoginRequest.m */; };
-		E5B0852215216B5300F87B46 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5B0852115216B5300F87B46 /* Default@2x.png */; };
-		E5B0852415216B5E00F87B46 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E5B0852315216B5E00F87B46 /* Default.png */; };
 		E5B0853015216CF700F87B46 /* RCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0852815216CF700F87B46 /* RCConfig.m */; };
 		E5B0853115216CF700F87B46 /* RCMainUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0852B15216CF700F87B46 /* RCMainUser.m */; };
 		E5B0853215216CF700F87B46 /* RCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B0852D15216CF700F87B46 /* RCUser.m */; };
@@ -441,6 +440,7 @@
 		E5F8CF6215479E9400B42376 /* UIImageView+RRWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F8CF5D15479E9400B42376 /* UIImageView+RRWebImage.m */; };
 		E5F9BA8415232A5F00705D87 /* RNModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8115232A5F00705D87 /* RNModel.m */; };
 		E5F9BA8515232A5F00705D87 /* RNModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5F9BA8315232A5F00705D87 /* RNModelViewController.m */; };
+		E5FDEC2E1562330D00823256 /* RNNewsFeedSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5FDEC2D1562330D00823256 /* RNNewsFeedSectionView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -448,6 +448,7 @@
 		E5173CBE155D440900B42F9D /* RNHotShareModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareModel.m; sourceTree = "<group>"; };
 		E5173CC0155D4EA000B42F9D /* RNHotShareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNHotShareViewController.h; sourceTree = "<group>"; };
 		E5173CC1155D4EA100B42F9D /* RNHotShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNHotShareViewController.m; sourceTree = "<group>"; };
+		E51BE83315638A3300512DE2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		E5405406155F743800F53A63 /* RNRootNewsFeedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRootNewsFeedController.h; sourceTree = "<group>"; };
 		E5405407155F743800F53A63 /* RNRootNewsFeedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRootNewsFeedController.m; sourceTree = "<group>"; };
 		E540540A155F904500F53A63 /* RNCommentListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCommentListCell.h; sourceTree = "<group>"; };
@@ -837,8 +838,6 @@
 		E5A40597154FAFBA00CF128F /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		E5A4059D154FB20200CF128F /* RCClientLoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCClientLoginRequest.h; sourceTree = "<group>"; };
 		E5A4059E154FB20700CF128F /* RCClientLoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCClientLoginRequest.m; sourceTree = "<group>"; };
-		E5B0852115216B5300F87B46 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		E5B0852315216B5E00F87B46 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E5B0852715216CF700F87B46 /* RCConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCConfig.h; sourceTree = "<group>"; };
 		E5B0852815216CF700F87B46 /* RCConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCConfig.m; sourceTree = "<group>"; };
 		E5B0852915216CF700F87B46 /* RRConfigDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRConfigDelegate.h; sourceTree = "<group>"; };
@@ -1056,6 +1055,8 @@
 		E5F9BA8115232A5F00705D87 /* RNModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNModel.m; sourceTree = "<group>"; };
 		E5F9BA8215232A5F00705D87 /* RNModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNModelViewController.h; sourceTree = "<group>"; };
 		E5F9BA8315232A5F00705D87 /* RNModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNModelViewController.m; sourceTree = "<group>"; };
+		E5FDEC2C1562330C00823256 /* RNNewsFeedSectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNNewsFeedSectionView.h; sourceTree = "<group>"; };
+		E5FDEC2D1562330D00823256 /* RNNewsFeedSectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNNewsFeedSectionView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1867,6 +1868,8 @@
 				E5405407155F743800F53A63 /* RNRootNewsFeedController.m */,
 				E540540A155F904500F53A63 /* RNCommentListCell.h */,
 				E540540B155F904500F53A63 /* RNCommentListCell.m */,
+				E5FDEC2C1562330C00823256 /* RNNewsFeedSectionView.h */,
+				E5FDEC2D1562330D00823256 /* RNNewsFeedSectionView.m */,
 			);
 			name = NewsFeed;
 			sourceTree = "<group>";
@@ -2030,9 +2033,8 @@
 		E5F42A441520B3B1006DAE33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E51BE83315638A3300512DE2 /* Default@2x.png */,
 				E5C80DBE1522E7A000DE6C84 /* Icon.png */,
-				E5B0852315216B5E00F87B46 /* Default.png */,
-				E5B0852115216B5300F87B46 /* Default@2x.png */,
 				E5F42A451520B3B1006DAE33 /* RRPhotos-Info.plist */,
 				E5F42A461520B3B1006DAE33 /* InfoPlist.strings */,
 				E5F42A491520B3B1006DAE33 /* main.m */,
@@ -2110,8 +2112,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5F42A481520B3B1006DAE33 /* InfoPlist.strings in Resources */,
-				E5B0852215216B5300F87B46 /* Default@2x.png in Resources */,
-				E5B0852415216B5E00F87B46 /* Default.png in Resources */,
 				E5C80DBF1522E7A000DE6C84 /* Icon.png in Resources */,
 				E5A403E1154F7F1100CF128F /* skintype_light.bundle in Resources */,
 				E5A403E2154F7F1100CF128F /* skintype_night.bundle in Resources */,
@@ -2363,6 +2363,7 @@
 				E56B256E1558EC8800ADEB77 /* userInfo_explain_bg@2x.png in Resources */,
 				E56B256F1558EC8800ADEB77 /* userInfo_head_bg.png in Resources */,
 				E56B25701558EC8800ADEB77 /* userInfo_head_bg@2x.png in Resources */,
+				E51BE83415638A3300512DE2 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2535,6 +2536,7 @@
 				E540540C155F904500F53A63 /* RNCommentListCell.m in Sources */,
 				E599BC8C1560A6E50007A2BB /* RNHotShareItem.m in Sources */,
 				E55F38F315613930003FC027 /* RNHotShareContentViewController.m in Sources */,
+				E5FDEC2E1562330D00823256 /* RNNewsFeedSectionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
